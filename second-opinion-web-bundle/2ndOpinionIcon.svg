@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="1500mm"
+   height="1500mm"
+   viewBox="0 0 1500 1500"
+   version="1.1"
+   id="svg1"
+   inkscape:export-filename="2ndOpinionIcon.png"
+   inkscape:export-xdpi="17.339733"
+   inkscape:export-ydpi="17.339733"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   sodipodi:docname="2ndOpinionIcon.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.089864794"
+     inkscape:cx="328.27094"
+     inkscape:cy="4056.0934"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <rect
+       x="6053.5386"
+       y="8768.7287"
+       width="44.511313"
+       height="1123.9107"
+       id="rect5" />
+    <rect
+       x="467.36879"
+       y="3994.8904"
+       width="6454.1405"
+       height="6309.4788"
+       id="rect4" />
+    <rect
+       x="1135.0385"
+       y="1090.5272"
+       width="3661.0555"
+       height="2069.7761"
+       id="rect3" />
+    <rect
+       x="1190.6776"
+       y="1101.655"
+       width="3393.9876"
+       height="1502.2568"
+       id="rect2" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       transform="scale(0.26458333)"
+       id="text1"
+       style="fill:#ffffff;text-orientation:auto;stroke:#ffffff;-inkscape-font-specification:'MV Boli';font-family:'MV Boli';line-height:0;letter-spacing:4.73px;text-align:start;writing-mode:lr-tb;direction:ltr;fill-opacity:1;stroke-opacity:1;white-space:pre;shape-inside:url(#rect2);font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:200.00000252px" />
+    <g
+       id="g6"
+       style="stroke:#074963;stroke-opacity:1">
+      <rect
+         style="fill:#074963;fill-opacity:1;stroke:#074963;stroke-width:0.264583;stroke-opacity:1"
+         id="rect1"
+         width="1024"
+         height="1024"
+         x="264.98141"
+         y="229.28253" />
+      <text
+         xml:space="preserve"
+         transform="matrix(0.25342224,0,0,0.36975694,37.736181,197.73098)"
+         id="text2"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2363.59px;line-height:0;font-family:'MV Boli';-inkscape-font-specification:'MV Boli';text-align:start;letter-spacing:4.73px;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect3);fill:#ffffff;fill-opacity:1;stroke:#074963;stroke-opacity:1"><tspan
+           x="1135.0391"
+           y="1764.1505"
+           id="tspan2"><tspan
+             style="font-family:'Tw Cen MT';-inkscape-font-specification:'Tw Cen MT'"
+             id="tspan1">2nd</tspan></tspan></text>
+      <text
+         xml:space="preserve"
+         transform="matrix(0.26458333,0,0,0.26458333,191.37546,-17.665428)"
+         id="text3"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:1066.67px;line-height:0;font-family:'MV Boli';-inkscape-font-specification:'MV Boli';text-align:start;letter-spacing:4.73px;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect4);fill:#ffffff;fill-opacity:1;stroke:#074963;stroke-opacity:1"><tspan
+           x="467.36914"
+           y="4271.937"
+           id="tspan3">opinion</tspan></text>
+    </g>
+    <text
+       xml:space="preserve"
+       transform="scale(0.26458333)"
+       id="text4"
+       style="fill:#ffffff;text-orientation:auto;stroke:#ffffff;-inkscape-font-specification:'MV Boli';font-family:'MV Boli';line-height:0;letter-spacing:4.73px;text-align:start;writing-mode:lr-tb;direction:ltr;fill-opacity:1;stroke-opacity:1;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:1000px;white-space:pre;shape-inside:url(#rect5)" />
+  </g>
+</svg>
