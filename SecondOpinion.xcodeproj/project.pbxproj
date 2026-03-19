@@ -8,17 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		27F878A32EE53F2700F5BA67 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 27F878A02EE53F2700F5BA67 /* index.html */; };
-		27F878A42EE53F2700F5BA67 /* 2ndOpinionIcon.svg in Resources */ = {isa = PBXBuildFile; fileRef = 27F8789F2EE53F2700F5BA67 /* 2ndOpinionIcon.svg */; };
 		27F878A52EE53F2700F5BA67 /* SVG_VERSION_OST_Main_Logo.svg in Resources */ = {isa = PBXBuildFile; fileRef = 27F878A12EE53F2700F5BA67 /* SVG_VERSION_OST_Main_Logo.svg */; };
 		27F878A72EE5401500F5BA67 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F878A62EE5401500F5BA67 /* WebView.swift */; };
+		27FDF46A2EEF7A7B000AC76C /* SecOpIconFinal.png in Resources */ = {isa = PBXBuildFile; fileRef = 27FDF4692EEF7A7B000AC76C /* SecOpIconFinal.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		27F878912EE53DF900F5BA67 /* SecondOpinion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SecondOpinion.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		27F8789F2EE53F2700F5BA67 /* 2ndOpinionIcon.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = 2ndOpinionIcon.svg; sourceTree = "<group>"; };
 		27F878A02EE53F2700F5BA67 /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		27F878A12EE53F2700F5BA67 /* SVG_VERSION_OST_Main_Logo.svg */ = {isa = PBXFileReference; lastKnownFileType = text; path = SVG_VERSION_OST_Main_Logo.svg; sourceTree = "<group>"; };
 		27F878A62EE5401500F5BA67 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+		27FDF4692EEF7A7B000AC76C /* SecOpIconFinal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SecOpIconFinal.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -60,10 +60,10 @@
 		27F878A22EE53F2700F5BA67 /* second-opinion-web-bundle */ = {
 			isa = PBXGroup;
 			children = (
-				27F8789F2EE53F2700F5BA67 /* 2ndOpinionIcon.svg */,
 				27F878A02EE53F2700F5BA67 /* index.html */,
 				27F878A12EE53F2700F5BA67 /* SVG_VERSION_OST_Main_Logo.svg */,
 				27F878A62EE5401500F5BA67 /* WebView.swift */,
+				27FDF4692EEF7A7B000AC76C /* SecOpIconFinal.png */,
 			);
 			path = "second-opinion-web-bundle";
 			sourceTree = "<group>";
@@ -133,7 +133,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				27F878A32EE53F2700F5BA67 /* index.html in Resources */,
-				27F878A42EE53F2700F5BA67 /* 2ndOpinionIcon.svg in Resources */,
+				27FDF46A2EEF7A7B000AC76C /* SecOpIconFinal.png in Resources */,
 				27F878A52EE53F2700F5BA67 /* SVG_VERSION_OST_Main_Logo.svg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

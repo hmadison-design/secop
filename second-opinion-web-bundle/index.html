@@ -1,6 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Second Opinion">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Second Opinion — Pilot Readiness &amp; Risk Tools</title>
@@ -10,7 +18,7 @@
       --card:#00354dfe;
       --ink:#e9eef5;
       --muted:#a9b7c6;
-      --accent:#4da3ff;
+      --accent:#10dad4fe;
       --good:#13c27a;
       --warn:#ffb31a;
       --bad:#ff5b5b;
@@ -26,6 +34,7 @@
       max-width:880px;
       margin:0 auto;
       padding:16px 16px 24px;
+      min-height:100vh;
     }
     .card{
       background:var(--card);
@@ -33,6 +42,20 @@
       padding:16px 16px 20px;
       box-shadow:0 10px 30px rgba(0,0,0,.35);
       margin:12px 0;
+    }
+    #modeCard{
+      min-height: calc(100vh - 16px - 24px - 16px - 24px);
+      display:flex;
+      flex-direction:column;
+      position:relative;
+    }
+    #modeCard .footer-link{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:25px;
+      text-align:center;
+      font-style:italic;
     }
     h1{font-size:1.9rem;margin:.2rem 0 .6rem}
     h2{font-size:1.18rem;margin:.2rem 0 .4rem}
@@ -76,12 +99,14 @@
       display:inline-flex;
       align-items:center;
       justify-content:center;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
     .btn:disabled{opacity:.6;cursor:not-allowed}
     .btn-ghost{
-      background:transparent;
-      color:var(--ink);
-      border:2px solid #8795a3;
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
     }
     .btn-sm{
       padding:8px 12px;
@@ -141,6 +166,8 @@
       user-select:none;
       cursor:pointer;
       transition:background .1s,transform .05s;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
     .tapTarget.ready{background:#6a7688}
     .tapTarget.go{background:#3aa657}
@@ -154,8 +181,6 @@
       background:#0e1520;
       min-width:8ch;
     }
-
-    /* --- IMPORTANT FIX: hide must always win --- */
     .hide{display:none !important;}
 
     #btnMatch,#btnMismatch{min-width:160px}
@@ -175,21 +200,6 @@
       margin-top:10px;
       font-weight:600;
     }
-    .frat-q{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:10px;
-      padding:8px 10px;
-      border-radius:8px;
-      border:1px solid #223042;
-      margin-top:6px;
-    }
-    .frat-q-text{flex:1}
-    .frat-q-controls{
-      white-space:nowrap;
-      font-size:.9rem;
-    }
 
     #tmdMenu{
       margin-top:10px;
@@ -206,9 +216,12 @@
     }
     a.infoLink:hover{text-decoration:underline}
     .tagline{
-      font-size:1.05rem;
-      margin-top:4px;
+      font-size:clamp(1.8rem, 6vw, 3.2rem);
+      margin-top:8px;
       font-style:italic;
+      font-weight:800;
+      line-height:1.05;
+      text-align:center;
     }
     .footer-link{
       margin-top:10px;
@@ -237,7 +250,6 @@
     .resultLine.amber{ color:var(--warn); }
     .resultLine.red{ color:var(--bad); }
 
-    /* ---------- Global hamburger menu ---------- */
     .globalMenuBtn{
       position:fixed;
       top:10px;
@@ -272,7 +284,6 @@
       min-height:45px;
     }
 
-    /* ---------- Explainer modal ---------- */
     .modalOverlay{
       position:fixed;
       inset:0;
@@ -320,37 +331,167 @@
       padding:10px 12px;
     }
 
-    .mainActions .btn{ width:100%; }
+    .mainActions .btn{
+      width:100%;
+      min-height:138px;
+      padding:18px 14px;
+      font-size:1.25rem;
+      font-weight:800;
+      line-height:1.15;
+      white-space:normal;
+      text-wrap:balance;
+      word-break:normal;
+      overflow-wrap:anywhere;
+      box-shadow: inset 0 0 0 3px #ffffff;
+    }
+    .mainActions > div{
+      display:flex;
+    }
+
+    .printDoc{
+      color:var(--ink);
+      padding:10px 0 0;
+    }
+    .printDoc h1{ font-size:1.25rem; margin:.2rem 0 .4rem; }
+    .printDoc h2{ font-size:1.05rem; margin:1rem 0 .35rem; }
+    .printDoc .pmuted{ color:var(--muted); font-size:.9rem; }
+    .printDoc .pbox{
+      background:#0f1622;
+      border:1px solid #223042;
+      border-radius:12px;
+      padding:12px;
+      margin-top:10px;
+    }
+    .printDoc .pgrid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    @media (max-width:520px){
+      .printDoc .pgrid{ grid-template-columns:1fr; }
+    }
+
+    @media print{
+      body * { visibility:hidden !important; }
+      #printOverlay, #printOverlay * { visibility:visible !important; }
+      #printOverlay { position:static !important; inset:auto !important; background:transparent !important; padding:0 !important; }
+      .modalSheet { box-shadow:none !important; border:none !important; }
+      .modalHeader { display:none !important; }
+      .printDoc{ color:#000 !important; }
+      .printDoc .pmuted{ color:#333 !important; }
+      .printDoc .pbox{ border:1px solid #bbb !important; background:#fff !important; }
+      .printDoc a{ color:#000 !important; text-decoration:none !important; }
+    }
+
+    .globalMenuSheet .btn{
+      font-size:1.3rem;
+      font-weight:800;
+      line-height:1.15;
+      padding:16px 18px;
+      letter-spacing:0.03em;
+    }
+
+    /* FRAT wizard */
+    .fratWizardQ{
+      background:#0f1622;
+      border:1px solid #223042;
+    }
+    .fratChoiceRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+      justify-content:center;
+    }
+    .fratChoiceRow label{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border:1px solid #223042;
+      border-radius:12px;
+      background:#0e141c;
+      cursor:pointer;
+      user-select:none;
+      min-width:140px;
+      justify-content:center;
+      font-weight:800;
+    }
+    .fratChoiceRow input{ transform:scale(1.2); }
+    .smallCaps{ letter-spacing:.08em; font-size:.82rem; font-weight:900; }
+
+    /* ==========================================================
+       MOBILE WIDTH / OVERFLOW FIXES (prevents "cut off" content)
+       ========================================================== */
+    html, body{
+      max-width:100%;
+      overflow-x:hidden; /* hard stop: no accidental horizontal overflow */
+    }
+    img, svg, canvas{
+      max-width:100%;
+      height:auto;
+    }
+
+    /* Make flex/grid children shrinkable (classic iOS WebView overflow culprit) */
+    .row > *,
+    .grid > *{
+      min-width:0;
+    }
+
+    /* Cards should never exceed viewport */
+    .card{
+      max-width:100%;
+    }
+
+    /* If any long strings appear (headers/labels), wrap safely */
+    h1, h2, h3, p, div, span{
+      overflow-wrap:anywhere;
+      word-break:normal;
+    }
+
+    /* ==========================================================
+       GAUGE HOOKS (safe even if unused in this file)
+       When your gauge markup exists, apply these classes:
+       <div class="fratGaugeWrap"><svg class="fratGauge">...</svg></div>
+       ========================================================== */
+    .fratGaugeWrap{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      width:100%;
+      min-width:0;
+    }
+    .fratGauge{
+      display:block;
+      width:min(360px, 100%);
+      height:auto;
+      transform-origin:50% 50%;
+      transform:rotate(-90deg); /* classic analog "rainbow" orientation */
+    }
+
   </style>
 </head>
 
 <body>
 <div class="wrap">
 
-  <!-- GLOBAL MENU OVERLAY -->
+  <!-- GLOBAL MENU -->
   <button id="globalMenuBtn" type="button" class="globalMenuBtn" aria-label="Open menu">☰</button>
   <section id="globalMenuSheet" class="card globalMenuSheet hide" aria-label="Second Opinion menu">
     <h3 style="margin-top:0;">Menu</h3>
-    <button id="menuMainGlobal" type="button" class="btn btn-sm btn-ghost">Main menu</button>
-    <button id="menuCogGlobal" type="button" class="btn btn-sm">Cognition &amp; Acuity Assessment</button>
-    <button id="menuFratGlobal" type="button" class="btn btn-sm btn-ghost">FRAT Assessment</button>
+    <button id="menuMainGlobal" type="button" class="btn btn-sm btn-ghost">MAIN MENU</button>
+    <button id="menuCogGlobal" type="button" class="btn btn-sm">Cog. &amp; Acuity</button>
+    <button id="menuFratGlobal" type="button" class="btn btn-sm btn-ghost">FRAT Survey</button>
     <div class="hr"></div>
-    <button id="menuAppInfoGlobal" type="button" class="btn btn-sm btn-ghost">About this app</button>
-    <button id="menuOstGlobal" type="button" class="btn btn-sm btn-ghost">About On Second Thought</button>
+    <button id="menuBaselineGlobal" type="button" class="btn btn-sm btn-ghost">Baselines</button>
+    <button id="menuExportGlobal" type="button" class="btn btn-sm btn-ghost">Export Data</button>
     <div class="hr"></div>
-    <button id="menuBaselineGlobal" type="button" class="btn btn-sm btn-ghost">Baseline sessions</button>
-    <button id="menuExportGlobal" type="button" class="btn btn-sm btn-ghost">Export Cognition summary</button>
+    <button id="menuAboutGlobal" type="button" class="btn btn-sm btn-ghost">About</button>
   </section>
 
   <!-- MAIN MODE CARD -->
   <section id="modeCard" class="card">
     <header class="center" style="flex-direction:column;gap:8px;">
-      <div style="background:#ffffff;border-radius:24px;padding:10px 14px;box-shadow:0 6px 18px rgba(0,0,0,0.35);">
-        <img src="2ndOpinionIcon.svg"
-             alt="Second Opinion app icon"
-             style="height:100px;display:block;">
-      </div>
-      <div class="tagline"><i>Real Flights – Human Factors – Safer Skies</i></div>
+      <img src="SecOpIconFinal.png"
+           alt="Second Opinion app icon"
+           style="width:300px;height:300px;display:block;">
+      <div class="tagline"><i>Real Flights<br>Human Factors<br>Safer Skies</i></div>
       <div style="margin-top:6px;">
         <a href="javascript:void(0)" id="appInfoLink" class="infoLink">What’s this?</a>
       </div>
@@ -369,15 +510,14 @@
 
     <div class="hr"></div>
 
-    <div class="footer-link muted">
-      Learn more about the show at
-      <a href="https://OnSecondThought.me" target="_blank" rel="noopener noreferrer">OnSecondThought.me</a>.
+    <div class="footer-link muted" style="font-style:italic;">
+      © Flying M 2025
     </div>
   </section>
 
-  <!-- APP INFO / HOW-TO CARD -->
+  <!-- ABOUT -->
   <section id="appInfoCard" class="card hide">
-    <h2>How to use <i>Second Opinion</i></h2>
+    <h2>About <i>Second Opinion</i></h2>
     <div class="muted">
       <p><b>What this app is.</b> <i>Second Opinion</i> was developed by instructional designer and pilot Harvey
       Madison, co-host of <i>On Second Thought</i>, to assist pilots in making more objective, data-informed
@@ -391,6 +531,8 @@
       your decision-making; they do not replace your CFI, the regulations, or your own judgment. All go/no-go
       decisions remain entirely the responsibility of each pilot—just as they always have.</p>
 
+      <div class="hr"></div>
+      <h2>How to use it</h2>
       <p><b>When to use it.</b> Use <i>Second Opinion</i> before a flight when you want a quick, private check of your
       cognitive sharpness, alongside IM SAFE, weather, and the rest of your preflight workflow.</p>
 
@@ -399,29 +541,19 @@
       Add only those “good-day” runs to your baseline. Future runs are compared to that personal baseline instead
       of an abstract population norm.</p>
 
-      <p><b>The three pieces.</b></p>
-      <ul>
-        <li><b>Reaction:</b> tap as quickly as you can when the circle turns green. Slower median reaction times and
-        more lapses suggest reduced alertness.</li>
-        <li><b>Color–word (Stroop):</b> decide whether the ink color matches the word. Conflicting items require you
-        to suppress the automatic reading response—this taps executive control.</li>
-        <li><b>2-back:</b> watch short groups of digits and decide if the third matches the digit two positions back.
-        This stresses online updating and working memory. The summary statistic (<i>d′</i>) is essentially a
-        signal-to-noise measure; higher is better separation between “same” and “not same”.</li>
-      </ul>
-
-      <p><b>Interpreting results.</b> The app focuses on how far you are from your own baseline, not anyone else’s.</p>
-      <ul>
-        <li>“Near baseline” looks like a typical good day—assuming your device is behaving.</li>
-        <li>“Mildly” or “moderately” below baseline suggests you’re softer than usual; consider adding margin or
-        delaying until after rest, food, or reduced stress.</li>
-        <li>“Well below baseline” is an “On Second Thought…” moment: either something is wrong with the device,
-        or you are not bringing your usual cognitive resources to the flight.</li>
-      </ul>
-
       <p><b>Limitations.</b> A good score does not guarantee fitness to fly; a soft score does not prove unfitness.
       Treat this as a conservative nudge, not a verdict.</p>
+
+      <div class="hr"></div>
+      <h2>About <i>On Second Thought</i></h2>
+      <p><i>On Second Thought</i> is a safety-focused series for general aviation pilots who want more than
+      airplane porn and hangar talk. Each episode takes a single real-world accident and unpacks the human factors
+      behind it—attention, bias, pressure, habit patterns, and all the tiny choices that add up to a big outcome.</p>
+
+      <p><i>Second Opinion</i> is part of that ecosystem: a quick, private way to pause, think twice, and give yourself
+      a reality check before you go fly on purpose.</p>
     </div>
+
     <div class="hr"></div>
     <button id="appInfoBackBtn" type="button" class="btn btn-ghost">Back to main menu</button>
     <div class="footer-link muted">
@@ -429,30 +561,7 @@
     </div>
   </section>
 
-  <!-- ABOUT OST CARD (marketing copy) -->
-  <section id="aboutOstCard" class="card hide">
-    <h2>About <i>On Second Thought</i></h2>
-    <div class="muted">
-      <p><i>On Second Thought</i> is a safety-focused series for general aviation pilots who want more than
-      airplane porn and hangar talk. Each episode takes a single real-world accident and unpacks the human factors
-      behind it—attention, bias, pressure, habit patterns, and all the tiny choices that add up to a big outcome.</p>
-
-      <p>The show is co-hosted by instructional designer and GA pilot Harvey Madison and psychotherapist /
-      long-time aviation safety advocate Jolie Lucas. Together they blend solid research, story-driven case studies,
-      and practical “what would you actually do in this cockpit?” discussions aimed squarely at line pilots—
-      not just test pilots or airline crews.</p>
-
-      <p><i>Second Opinion</i> is part of that ecosystem: a quick, private way to pause, think twice, and give yourself
-      a reality check before you go fly on purpose.</p>
-    </div>
-    <div class="hr"></div>
-    <button id="aboutOstBackBtn" type="button" class="btn btn-ghost">Back</button>
-    <div class="footer-link muted">
-      Visit <a href="https://OnSecondThought.me" target="_blank" rel="noopener noreferrer">OnSecondThought.me</a> for episodes, articles, and upcoming events.
-    </div>
-  </section>
-
-  <!-- DISCLAIMER CARD (opened by “Disclaimer” link) -->
+  <!-- DISCLAIMER CARD -->
   <section id="disclaimerCard" class="card hide">
     <h2>Disclaimer</h2>
     <div class="muted">
@@ -502,7 +611,7 @@
         </div>
         <div class="row" style="margin-top:8px;">
           <button id="menuExport" type="button" class="btn btn-sm btn-ghost">Export Assessment PDF</button>
-          <button id="menuAboutOst" type="button" class="btn btn-sm btn-ghost">About OST</button>
+          <button id="menuAbout" type="button" class="btn btn-sm btn-ghost">About</button>
           <button id="menuMain" type="button" class="btn btn-sm btn-ghost">Main Menu</button>
         </div>
       </div>
@@ -538,7 +647,7 @@
 
     <section id="testCard" class="card hide">
       <div class="row" style="justify-content:space-between;align-items:center">
-        <div class="pill"><span>Step:</span> <b id="stepName">Warm-up</b></div>
+        <div class="pill"><span>Step:</span> <b id="stepName">Get Ready!</b></div>
         <div class="pill"><span>Time:</span> <b id="countdown">0s</b></div>
       </div>
       <div class="bar" style="margin:12px 0 10px"><i id="progressBar"></i></div>
@@ -561,7 +670,11 @@
       </div>
 
       <div id="betweenPane" class="center hide" style="min-height:200px;flex-direction:column;gap:14px;">
-        <div class="muted">The next evaluation begins in</div>
+        <div id="betweenLabel" class="muted">The next evaluation begins in</div>
+        <div id="betweenMessage"
+             class="big"
+             style="display:none;font-size:1.8rem;line-height:1.2;white-space:pre-line;">
+        </div>
         <div id="betweenCountdown" class="big" style="font-size:3rem;">5</div>
       </div>
 
@@ -633,10 +746,10 @@
   </div>
 
   <!-- ========================= -->
-  <!-- FRAT ROOT                 -->
+  <!-- FRAT ROOT (WIZARD)        -->
   <!-- ========================= -->
   <div id="fratRoot" class="hide">
-    <section class="card">
+    <section class="card" id="fratIntroCard">
       <div class="row" style="justify-content:space-between;align-items:flex-start">
         <div class="row" style="align-items:center;gap:10px">
           <img src="SVG_VERSION_OST_Main_Logo.svg" alt="OST" style="height:28px;opacity:.7;">
@@ -649,6 +762,7 @@
         </div>
         <button id="backFromFrat" type="button" class="btn btn-sm btn-ghost">Back to main menu</button>
       </div>
+
       <div class="hr"></div>
 
       <div class="grid grid-2">
@@ -670,7 +784,14 @@
           <div class="muted" style="margin-top:6px;font-size:.85rem;">
             These bands mirror one published FAA FRAT example. Your SOP or CFI may use different thresholds.
           </div>
+
+          <div class="hr"></div>
+          <button id="fratBeginBtn" type="button" class="btn" disabled>Begin FRAT Questions</button>
+          <div class="muted" style="margin-top:6px;font-size:.85rem;">
+            You’ll see one question at a time. Answer, then tap Next.
+          </div>
         </div>
+
         <div>
           <h2>Risk bands (reference)</h2>
           <div class="muted" style="font-size:.9rem;">
@@ -690,24 +811,51 @@
           </div>
         </div>
       </div>
-      <div class="hr"></div>
 
-      <div class="muted" style="margin-bottom:6px;font-size:.9rem;">
-        All questions are True/False. “True” applies the score shown; “False” contributes zero. Questions shown update based on VFR vs IFR.
-      </div>
-
-      <div id="fratQuestions"></div>
-
-      <div class="hr"></div>
-      <div class="row" style="gap:10px;">
-        <button id="fratCalcBtn" type="button" class="btn">Calculate FRAT Score</button>
-        <button id="fratResetBtn" type="button" class="btn btn-ghost">Clear Answers</button>
-      </div>
       <div class="footer-link muted">
         Learn more at <a href="https://OnSecondThought.me" target="_blank" rel="noopener noreferrer">OnSecondThought.me</a>.
       </div>
     </section>
 
+    <!-- Wizard question card (ONE AT A TIME) -->
+    <section id="fratWizardCard" class="card fratWizardQ hide">
+      <div class="row" style="justify-content:space-between;align-items:center">
+        <div class="pill">
+          <span class="smallCaps">QUESTION</span>
+          <b id="fratQCounter" style="margin-left:6px;">1 / 1</b>
+        </div>
+        <div class="pill">
+          <span class="smallCaps">RUNNING TOTAL</span>
+          <b id="fratRunningTotal" style="margin-left:6px;">0</b>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="muted" id="fratQCategory" style="font-size:.9rem;margin-bottom:6px;">—</div>
+      <h2 id="fratQText" style="margin-top:0;">—</h2>
+      <div class="muted" id="fratQScoreHint" style="margin-top:6px;">—</div>
+
+      <div class="fratChoiceRow" role="group" aria-label="Answer true or false">
+        <label><input type="radio" name="fratWizardAns" value="true"> TRUE</label>
+        <label><input type="radio" name="fratWizardAns" value="false"> FALSE</label>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="row" style="justify-content:space-between;align-items:center;">
+        <button id="fratQuitBtn" type="button" class="btn btn-ghost">Quit</button>
+        <div class="row" style="justify-content:flex-end;">
+          <button id="fratNextBtn" type="button" class="btn" disabled>Next</button>
+        </div>
+      </div>
+
+      <div class="muted" style="margin-top:10px;font-size:.85rem;">
+        Tip: “True” adds points; “False” adds zero.
+      </div>
+    </section>
+
+    <!-- Result card + scrollable review below -->
     <section id="fratResultCard" class="card hide">
       <h2>FRAT Result</h2>
       <div class="row" style="align-items:center;gap:14px;margin-top:4px;">
@@ -718,6 +866,7 @@
       <div class="card" style="margin:10px 0;background:#0f1622;border:1px solid #223042">
         <b>On Second Thought…</b> <span id="fratGuidance">—</span>
       </div>
+
       <div class="grid grid-2" style="margin-top:6px;">
         <div>
           <h3>Score breakdown</h3>
@@ -728,14 +877,26 @@
           <div class="muted" id="fratBandRef"></div>
         </div>
       </div>
+
       <div class="hr"></div>
-      <button id="fratExportBtn" type="button" class="btn btn-ghost">Open printable summary</button>
+      <div class="row" style="gap:10px;">
+        <button id="fratRestartBtn" type="button" class="btn">Run FRAT Again</button>
+        <button id="fratResetBtn" type="button" class="btn btn-ghost">Clear Answers</button>
+        <button id="fratExportBtn" type="button" class="btn btn-ghost">Open printable summary</button>
+      </div>
+
+      <div class="hr"></div>
+      <h3>Questions &amp; your answers</h3>
+      <div class="muted" style="font-size:.9rem;margin-top:2px;">
+        Scroll to review. “True” items are the ones adding risk points today.
+      </div>
+      <div id="fratReviewList"></div>
     </section>
   </div>
 
 </div>
 
-<!-- Explainer modal (UNIQUE IDS) -->
+<!-- Explainer modal -->
 <div id="explainerModal" class="modalOverlay hide" aria-hidden="true">
   <div class="modalSheet" role="dialog" aria-modal="true" aria-labelledby="modalExplainerTitle">
     <div class="modalHeader">
@@ -743,6 +904,20 @@
       <button id="explainerClose" type="button" class="btn btn-ghost btn-sm modalCloseBtn">Close</button>
     </div>
     <div id="modalExplainerBody" class="modalBody muted"></div>
+  </div>
+</div>
+
+<!-- Print overlay -->
+<div id="printOverlay" class="modalOverlay hide" aria-hidden="true">
+  <div class="modalSheet" role="dialog" aria-modal="true" aria-labelledby="printTitle">
+    <div class="modalHeader">
+      <h3 id="printTitle" class="modalTitle">Printable Summary</h3>
+      <div class="row" style="gap:8px;">
+        <button id="printNowBtn" type="button" class="btn btn-sm">Print</button>
+        <button id="printCloseBtn" type="button" class="btn btn-ghost btn-sm modalCloseBtn">Close</button>
+      </div>
+    </div>
+    <div id="printBody" class="modalBody"></div>
   </div>
 </div>
 
@@ -755,52 +930,49 @@
   const sd=a=>{if(a.length<2)return 0;const m=mean(a);return Math.sqrt(mean(a.map(x=>(x-m)*(x-m))));};
   const now=()=>performance.now();
   const sleep = ms => new Promise(r=>setTimeout(r,ms));
+  const scrollTopNow = ()=>{ try{ window.scrollTo(0,0); }catch(_e){} };
 
   function show(el){el.classList.remove("hide");}
   function hide(el){el.classList.add("hide");}
 
-  // ---------- Explainer modal (single source of truth) ----------
+  function openExternalUrl(url){
+    try{
+      if(window.Capacitor &&
+         window.Capacitor.Plugins &&
+         window.Capacitor.Plugins.Browser &&
+         typeof window.Capacitor.Plugins.Browser.open === "function"){
+        window.Capacitor.Plugins.Browser.open({ url: url });
+        return;
+      }
+    }catch(_e){}
+    try{
+      const w = window.open(url, "_blank");
+      if(w && w.focus){ w.focus(); return; }
+    }catch(_e2){}
+    window.location.href = url;
+  }
+
+  document.addEventListener("click", function(e){
+    const a = e.target && e.target.closest ? e.target.closest("a") : null;
+    if(!a) return;
+    const href = a.getAttribute("href") || "";
+    if(href.indexOf("http://") === 0 || href.indexOf("https://") === 0){
+      e.preventDefault();
+      openExternalUrl(href);
+    }
+  }, false);
+
+  // ---------- Explainer modal ----------
   const explainerModal = $("#explainerModal");
   const modalTitle = $("#modalExplainerTitle");
   const modalBody  = $("#modalExplainerBody");
   const explainerClose = $("#explainerClose");
 
   const EXPLAIN = {
-    wordColorMeanRT: {
-      title: "Word Color mean RT",
-      html: `
-        <p><b>Mean RT</b> here is the average response time on <b>correct</b> Word Color trials.</p>
-        <p>Slower mean RT can indicate reduced processing speed or more time spent resolving interference.</p>
-      `
-    },
-    wordColorCost: {
-      title: "Word Color cost",
-      html: `
-        <p><b>Cost</b> is the extra time needed on “conflict” items (word vs ink don’t match) compared to easier items.</p>
-        <p>Higher cost usually means more struggle suppressing the automatic “read the word” response.</p>
-      `
-    },
-    dPrime: {
-      title: "2-back d′ (d-prime)",
-      html: `
-        <p><b>d′</b> is a signal-detection metric: how well you separate <b>targets</b> from <b>non-targets</b>.</p>
-        <ul>
-          <li>More hits with few false alarms → higher d′</li>
-          <li>Lots of false alarms or misses → lower d′</li>
-        </ul>
-        <p>Plain English: it summarizes both accuracy and “trigger discipline.”</p>
-      `
-    },
-    hitsFaMiss: {
-      title: "2-back hits / FA / miss",
-      html: `
-        <ul>
-          <li><b>Hit:</b> you said “TARGET” when it truly was a target.</li>
-          <li><b>False Alarm (FA):</b> you said “TARGET” when it was not.</li>
-          <li><b>Miss:</b> you said “NOT TARGET” when it truly was a target.</li>
-        </ul>
-      `
-    }
+    wordColorMeanRT: { title: "Word Color mean RT", html: `<p><b>Mean RT</b> here is the average response time on <b>correct</b> Word Color trials.</p><p>Slower mean RT can indicate reduced processing speed or more time spent resolving interference.</p>` },
+    wordColorCost: { title: "Word Color cost", html: `<p><b>Cost</b> is the extra time needed on “conflict” items (word vs ink don’t match) compared to easier items.</p><p>Higher cost usually means more struggle suppressing the automatic “read the word” response.</p>` },
+    dPrime: { title: "2-back d′ (d-prime)", html: `<p><b>d′</b> is a signal-detection metric: how well you separate <b>targets</b> from <b>non-targets</b>.</p><ul><li>More hits with few false alarms → higher d′</li><li>Lots of false alarms or misses → lower d′</li></ul><p>Plain English: it summarizes both accuracy and “trigger discipline.”</p>` },
+    hitsFaMiss: { title: "2-back hits / FA / miss", html: `<ul><li><b>Hit:</b> you said “TARGET” when it truly was a target.</li><li><b>False Alarm (FA):</b> you said “TARGET” when it was not.</li><li><b>Miss:</b> you said “NOT TARGET” when it truly was a target.</li></ul>` }
   };
 
   function openExplainer(key){
@@ -810,18 +982,12 @@
     explainerModal.setAttribute("aria-hidden","false");
     show(explainerModal);
   }
-
   function closeExplainer(){
     hide(explainerModal);
     explainerModal.setAttribute("aria-hidden","true");
   }
-
   explainerClose.addEventListener("click", closeExplainer);
-  explainerModal.addEventListener("click", (e)=>{
-    if(e.target === explainerModal) closeExplainer();
-  });
-
-  // Any <a data-explain="..."> opens the modal
+  explainerModal.addEventListener("click", (e)=>{ if(e.target === explainerModal) closeExplainer(); });
   document.addEventListener("click", (e)=>{
     const link = e.target.closest('a[data-explain]');
     if(!link) return;
@@ -829,16 +995,36 @@
     openExplainer(link.getAttribute("data-explain"));
   });
 
-  // MODE TOGGLE & APP / ABOUT CARDS
+  // ---------- Print overlay ----------
+  const printOverlay = $("#printOverlay");
+  const printTitle = $("#printTitle");
+  const printBody = $("#printBody");
+  const printNowBtn = $("#printNowBtn");
+  const printCloseBtn = $("#printCloseBtn");
+  function openPrintOverlay(title, html){
+    if(printTitle) printTitle.textContent = title || "Printable Summary";
+    if(printBody) printBody.innerHTML = html || "<div class='printDoc'><p>No content.</p></div>";
+    if(printOverlay){
+      printOverlay.setAttribute("aria-hidden","false");
+      show(printOverlay);
+    }
+  }
+  function closePrintOverlay(){
+    if(printOverlay){
+      hide(printOverlay);
+      printOverlay.setAttribute("aria-hidden","true");
+    }
+  }
+  printCloseBtn.addEventListener("click", closePrintOverlay);
+  printNowBtn.addEventListener("click", ()=>window.print());
+  printOverlay.addEventListener("click", (e)=>{ if(e.target===printOverlay) closePrintOverlay(); });
+
+  // ---------- Global menu ----------
   const modeCard=$("#modeCard"), tmdRoot=$("#tmdRoot"), fratRoot=$("#fratRoot");
   const goTmdBtn=$("#goTmdBtn"), goFratBtn=$("#goFratBtn");
   const tmdHome=$("#tmdHome"), tmdInfoCard=$("#tmdInfoCard");
   const tmdInfoBtn=$("#tmdInfoBtn"), tmdInfoBackBtn=$("#tmdInfoBackBtn");
-
   const appInfoLink=$("#appInfoLink"), appInfoCard=$("#appInfoCard"), appInfoBackBtn=$("#appInfoBackBtn");
-  const aboutOstCard=$("#aboutOstCard");
-  const aboutOstBackBtn=$("#aboutOstBackBtn");
-
   const disclaimerCard = $("#disclaimerCard");
   const disclaimerLink = $("#disclaimerLink");
   const disclaimerBackBtn = $("#disclaimerBackBtn");
@@ -847,12 +1033,7 @@
 
   function closeGlobalMenu(){ globalMenuSheet.classList.add("hide"); }
   function toggleGlobalMenu(){ globalMenuSheet.classList.toggle("hide"); }
-
-  globalMenuBtn.addEventListener("click",(e)=>{
-    e.stopPropagation();
-    toggleGlobalMenu();
-  });
-
+  globalMenuBtn.addEventListener("click",(e)=>{ e.stopPropagation(); toggleGlobalMenu(); });
   document.addEventListener("click",(e)=>{
     if(globalMenuSheet.classList.contains("hide")) return;
     if(!globalMenuSheet.contains(e.target) && e.target!==globalMenuBtn){
@@ -860,65 +1041,58 @@
     }
   });
 
-  function goMain(){
-    hide(tmdRoot);
-    hide(fratRoot);
-    hide(appInfoCard);
-    hide(aboutOstCard);
-    hide(disclaimerCard);
-    show(modeCard);
+  const testCard=$("#testCard");
+  const resultCard=$("#resultCard");
+  const baselineCard=$("#baselineCard");
+  const tmdMenu=$("#tmdMenu");
+  const fratResultCard=$("#fratResultCard");
+  const fratIntroCard=$("#fratIntroCard");
+  const fratWizardCard=$("#fratWizardCard");
+
+  function hideAllAppScreens(){
+    hide(modeCard); hide(appInfoCard); hide(disclaimerCard);
+    hide(tmdRoot); hide(fratRoot);
+    hide(tmdHome); hide(tmdInfoCard); hide(testCard); hide(resultCard); hide(baselineCard); hide(tmdMenu);
+    hide(fratIntroCard); hide(fratWizardCard); hide(fratResultCard);
+    closeExplainer();
+    closePrintOverlay();
   }
 
-  function openCognitionHome(){
-    hide(modeCard);
-    hide(appInfoCard);
-    hide(aboutOstCard);
-    hide(disclaimerCard);
-    fratRoot.classList.add("hide");
-    tmdRoot.classList.remove("hide");
-    show(tmdHome);
-    hide(tmdInfoCard);
-    hide($("#testCard"));
-    hide($("#resultCard"));
-    hide($("#baselineCard"));
-    hide($("#tmdMenu"));
-  }
-
-  function openFrat(){
-    hide(modeCard);
-    hide(appInfoCard);
-    hide(aboutOstCard);
-    hide(disclaimerCard);
-    tmdRoot.classList.add("hide");
-    fratRoot.classList.remove("hide");
+  function goMain(){ hideAllAppScreens(); show(modeCard); scrollTopNow(); }
+  function openCognitionHome(){ hideAllAppScreens(); show(tmdRoot); show(tmdHome); scrollTopNow(); }
+  function openFrat(){ hideAllAppScreens(); show(fratRoot); show(fratIntroCard); scrollTopNow(); }
+  function openAbout(){ hideAllAppScreens(); show(appInfoCard); scrollTopNow(); appInfoCard.scrollIntoView({behavior:"auto"}); }
+  function openBaselineOnly(){
+    hideAllAppScreens();
+    show(tmdRoot);
+    show(baselineCard);
+    scrollTopNow();
+    baselineCard.scrollIntoView({behavior:"auto"});
   }
 
   goTmdBtn.addEventListener("click",openCognitionHome);
   goFratBtn.addEventListener("click",openFrat);
   $("#backFromFrat").addEventListener("click",goMain);
 
-  appInfoLink.addEventListener("click",()=>{
-    hide(modeCard);
-    hide(aboutOstCard);
-    hide(disclaimerCard);
-    show(appInfoCard);
-  });
+  appInfoLink.addEventListener("click", openAbout);
   appInfoBackBtn.addEventListener("click",goMain);
-
-  aboutOstBackBtn.addEventListener("click",()=>{
-    hide(aboutOstCard);
-    goMain();
-  });
 
   tmdInfoBtn.addEventListener("click",()=>{
     hide(tmdHome);
-    hide($("#tmdMenu"));
+    hide(tmdMenu);
     show(tmdInfoCard);
+    scrollTopNow();
   });
   tmdInfoBackBtn.addEventListener("click",()=>{
     hide(tmdInfoCard);
     show(tmdHome);
+    scrollTopNow();
   });
+
+  $("#menuMainGlobal").addEventListener("click",()=>{ closeGlobalMenu(); goMain(); });
+  $("#menuCogGlobal").addEventListener("click",()=>{ closeGlobalMenu(); openCognitionHome(); });
+  $("#menuFratGlobal").addEventListener("click",()=>{ closeGlobalMenu(); openFrat(); });
+  $("#menuAboutGlobal").addEventListener("click",()=>{ closeGlobalMenu(); openAbout(); });
 
   // ---------- Shared helpers ----------
   const lastPress=new WeakMap();
@@ -947,22 +1121,22 @@
   const saveBaseline=s=>localStorage.setItem(storeKey,JSON.stringify(s||[]));
 
   const startBtn=$("#startBtn"), addBaselineBtn2=$("#addBaselineBtn2");
-  const tmdMenuBtn=$("#tmdMenuBtn"), tmdMenu=$("#tmdMenu");
+  const tmdMenuBtn=$("#tmdMenuBtn");
   const menuAddBaseline=$("#menuAddBaseline"), menuManageBaseline=$("#menuManageBaseline");
-  const menuExport=$("#menuExport"), menuMain=$("#menuMain"), menuAboutOst=$("#menuAboutOst");
-
-  const testCard=$("#testCard"), stepName=$("#stepName"), countdown=$("#countdown"), progressBar=$("#progressBar");
+  const menuExport=$("#menuExport"), menuMain=$("#menuMain"), menuAbout=$("#menuAbout");
+  const stepName=$("#stepName"), countdown=$("#countdown"), progressBar=$("#progressBar");
   const srtPane=$("#srtPane"), srtTarget=$("#srtTarget");
   const stroopPane=$("#stroopPane"), stroopWord=$("#stroopWord"), btnMatch=$("#btnMatch"), btnMismatch=$("#btnMismatch");
   const betweenPane=$("#betweenPane"), betweenCountdown=$("#betweenCountdown");
+  const betweenLabel=$("#betweenLabel"), betweenMessage=$("#betweenMessage");
   const preNbackPane=$("#preNbackPane"), startNbackBtn=$("#startNbackBtn"), preNbackHint=$("#preNbackHint");
   const nbackPane=$("#nbackPane"), nbackDigit=$("#nbackDigit"), btnTarget=$("#btnTarget"), btnNotTarget=$("#btnNotTarget"), twoBackButtons=$("#twoBackButtons"), groupLabel=$("#groupLabel");
-  const resultCard=$("#resultCard"), resultLine=$("#resultLine"),
+  const resultLine=$("#resultLine"),
         guidanceText=$("#guidanceText"),
         metricToday=$("#metricToday"), metricBase=$("#metricBase"),
         againBtn=$("#againBtn");
   const backToMainBtn=$("#backToMainBtn");
-  const baselineCard=$("#baselineCard"), baselineList=$("#baselineList"), deleteBaselineBtn=$("#deleteBaselineBtn"), closeBaselineBtn=$("#closeBaselineBtn");
+  const baselineList=$("#baselineList"), deleteBaselineBtn=$("#deleteBaselineBtn"), closeBaselineBtn=$("#closeBaselineBtn");
 
   let baselineSessions=loadBaseline();
   let sessionResult=null;
@@ -973,52 +1147,27 @@
     if(tmdMenu.classList.contains("hide")) show(tmdMenu); else hide(tmdMenu);
   });
 
-  menuAddBaseline.addEventListener("click",()=>{
-    hide(tmdMenu);
-    addCurrentToBaseline();
-  });
+  menuAddBaseline.addEventListener("click",()=>{ hide(tmdMenu); addCurrentToBaseline(); });
 
   menuManageBaseline.addEventListener("click",()=>{
     hide(tmdMenu);
     updateBaselineList();
-    hide(resultCard);
-    hide(testCard);
-    hide(tmdInfoCard);
-    show(baselineCard);
+    hide(resultCard); hide(testCard); hide(tmdInfoCard);
+    show(baselineCard); scrollTopNow();
   });
 
-  menuExport.addEventListener("click",()=>{
-    hide(tmdMenu);
-    exportPDF();
-  });
+  menuExport.addEventListener("click",()=>{ hide(tmdMenu); exportPDF(); });
 
   menuMain.addEventListener("click",()=>{
-    hide(tmdMenu);
-    hide(baselineCard);
-    hide(testCard);
-    hide(resultCard);
-    hide(tmdInfoCard);
-    tmdRoot.classList.add("hide");
-    show(modeCard);
+    hide(tmdMenu); hide(baselineCard); hide(testCard); hide(resultCard); hide(tmdInfoCard);
+    goMain();
   });
 
-  menuAboutOst.addEventListener("click",()=>{
-    hide(tmdMenu);
-    hide(tmdHome);
-    hide(testCard);
-    hide(resultCard);
-    hide(baselineCard);
-    hide(tmdInfoCard);
-    show(aboutOstCard);
-  });
+  menuAbout.addEventListener("click",()=>{ hide(tmdMenu); openAbout(); });
 
   backToMainBtn.addEventListener("click", () => {
-    hide(resultCard);
-    hide(testCard);
-    hide(baselineCard);
-    hide(tmdInfoCard);
-    tmdRoot.classList.add("hide");
-    show(modeCard);
+    hide(resultCard); hide(testCard); hide(baselineCard); hide(tmdInfoCard);
+    goMain();
   });
 
   startBtn.addEventListener('click', runTest);
@@ -1031,8 +1180,23 @@
   });
   closeBaselineBtn.addEventListener('click', ()=>hide(baselineCard));
 
+  $("#menuBaselineGlobal").addEventListener("click",()=>{
+    closeGlobalMenu();
+    if(!baselineSessions.length){
+      alert("No baseline sessions stored on this device yet. Run the assessment on a good day and add results to baseline first.");
+      return;
+    }
+    updateBaselineList();
+    openBaselineOnly();
+  });
+
+  $("#menuExportGlobal").addEventListener("click",()=>{
+    closeGlobalMenu();
+    exportPDF();
+  });
+
   const DUR={warmup:5,srt:30,stroop:45,nbackGroups:12};
-  const TOTAL_TIME=DUR.warmup + DUR.srt + DUR.stroop + 15;
+  const TOTAL_TIME = DUR.warmup + DUR.srt + 5 + DUR.stroop + 6 + 15;
   const BASELINE_MIN=3;
 
   function sectionTimer(name,sec,tick){
@@ -1049,15 +1213,42 @@
     });
   }
 
-  async function betweenSegments(label, seconds, elapsedBefore){
+  async function endMessageThenMaybeCountdown({
+    messageText = "TEST OVER\nGET READY FOR THE NEXT ONE",
+    messageMs = 3000,
+    countdownSeconds = 5,
+    elapsedBefore = 0
+  } = {}){
     show(betweenPane);
     hide(srtPane); hide(stroopPane); hide(nbackPane); hide(preNbackPane);
-    await sectionTimer(label, seconds,(tleft,p)=>{
-      countdown.textContent=Math.ceil(tleft)+"s";
-      betweenCountdown.textContent=Math.ceil(tleft);
-      const elapsed=elapsedBefore + (seconds - tleft);
+
+    betweenLabel.textContent = "";
+    betweenMessage.style.display = "block";
+    betweenMessage.textContent = messageText;
+    betweenCountdown.style.display = "none";
+    countdown.textContent = "—";
+    setProgress(elapsedBefore / TOTAL_TIME);
+
+    await sleep(messageMs);
+
+    if(!countdownSeconds || countdownSeconds <= 0){
+      hide(betweenPane);
+      betweenMessage.style.display = "none";
+      betweenCountdown.style.display = "";
+      return;
+    }
+
+    betweenLabel.textContent = "The next evaluation begins in";
+    betweenMessage.style.display = "none";
+    betweenCountdown.style.display = "";
+
+    await sectionTimer("Pause", countdownSeconds, (tleft,p)=>{
+      countdown.textContent = Math.ceil(tleft) + "s";
+      betweenCountdown.textContent = Math.ceil(tleft);
+      const elapsed = elapsedBefore + (countdownSeconds - tleft);
       setProgress(elapsed / TOTAL_TIME);
     });
+
     hide(betweenPane);
   }
 
@@ -1069,9 +1260,10 @@
     hide(tmdHome);
     hide(tmdInfoCard);
     show(testCard);
+    scrollTopNow();
     testCard.scrollIntoView({behavior:"auto"});
 
-    await sectionTimer("Warm-up",DUR.warmup,(t,p)=>{
+    await sectionTimer("Get Ready!",DUR.warmup,(t,p)=>{
       countdown.textContent=Math.ceil(t)+"s";
       setProgress((DUR.warmup - t)/TOTAL_TIME);
       srtTarget.textContent="WAIT"; srtTarget.className="tapTarget ready";
@@ -1079,9 +1271,22 @@
     });
 
     const srt=await runSRT(DUR.srt);
-    await betweenSegments("Pause",5, DUR.warmup + DUR.srt);
+
+    await endMessageThenMaybeCountdown({
+      messageText: "TEST OVER\nGET READY FOR THE NEXT ONE",
+      messageMs: 3000,
+      countdownSeconds: 5,
+      elapsedBefore: DUR.warmup + DUR.srt
+    });
+
     const stro=await runStroop(DUR.stroop);
-    await betweenSegments("Pause",5, DUR.warmup + DUR.srt + DUR.stroop);
+
+    await endMessageThenMaybeCountdown({
+      messageText: "TEST OVER\nGET READY FOR THE NEXT ONE",
+      messageMs: 3000,
+      countdownSeconds: 0,
+      elapsedBefore: DUR.warmup + DUR.srt + 5 + DUR.stroop
+    });
 
     const started=await waitForNbackStart(10000);
     hide(preNbackPane);
@@ -1089,12 +1294,14 @@
       hide(testCard);
       alert("2-back segment was not started within 10 seconds. The assessment has been cancelled. Please run it again for valid results.");
       show(tmdHome);
+      scrollTopNow();
       return;
     }
 
     const nb=await runTwoBack(DUR.nbackGroups);
     sessionResult=computeScoring(srt,stro,nb,baselineSessions);
     renderResults(sessionResult,srt,stro,nb,baselineSessions);
+    scrollTopNow();
     resultCard.scrollIntoView({behavior:"auto"});
   }
 
@@ -1126,6 +1333,8 @@
     return await new Promise(resolve=>{
       let rts=[], falseStarts=0, lapses=0;
       let waiting=true, goTime=0, timeOver=false, finished=false;
+      let finalTapArmed=false;
+
       const endAt=now()+sec*1000;
       let offHandler=null;
 
@@ -1144,11 +1353,7 @@
         srtTarget.textContent="WAIT"; srtTarget.className="tapTarget ready";
         setTimeout(()=>{
           if(finished) return;
-          if(now()>endAt || timeOver){
-            waiting=true;
-            if(timeOver) finish();
-            return;
-          }
+          if(now()>endAt || timeOver) return;
           srtTarget.textContent="TAP"; srtTarget.className="tapTarget go";
           waiting=false; goTime=now();
         },delay);
@@ -1157,13 +1362,34 @@
       offHandler=onPressPointer(srtTarget,()=>{
         if(finished) return;
         const t=now();
+
+        if(finalTapArmed){
+          if(!waiting){
+            const rt=t-goTime;
+            if(rt>500) lapses++;
+            else if(rt>=100) rts.push(rt);
+          }else{
+            falseStarts++;
+          }
+          finish();
+          return;
+        }
+
         if(waiting){ falseStarts++; return; }
         const rt=t-goTime;
         if(rt>500) lapses++;
         else if(rt>=100) rts.push(rt);
+
         waiting=true;
-        if(t>=endAt || timeOver){ finish(); }
-        else { scheduleNext(); }
+        if(t>=endAt || timeOver){
+          srtTarget.textContent="TAP";
+          srtTarget.className="tapTarget go";
+          waiting=false;
+          goTime=now();
+          finalTapArmed=true;
+        } else {
+          scheduleNext();
+        }
       });
 
       scheduleNext();
@@ -1174,7 +1400,14 @@
         setProgress(elapsed / TOTAL_TIME);
       }).then(()=>{
         timeOver=true;
-        if(waiting && !finished) finish();
+        if(finished) return;
+        if(waiting){
+          srtTarget.textContent="TAP";
+          srtTarget.className="tapTarget go";
+          waiting=false;
+          goTime=now();
+        }
+        finalTapArmed=true;
       });
     });
   }
@@ -1192,6 +1425,9 @@
       const endAt=now()+sec*1000;
       const gap=400;
       let offM=null, offMM=null;
+
+      let finalResponseArmed=false;
+      let allowFinalTrial=false;
 
       let prevCongruent=null;
       let runLen=0;
@@ -1255,7 +1491,9 @@
 
       let current=null;
       function showTrial(){
-        if(finished || timeOver) return;
+        if(finished) return;
+        if(timeOver && !allowFinalTrial) return;
+
         current=nextPair();
         stroopWord.textContent=current.word;
         stroopWord.style.color=colors[current.colorName];
@@ -1272,7 +1510,11 @@
           if(finished) return;
           if(now()>endAt || timeOver){
             timeOver=true;
-            if(!awaiting) finish();
+            if(!awaiting){
+              allowFinalTrial=true;
+              showTrial();
+              allowFinalTrial=false;
+            }
           }else{
             showTrial();
           }
@@ -1288,8 +1530,13 @@
         trials.push({rt,correct,congruent:current.congruent});
         (which==="MATCH"?btnMatch:btnMismatch).classList.add('active');
 
-        if(timeOver || now()>endAt) finish();
-        else queueNext();
+        if(finalResponseArmed){
+          finish();
+        } else if(timeOver || now()>endAt){
+          finish();
+        } else {
+          queueNext();
+        }
       }
 
       offM=onPressPointer(btnMatch,()=>respond("MATCH"));
@@ -1304,36 +1551,80 @@
       showTrial();
       sectionTimer("Color–Word",sec,(tleft,p)=>{
         countdown.textContent=Math.ceil(tleft)+"s";
-        const elapsed=DUR.warmup + DUR.srt + (DUR.stroop - tleft);
+        const elapsed=DUR.warmup + DUR.srt + 5 + (DUR.stroop - tleft);
         setProgress(elapsed / TOTAL_TIME);
       }).then(()=>{
         timeOver=true;
-        if(!awaiting && !finished) finish();
+        if(finished) return;
+
+        finalResponseArmed=true;
+
+        if(awaiting){
+          return;
+        }
+        allowFinalTrial=true;
+        showTrial();
+        allowFinalTrial=false;
       });
     });
   }
 
   async function runTwoBack(groups){
     show(nbackPane); hide(srtPane); hide(stroopPane); hide(preNbackPane); hide(betweenPane);
-    await sleep(1000);
+
+    setDigit("", false);
+    twoBackButtons.style.visibility="hidden";
+    await sleep(2000);
 
     let group=1, hits=0, fas=0, miss=0, hitRTs=[];
-    const VIS=250, GAP=100; let tStim=0; twoBackButtons.style.visibility="hidden";
+    const VIS=250, GAP=100; let tStim=0;
 
-    function setDigit(d,vis){ nbackDigit.textContent=String(d); nbackDigit.style.visibility=vis?"visible":"hidden"; }
-    function rDigit(except){ let d; do{ d=Math.floor(1+Math.random()*9); }while(d===except); return d; }
+    function setDigit(d,vis){
+      nbackDigit.textContent = String(d || "");
+      nbackDigit.style.visibility = vis ? "visible" : "hidden";
+    }
+    function randBetween(min,max){ return Math.floor(min + Math.random()*(max-min+1)); }
+    function rDigit(except){
+      let d;
+      do{ d=Math.floor(1+Math.random()*9); }while(d===except);
+      return d;
+    }
 
     async function doGroup(){
       if(group>groups) return;
+
+      if(group>1){
+        setDigit("", false);
+        twoBackButtons.style.visibility="hidden";
+        await sleep(randBetween(1500,3000));
+      }
+
       groupLabel.textContent=`Group ${group}`;
       twoBackButtons.style.visibility="hidden";
-      const a=rDigit(null), b=rDigit(null), target=Math.random()<0.5, c=target?a:rDigit(a);
+
+      const a=rDigit(null);
+      const b=rDigit(a);             // prevents a=b, so a=b=c can never happen
+      const target=Math.random()<0.5;
+      const c=target ? a : rDigit(a);
 
       await new Promise(res=>{
         let awaiting=false;
-        function showA(){ setDigit(a,true); setTimeout(()=>{ setDigit(a,false); setTimeout(showB,GAP); },VIS); }
-        function showB(){ setDigit(b,true); setTimeout(()=>{ setDigit(b,false); setTimeout(showC,GAP); },VIS); }
-        function showC(){ setDigit(c,true); twoBackButtons.style.visibility="visible"; awaiting=true; tStim=now(); }
+
+        function showA(){
+          setDigit(a,true);
+          setTimeout(()=>{ setDigit(a,false); setTimeout(showB,GAP); },VIS);
+        }
+        function showB(){
+          setDigit(b,true);
+          setTimeout(()=>{ setDigit(b,false); setTimeout(showC,GAP); },VIS);
+        }
+        function showC(){
+          setDigit(c,true);
+          setTimeout(()=>{ setDigit(c,false); },VIS);   // third digit visible exactly VIS
+          twoBackButtons.style.visibility="visible";
+          awaiting=true;
+          tStim=now();
+        }
 
         function evalResp(isTarget){
           if(!awaiting) return;
@@ -1345,7 +1636,10 @@
           }else{
             if(correctTarget){ miss++; }
           }
-          setDigit(c,false); twoBackButtons.style.visibility="hidden";
+
+          setDigit("", false);
+          twoBackButtons.style.visibility="hidden";
+
           offT(); offNT(); offKey();
           res();
         }
@@ -1361,6 +1655,7 @@
 
         showA();
       });
+
       group++;
       await doGroup();
     }
@@ -1594,63 +1889,88 @@
 
   function exportPDF(){
     const payload=resultCard.dataset.payload?JSON.parse(resultCard.dataset.payload):null;
-    const bcount=baselineSessions.length; const when=new Date().toLocaleString();
-    let html=`<html><head><title>Second Opinion — Cognition &amp; Acuity Summary</title>
-      <style>body{font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:24px;color:#111}
-      h1{font-size:20px;margin:0 0 6px} h2{font-size:16px;margin:18px 0 6px}
-      .muted{color:#555}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.box{border:1px solid #ddd;border-radius:8px;padding:12px}
-      .mono{font-family:ui-monospace,Menlo,Monaco,Consolas}</style></head><body>
-      <h1>Second Opinion — Cognition &amp; Acuity (Summary)</h1>
-      <div class="muted">Generated: ${when} • Baseline sessions on this device: ${bcount} • Version: v0.7 experimental</div>`;
+    const bcount=baselineSessions.length;
+    const when=new Date().toLocaleString();
+
     if(!payload){
-      html+=`<p>No recent assessment run to export.</p></body></html>`;
-      const w=window.open("","_blank"); if(w){w.document.write(html);w.document.close();w.focus();w.print();}
-      else alert("Pop-up blocked — please allow pop-ups to view the summary.");
+      openPrintOverlay(
+        "Second Opinion — Cognition & Acuity Summary",
+        `<div class="printDoc">
+          <h1>Second Opinion — Cognition &amp; Acuity (Summary)</h1>
+          <div class="pmuted">Generated: ${when} • Baseline sessions on this device: ${bcount} • Version: v0.7 experimental</div>
+          <div class="pbox"><b>No recent assessment run to export.</b></div>
+        </div>`
+      );
       return;
     }
+
     const {srt,stro,nb,res}=payload;
     const shownNbD=res.today.nb_d;
-    html+=`
-      <h2>Overall</h2>
-      <div class="box">
-        <div><b>Status:</b> ${res.statusLabel}${res.hasBaseline?" (baseline-referenced)":" (baseline not yet established)"}</div>
-        <div><b>On Second Thought…</b> ${res.guidance}</div>
-        <div><b>Driver:</b> ${res.driver}</div>
-      </div>
-      <div class="grid" style="margin-top:10px">
-        <div class="box">
-          <h2>Reaction</h2>
-          <div>Median RT: <b>${fmt(srt.medianRT)} ms</b></div>
-          <div>Lapses (&gt;500 ms): <b>${srt.lapses}</b></div>
-          <div>False starts: <b>${srt.falseStarts}</b></div>
-        </div>
-        <div class="box">
-          <h2>Stroop (Executive Function)</h2>
-          <div>Accuracy: <b>${fmt(stro.acc)}%</b></div>
-          <div>Mean RT (correct): <b>${fmt(stro.meanRTCorrect)} ms</b></div>
-          <div>Cost (incong − cong): <b>${isFinite(stro.congruencyCost)?fmt(stro.congruencyCost):"—"} ms</b></div>
-        </div>
-      </div>
-      <div class="box" style="margin-top:10px">
-        <h2>2-back (Working Memory)</h2>
-        <div>d′ (scaled): <b>${isFinite(shownNbD)?fmt(shownNbD):"—"}</b></div>
-        <div>Hits / False Alarms / Misses: <b>${nb.counts.hits}/${nb.counts.fas}/${nb.counts.miss}</b> (${nb.groups} groups)</div>
-        ${res.nbackNote?`<div class="muted">${res.nbackNote}</div>`:""}
-      </div>
-      </body></html>`;
 
-    const w = window.open("", "_blank");
-    if (w) { w.document.write(html); w.document.close(); w.focus(); w.print(); }
-    else { alert("Pop-up blocked — please allow pop-ups to view the summary."); }
+    const html = `
+      <div class="printDoc">
+        <h1>Second Opinion — Cognition &amp; Acuity (Summary)</h1>
+        <div class="pmuted">Generated: ${when} • Baseline sessions on this device: ${bcount} • Version: v0.7 experimental</div>
+
+        <div class="pbox">
+          <div><b>Status:</b> ${res.statusLabel}${res.hasBaseline?" (baseline-referenced)":" (baseline not yet established)"}</div>
+          <div style="margin-top:6px;"><b>On Second Thought…</b> ${res.guidance}</div>
+          <div style="margin-top:6px;"><b>Driver:</b> ${res.driver}</div>
+        </div>
+
+        <div class="pgrid" style="margin-top:10px;">
+          <div class="pbox">
+            <h2>Reaction</h2>
+            <div>Median RT: <b>${fmt(srt.medianRT)} ms</b></div>
+            <div>Lapses (&gt;500 ms): <b>${srt.lapses}</b></div>
+            <div>False starts: <b>${srt.falseStarts}</b></div>
+          </div>
+
+          <div class="pbox">
+            <h2>Stroop (Executive Function)</h2>
+            <div>Accuracy: <b>${fmt(stro.acc)}%</b></div>
+            <div>Mean RT (correct): <b>${fmt(stro.meanRTCorrect)} ms</b></div>
+            <div>Cost (incong − cong): <b>${isFinite(stro.congruencyCost)?fmt(stro.congruencyCost):"—"} ms</b></div>
+          </div>
+        </div>
+
+        <div class="pbox" style="margin-top:10px;">
+          <h2>2-back (Working Memory)</h2>
+          <div>d′ (scaled): <b>${isFinite(shownNbD)?fmt(shownNbD):"—"}</b></div>
+          <div>Hits / False Alarms / Misses: <b>${nb.counts.hits}/${nb.counts.fas}/${nb.counts.miss}</b> (${nb.groups} groups)</div>
+          ${res.nbackNote?`<div class="pmuted" style="margin-top:6px;">${res.nbackNote}</div>`:""}
+        </div>
+      </div>
+    `;
+    openPrintOverlay("Second Opinion — Cognition & Acuity Summary", html);
   }
 
+  // Disclaimer nav
+  disclaimerLink?.addEventListener("click", ()=>{
+    hide(resultCard);
+    show(disclaimerCard);
+    scrollTopNow();
+    disclaimerCard.scrollIntoView({behavior:"auto"});
+  });
+  disclaimerBackBtn.addEventListener("click", ()=>{
+    hide(disclaimerCard);
+    show(resultCard);
+    scrollTopNow();
+  });
+
   // =====================================================================
-  //                              FRAT
+  //                              FRAT WIZARD
   // =====================================================================
-  const fratQuestionsDiv=$("#fratQuestions");
-  const fratCalcBtn=$("#fratCalcBtn");
+  const fratBeginBtn=$("#fratBeginBtn");
+  const fratQCounter=$("#fratQCounter");
+  const fratRunningTotal=$("#fratRunningTotal");
+  const fratQCategory=$("#fratQCategory");
+  const fratQText=$("#fratQText");
+  const fratQScoreHint=$("#fratQScoreHint");
+  const fratNextBtn=$("#fratNextBtn");
+  const fratQuitBtn=$("#fratQuitBtn");
+  const fratRestartBtn=$("#fratRestartBtn");
   const fratResetBtn=$("#fratResetBtn");
-  const fratResultCard=$("#fratResultCard");
   const fratDot=$("#fratDot");
   const fratStatusLabel=$("#fratStatusLabel");
   const fratScoreText=$("#fratScoreText");
@@ -1659,6 +1979,7 @@
   const fratBreakdown=$("#fratBreakdown");
   const fratBandRef=$("#fratBandRef");
   const fratExportBtn=$("#fratExportBtn");
+  const fratReviewList=$("#fratReviewList");
 
   const FRAT_ITEMS=[
     {id:"pilot_recent", cat:"Pilot", text:"Less than 3 hours flight time in last 30 days.", score:2, rule:"BOTH"},
@@ -1691,65 +2012,170 @@
     {id:"press_financial", cat:"External Pressures", text:"Financial or other external consequences if the flight is delayed or cancelled.", score:3, rule:"BOTH"}
   ];
 
-  function buildFratQuestions(){
-    fratQuestionsDiv.innerHTML="";
-    const cats=[...new Set(FRAT_ITEMS.map(i=>i.cat))];
-    cats.forEach(cat=>{
-      const wrapper=document.createElement("div");
-      wrapper.className="card";
-      wrapper.style.background="#0f1622";
-      wrapper.style.border="1px solid #223042";
-      wrapper.style.marginBottom="10px";
-      const h=document.createElement("h3");
-      h.textContent=cat;
-      wrapper.appendChild(h);
-      const subset=FRAT_ITEMS.filter(i=>i.cat===cat);
-      subset.forEach(item=>{
-        const row=document.createElement("div");
-        row.className="frat-q";
-        row.dataset.itemId=item.id;
-        const textDiv=document.createElement("div");
-        textDiv.className="frat-q-text";
-        textDiv.innerHTML=`${item.text} <span class="muted" style="font-size:.8rem;">(True = +${item.score})</span>`;
-        const controls=document.createElement("div");
-        controls.className="frat-q-controls";
-        controls.innerHTML=`
-          <label><input type="radio" name="${item.id}" value="true"> True</label><br/>
-          <label><input type="radio" name="${item.id}" value="false"> False</label>
-        `;
-        row.appendChild(textDiv);
-        row.appendChild(controls);
-        wrapper.appendChild(row);
-      });
-      fratQuestionsDiv.appendChild(wrapper);
-    });
-  }
-
-  buildFratQuestions();
+  let fratState = {
+    rules:null,
+    exp:null,
+    items:[],
+    idx:0,
+    answers:{}, // id -> true/false
+  };
 
   function getFratProfile(){
     const rules=document.querySelector('input[name="fratRules"]:checked')?.value || null;
     const exp=document.querySelector('input[name="fratExp"]:checked')?.value || null;
     return {rules,exp};
   }
-
   function applicableToRules(itemRule, rules){
     if(itemRule==="BOTH") return true;
     return itemRule===rules;
   }
 
-  fratCalcBtn.addEventListener("click",()=>{
+  function updateBeginEnabled(){
+    const {rules,exp}=getFratProfile();
+    fratBeginBtn.disabled = !(rules && exp);
+  }
+  document.querySelectorAll('input[name="fratRules"],input[name="fratExp"]').forEach(r=>{
+    r.addEventListener("change", ()=>{
+      updateBeginEnabled();
+      // Changing profile invalidates any in-progress run
+      resetFratRunUIOnly();
+    });
+  });
+  updateBeginEnabled();
+
+  function resetFratRunUIOnly(){
+    hide(fratWizardCard);
+    hide(fratResultCard);
+    show(fratIntroCard);
+
+    fratReviewList.innerHTML="";
+    // clear wizard radios
+    document.querySelectorAll('input[name="fratWizardAns"]').forEach(x=>x.checked=false);
+    fratNextBtn.disabled=true;
+    fratNextBtn.textContent="Next";
+  }
+
+  function startFratWizard(){
     const {rules,exp}=getFratProfile();
     if(!rules || !exp){
-      alert("Please select flight rules (VFR/IFR) and experience in type before scoring.");
+      alert("Please select flight rules (VFR/IFR) and experience in type before starting.");
       return;
     }
+    fratState.rules=rules;
+    fratState.exp=exp;
+    fratState.items = FRAT_ITEMS.filter(i=>applicableToRules(i.rule, rules));
+    fratState.idx = 0;
+    fratState.answers = {};
+    fratReviewList.innerHTML="";
+
+    hide(fratResultCard);
+    hide(fratIntroCard);
+    show(fratWizardCard);
+    scrollTopNow();
+    fratWizardCard.scrollIntoView({behavior:"auto"});
+    renderFratQuestion();
+  }
+
+  fratBeginBtn.addEventListener("click", startFratWizard);
+
+  function runningTotal(){
+    let total=0;
+    for(const it of fratState.items){
+      const a = fratState.answers[it.id];
+      if(a === true) total += it.score;
+    }
+    return total;
+  }
+
+  function renderFratQuestion(){
+    const items=fratState.items;
+    const i=fratState.idx;
+    const it=items[i];
+
+    fratQCounter.textContent = `${i+1} / ${items.length}`;
+    fratRunningTotal.textContent = String(runningTotal());
+    fratQCategory.textContent = it.cat.toUpperCase();
+    fratQText.textContent = it.text;
+    fratQScoreHint.textContent = `True = +${it.score} points • False = +0 points`;
+
+    // set wizard radios based on saved answer
+    const saved=fratState.answers[it.id];
+    document.querySelectorAll('input[name="fratWizardAns"]').forEach(r=>{
+      r.checked = (String(saved) === r.value);
+    });
+
+    fratNextBtn.textContent = (i === items.length-1) ? "Finish" : "Next";
+    fratNextBtn.disabled = (saved !== true && saved !== false);
+
+    // After rendering, keep the page snapped so only this card is seen (polished feel)
+    scrollTopNow();
+    fratWizardCard.scrollIntoView({behavior:"auto"});
+  }
+
+  // enable Next when user answers
+  document.querySelectorAll('input[name="fratWizardAns"]').forEach(r=>{
+    r.addEventListener("change", ()=>{
+      fratNextBtn.disabled=false;
+    });
+  });
+
+  fratQuitBtn.addEventListener("click", ()=>{
+    if(confirm("Quit FRAT and discard this run?")){
+      fratState.idx=0;
+      fratState.answers={};
+      resetFratRunUIOnly();
+      scrollTopNow();
+    }
+  });
+
+  fratNextBtn.addEventListener("click", ()=>{
+    const it = fratState.items[fratState.idx];
+    const selected = document.querySelector('input[name="fratWizardAns"]:checked')?.value;
+    if(selected !== "true" && selected !== "false"){
+      alert("Select True or False, then tap Next.");
+      return;
+    }
+    fratState.answers[it.id] = (selected === "true");
+
+    // clear selection for next render (we re-check from saved)
+    document.querySelectorAll('input[name="fratWizardAns"]').forEach(x=>x.checked=false);
+
+    if(fratState.idx >= fratState.items.length-1){
+      // finish -> compute results, show result card, and show review list below
+      computeAndShowFratResults();
+      return;
+    }
+    fratState.idx++;
+    // running total updates immediately
+    renderFratQuestion();
+  });
+
+  fratRestartBtn?.addEventListener("click", ()=>{
+    // Keep profile selection; run again
+    startFratWizard();
+  });
+
+  fratResetBtn.addEventListener("click", ()=>{
+    if(confirm("Clear FRAT answers and results?")){
+      // keep profile, clear answers
+      fratState.answers={};
+      fratReviewList.innerHTML="";
+      hide(fratResultCard);
+      hide(fratWizardCard);
+      show(fratIntroCard);
+      scrollTopNow();
+    }
+  });
+
+  function computeAndShowFratResults(){
+    const rules=fratState.rules;
+    const exp=fratState.exp;
+
     let total=0;
     const byCat={};
-    FRAT_ITEMS.forEach(item=>{
-      if(!applicableToRules(item.rule,rules)) return;
-      const val=document.querySelector(`input[name="${item.id}"]:checked`)?.value;
-      if(val==="true"){
+    fratState.items.forEach(item=>{
+      const val=fratState.answers[item.id];
+      if(val===true){
         total+=item.score;
         byCat[item.cat]=(byCat[item.cat]||0)+item.score;
       }
@@ -1813,88 +2239,107 @@
     fratBreakdown.innerHTML=catLines.length?catLines.join(""):"<div>No items scored True.</div>";
     fratBandRef.textContent=bandText;
 
-    fratResultCard.classList.remove("hide");
-    fratResultCard.scrollIntoView({behavior:"auto"});
-    fratResultCard.dataset.payload=JSON.stringify({total,band,byCat,rules,exp});
-  });
+    // Build review list (questions + answers) BELOW results
+    buildFratReviewList();
 
-  fratResetBtn.addEventListener("click",()=>{
-    document.querySelectorAll("#fratQuestions input[type=radio]").forEach(r=>r.checked=false);
-    fratResultCard.classList.add("hide");
-  });
+    // Show results and allow scroll-down review
+    hide(fratWizardCard);
+    show(fratResultCard);
+    scrollTopNow();
+    fratResultCard.scrollIntoView({behavior:"auto"});
+    fratResultCard.dataset.payload=JSON.stringify({total,band,byCat,rules,exp,answers:fratState.answers,items:fratState.items});
+  }
+
+  function buildFratReviewList(){
+    const items=fratState.items.slice();
+    const answers=fratState.answers;
+
+    const html = items.map((it,idx)=>{
+      const a = answers[it.id];
+      const ansText = (a===true) ? "TRUE" : "FALSE";
+      const points = (a===true) ? it.score : 0;
+      const tagColor = (a===true) ? "var(--warn)" : "var(--muted)";
+      return `
+        <div class="card" style="background:#0f1622;border:1px solid #223042;margin-top:10px;">
+          <div class="muted" style="font-size:.85rem;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+            <div><b>${idx+1}.</b> ${it.cat}</div>
+            <div style="display:flex;gap:10px;align-items:center;">
+              <span style="font-weight:900;letter-spacing:.06em;color:${tagColor};">${ansText}</span>
+              <span class="muted">(+${points})</span>
+            </div>
+          </div>
+          <div style="margin-top:6px;font-weight:800;">${it.text}</div>
+        </div>
+      `;
+    }).join("");
+
+    fratReviewList.innerHTML = html || "<div class='muted'>No questions.</div>";
+  }
 
   fratExportBtn.addEventListener("click",()=>{
     const payload=fratResultCard.dataset.payload?JSON.parse(fratResultCard.dataset.payload):null;
     const when=new Date().toLocaleString();
-    const {rules,exp}=getFratProfile();
-    let html=`<html><head><title>Second Opinion — FRAT Summary</title>
-      <style>body{font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:24px;color:#111}
-      h1{font-size:20px;margin:0 0 6px} h2{font-size:16px;margin:18px 0 6px}
-      .muted{color:#555}.box{border:1px solid #ddd;border-radius:8px;padding:12px}</style></head><body>
-      <h1>Second Opinion — Flight Risk Assessment (FRAT)</h1>
-      <div class="muted">Generated: ${when}</div>`;
     if(!payload){
-      html+=`<p>No FRAT result to export.</p></body></html>`;
-      const w=window.open("","_blank"); if(w){w.document.write(html);w.document.close();w.focus();w.print();}
-      else alert("Pop-up blocked — please allow pop-ups to view the summary.");
+      openPrintOverlay(
+        "Second Opinion — FRAT Summary",
+        `<div class="printDoc">
+          <h1>Second Opinion — Flight Risk Assessment (FRAT)</h1>
+          <div class="pmuted">Generated: ${when}</div>
+          <div class="pbox"><b>No FRAT result to export.</b></div>
+        </div>`
+      );
       return;
     }
-    const {total,band,byCat}=payload;
-    html+=`
-      <h2>Overall</h2>
-      <div class="box">
-        <div><b>Flight rules:</b> ${rules||"—"} • <b>Experience in type:</b> ${exp||"—"}</div>
-        <div><b>Total FRAT score:</b> ${total}</div>
-        <div><b>Reference band:</b> ${band}</div>
-        <div><b>On Second Thought…</b> ${fratGuidance.textContent}</div>
-      </div>
-      <h2>Category breakdown</h2>
-      <div class="box">`;
+
+    const {total,band,byCat,rules,exp,answers,items}=payload;
     const cats=Object.keys(byCat).sort();
-    if(!cats.length){ html+=`No items scored True.`; }
-    else{ cats.forEach(cat=>{ html+=`<div><b>${cat}:</b> ${byCat[cat]} points</div>`; }); }
-    html+=`</div></body></html>`;
-    const w=window.open("","_blank");
-    if(w){ w.document.write(html); w.document.close(); w.focus(); w.print(); }
-    else{ alert("Pop-up blocked — please allow pop-ups to view the summary."); }
-  });
+    const breakdown = cats.length
+      ? cats.map(cat=>`<div><b>${cat}:</b> ${byCat[cat]} points</div>`).join("")
+      : "No items scored True.";
 
-  // Disclaimer nav
-  disclaimerLink?.addEventListener("click", ()=>{
-    hide(resultCard);
-    show(disclaimerCard);
-    disclaimerCard.scrollIntoView({behavior:"auto"});
-  });
-  disclaimerBackBtn.addEventListener("click", ()=>{
-    hide(disclaimerCard);
-    show(resultCard);
-  });
+    const qa = (items||[]).map((it,idx)=>{
+      const a = answers?.[it.id];
+      const ansText = (a===true) ? "TRUE" : "FALSE";
+      const points = (a===true) ? it.score : 0;
+      return `<div style="margin-top:8px;"><b>${idx+1}. ${it.cat}</b> — ${it.text}<br><span class="pmuted">Answer: ${ansText} (+${points})</span></div>`;
+    }).join("");
 
-  // Global menu nav
-  $("#menuMainGlobal").addEventListener("click",()=>{ closeGlobalMenu(); goMain(); });
-  $("#menuCogGlobal").addEventListener("click",()=>{ closeGlobalMenu(); openCognitionHome(); });
-  $("#menuFratGlobal").addEventListener("click",()=>{ closeGlobalMenu(); openFrat(); });
-  $("#menuAppInfoGlobal").addEventListener("click",()=>{
-    closeGlobalMenu(); hide(modeCard); hide(aboutOstCard); show(appInfoCard);
+    const html = `
+      <div class="printDoc">
+        <h1>Second Opinion — Flight Risk Assessment (FRAT)</h1>
+        <div class="pmuted">Generated: ${when}</div>
+
+        <div class="pbox">
+          <div><b>Flight rules:</b> ${rules||"—"} • <b>Experience in type:</b> ${exp||"—"}</div>
+          <div style="margin-top:6px;"><b>Total FRAT score:</b> ${total}</div>
+          <div style="margin-top:6px;"><b>Reference band:</b> ${band}</div>
+          <div style="margin-top:6px;"><b>On Second Thought…</b> ${fratGuidance.textContent}</div>
+        </div>
+
+        <div class="pbox" style="margin-top:10px;">
+          <h2>Category breakdown</h2>
+          <div>${breakdown}</div>
+        </div>
+
+        <div class="pbox" style="margin-top:10px;">
+          <h2>Questions & answers</h2>
+          <div>${qa || "—"}</div>
+        </div>
+      </div>
+    `;
+    openPrintOverlay("Second Opinion — FRAT Summary", html);
   });
-  $("#menuOstGlobal").addEventListener("click",()=>{
-    closeGlobalMenu(); hide(modeCard); hide(appInfoCard); show(aboutOstCard);
-  });
-  $("#menuBaselineGlobal").addEventListener("click",()=>{
-    closeGlobalMenu();
-    if(!baselineSessions.length){
-      alert("No baseline sessions stored on this device yet. Run the assessment on a good day and add results to baseline first.");
-      return;
-    }
-    openCognitionHome();
-    updateBaselineList();
-    show(baselineCard);
-    baselineCard.scrollIntoView({behavior:"auto"});
-  });
-  $("#menuExportGlobal").addEventListener("click",()=>{ closeGlobalMenu(); exportPDF(); });
 
 })();
 </script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(()=>{});
+  });
+}
+</script>
+
 </body>
 </html>
 
