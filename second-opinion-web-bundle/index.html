@@ -318,17 +318,31 @@
   }
 
   /* FRAT wizard */
-  .fratWizardQ{background:#0f1622;border:1px solid #1e3050;}
+  .fratWizardQ{background:#ffffff;border:1px solid #dce4ed;margin-top:80px;}
+  #fratWizardCard{
+    display:flex;
+    flex-direction:column;
+    min-height:420px;
+  }
+  #fratWizardCard h2,
+  #fratWizardCard .muted,
+  #fratWizardCard #fratQCategory,
+  #fratWizardCard #fratQScoreHint{
+    color:#1a2f45;
+  }
+  #fratWizardCard #fratQText{
+    min-height:5.5rem;
+  }
   .fratChoiceRow{
     display:flex;gap:10px;flex-wrap:wrap;
-    margin-top:10px;justify-content:center;
+    margin-top:32px;justify-content:center;
   }
   .fratChoiceRow label{
     display:flex;align-items:center;gap:8px;
-    padding:10px 12px;border:1px solid #1e3050;
-    border-radius:12px;background:#0e141c;
+    padding:10px 12px;border:1px solid #1a2f45;
+    border-radius:12px;background:#1a2f45;
     cursor:pointer;user-select:none;
-    min-width:140px;justify-content:center;font-weight:800;
+    min-width:140px;justify-content:center;font-weight:800;color:#ffffff;
   }
   .fratChoiceRow input{transform:scale(1.2);}
   .smallCaps{letter-spacing:.08em;font-size:.82rem;font-weight:900;}
@@ -449,6 +463,68 @@
     background-position: -8% 30%, 58% 55%, 18% 75%;
     background-repeat: no-repeat;
   }
+
+#fratResultCard{
+  margin-top:60px;
+  padding-top:0;
+}
+#fratResultCard .card,
+#fratResultCard [style*="background:#0f1622"],
+#fratResultCard [style*="background:var(--surface)"]{
+  background:#f0f6ff !important;
+  border:1px solid #dce4ed !important;
+}
+#fratResultCard h2,
+#fratResultCard h3,
+#fratResultCard b,
+#fratResultCard .big,
+#fratResultCard #fratStatusLabel,
+#fratResultCard #fratScoreText,
+#fratResultCard #fratNarrative,
+#fratResultCard #fratGuidance,
+#fratResultCard #fratBreakdown,
+#fratResultCard #fratBandRef{
+  color:#1a2f45 !important;
+}
+#fratResultCard .muted{
+  color:#5a7184 !important;
+}
+#fratReviewList .card{
+  background:#f0f6ff !important;
+  border:1px solid #dce4ed !important;
+}
+#fratReviewList .card div{
+  color:#1a2f45 !important;
+}
+#fratReviewList .muted{
+  color:#5a7184 !important;
+}
+.modalSheet{
+  background:#ffffff !important;
+}
+.modalHeader{
+  background:#ffffff !important;
+  border-bottom:1px solid #dce4ed !important;
+}
+.modalTitle{
+  color:#1a2f45 !important;
+}
+.modalBody{
+  color:#1a2f45 !important;
+}
+.printDoc .pbox{
+  background:#f0f6ff !important;
+  border:1px solid #dce4ed !important;
+  color:#1a2f45 !important;
+}
+.printDoc .pmuted{
+  color:#5a7184 !important;
+}
+.printDoc h1,
+.printDoc h2,
+.printDoc b{
+  color:#1a2f45 !important;
+}
 </style>
 </head>
 
@@ -604,6 +680,9 @@
     </section>
 
     <section id="testCard" class="card hide">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+  <button id="cancelTestBtn" type="button" class="btn btn-ghost btn-sm">Cancel Assessment</button>
+</div>
       <div class="row" style="justify-content:space-between;align-items:center">
         <div class="pill"><span>Step:</span> <b id="stepName">Get Ready!</b></div>
         <div class="pill"><span>Time:</span> <b id="countdown">0s</b></div>
@@ -666,6 +745,7 @@
       <div class="hr"></div>
       <div class="row" style="gap:10px;">
         <button id="againBtn"        type="button" class="btn">Start Assessment Again</button>
+        <button id="backToCogBtn"    type="button" class="btn btn-ghost">Back to Cognition &amp; Acuity</button>
         <button id="addBaselineBtn2" type="button" class="btn btn-ghost" disabled>Add This Result to Baseline</button>
         <button id="backToMainBtn"   type="button" class="btn btn-ghost">Main Menu</button>
       </div>
@@ -686,7 +766,7 @@
 
   <!-- FRAT ROOT -->
   <div id="fratRoot" class="hide">
-    <section class="card" id="fratIntroCard">
+    <section class="card" id="fratIntroCard" style="margin-top:80px;">
       <div class="row" style="justify-content:space-between;align-items:flex-start">
         <div class="row" style="align-items:center;gap:10px">
           <img src="SVG_VERSION_OST_Main_Logo.svg" alt="OST" style="height:28px;opacity:.7;">
@@ -700,7 +780,7 @@
         <button id="backFromFrat" type="button" class="btn btn-sm btn-ghost">Back to main menu</button>
       </div>
       <div class="hr"></div>
-      <div class="grid grid-2">
+      <div class="grid">
         <div>
           <h2>Flight profile</h2>
           <div class="muted" style="font-size:.95rem;">Select flight rules and your experience in this aircraft / avionics type.</div>
@@ -714,29 +794,12 @@
             <label><input type="radio" name="fratExp" value="<100"> &lt;100 hours in type</label>
             <label><input type="radio" name="fratExp" value=">=100"> ≥100 hours in type</label>
           </div>
-          <div class="muted" style="margin-top:6px;font-size:.85rem;">
-            These bands mirror one published FAA FRAT example. Your SOP or CFI may use different thresholds.
-          </div>
+
           <div class="hr"></div>
           <button id="fratBeginBtn" type="button" class="btn" disabled>Begin FRAT Questions</button>
           <div class="muted" style="margin-top:6px;font-size:.85rem;">You'll see one question at a time. Answer, then tap Next.</div>
         </div>
-        <div>
-          <h2>Risk bands (reference)</h2>
-          <div class="muted" style="font-size:.9rem;">After scoring, your total is placed into one of these bands.</div>
-          <div class="card" style="margin-top:8px;background:#0f1622;border:1px solid #1e3050">
-            <div class="sectionTitle">IFR</div>
-            <div class="muted" style="font-size:.9rem;">
-              <b>&lt;100 in type:</b> Low 20–25, Moderate 25–30, High &gt;30<br>
-              <b>≥100 in type:</b> Low 25–30, Moderate 30–35, High &gt;35
-            </div>
-            <div class="sectionTitle" style="margin-top:6px">VFR</div>
-            <div class="muted" style="font-size:.9rem;">
-              <b>&lt;100 in type:</b> Low 5–15, Moderate 15–20, High &gt;20<br>
-              <b>≥100 in type:</b> Low 15–20, Moderate 20–25, High &gt;25
-            </div>
-          </div>
-        </div>
+
       </div>
       <div class="footer-link muted">
         Learn more at <a href="https://OnSecondThought.me" target="_blank" rel="noopener noreferrer">OnSecondThought.me</a>.
@@ -757,19 +820,17 @@
       <div class="hr"></div>
       <div class="muted" id="fratQCategory" style="font-size:.9rem;margin-bottom:6px;">—</div>
       <h2 id="fratQText" style="margin-top:0;">—</h2>
-      <div class="muted" id="fratQScoreHint" style="margin-top:6px;">—</div>
+
       <div class="fratChoiceRow" role="group" aria-label="Answer true or false">
         <label><input type="radio" name="fratWizardAns" value="true"> TRUE</label>
         <label><input type="radio" name="fratWizardAns" value="false"> FALSE</label>
       </div>
       <div class="hr"></div>
       <div class="row" style="justify-content:space-between;align-items:center;">
-        <button id="fratQuitBtn" type="button" class="btn btn-ghost">Quit</button>
-        <div class="row" style="justify-content:flex-end;">
-          <button id="fratNextBtn" type="button" class="btn" disabled>Next</button>
-        </div>
-      </div>
-      <div class="muted" style="margin-top:10px;font-size:.85rem;">Tip: "True" adds points; "False" adds zero.</div>
+  <button id="fratQuitBtn" type="button" class="btn btn-ghost">Quit</button>
+  <button id="fratPrevBtn" type="button" class="btn btn-ghost" disabled>← Back</button>
+</div>
+
     </section>
 
     <section id="fratResultCard" class="card hide">
@@ -790,6 +851,7 @@
       <div class="row" style="gap:10px;">
         <button id="fratRestartBtn" type="button" class="btn">Run FRAT Again</button>
         <button id="fratResetBtn"   type="button" class="btn btn-ghost">Clear Answers</button>
+        <button id="fratMainMenuBtn" type="button" class="btn btn-ghost">Main Menu</button>
         <button id="fratExportBtn"  type="button" class="btn btn-ghost">Printable summary</button>
       </div>
       <div class="hr"></div>
@@ -818,7 +880,7 @@
     <div class="modalHeader">
       <h3 id="printTitle" class="modalTitle">Printable Summary</h3>
       <div class="row" style="gap:8px;">
-        <button id="printNowBtn"   type="button" class="btn btn-sm">Print</button>
+        <button id="printNowBtn"   type="button" class="btn btn-sm">Share</button>
         <button id="printCloseBtn" type="button" class="btn btn-ghost btn-sm modalCloseBtn">Close</button>
       </div>
     </div>
@@ -852,10 +914,19 @@
   function openExternalUrl(url){
     try{
       if(window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.Browser&&typeof window.Capacitor.Plugins.Browser.open==="function"){
-        window.Capacitor.Plugins.Browser.open({url:url}); return;
+        window.Capacitor.Plugins.Browser.open({url:url});return;
       }
     }catch(_e){}
-    try{ const w=window.open(url,"_blank"); if(w&&w.focus){w.focus();return;} }catch(_e2){}
+    try{
+      if(window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.openURL){
+        window.webkit.messageHandlers.openURL.postMessage(url);return;
+      }
+    }catch(_e2){}
+    try{
+      const a=document.createElement('a');
+      a.href=url;a.target='_blank';a.rel='noopener noreferrer';
+      document.body.appendChild(a);a.click();document.body.removeChild(a);return;
+    }catch(_e3){}
     window.location.href=url;
   }
 
@@ -886,7 +957,7 @@
     explainerModal.setAttribute("aria-hidden","false"); show(explainerModal);
   }
   function closeExplainer(){ hide(explainerModal); explainerModal.setAttribute("aria-hidden","true"); }
-  explainerClose.addEventListener("click",closeExplainer);
+  onPressPointer(explainerClose,()=>closeExplainer());
   explainerModal.addEventListener("click",(e)=>{ if(e.target===explainerModal) closeExplainer(); });
   document.addEventListener("click",(e)=>{
     const link=e.target.closest('a[data-explain]');
@@ -904,8 +975,20 @@
     if(printOverlay){printOverlay.setAttribute("aria-hidden","false");show(printOverlay);}
   }
   function closePrintOverlay(){ if(printOverlay){hide(printOverlay);printOverlay.setAttribute("aria-hidden","true");} }
-  printCloseBtn.addEventListener("click",closePrintOverlay);
-  printNowBtn.addEventListener("click",()=>window.print());
+  onPressPointer(printCloseBtn,()=>closePrintOverlay());
+  onPressPointer(document.getElementById('printNowBtn'),()=>{
+  const text = printBody ? printBody.innerText : "No content";
+  try{
+    if(window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.shareText){
+      window.webkit.messageHandlers.shareText.postMessage(text);return;
+    }
+  }catch(_e){}
+  try{
+    if(navigator.share){
+      navigator.share({title:"Second Opinion Summary",text:text});return;
+    }
+  }catch(_e2){}
+});
   printOverlay.addEventListener("click",(e)=>{ if(e.target===printOverlay) closePrintOverlay(); });
 
   const modeCard=$("#modeCard"),tmdRoot=$("#tmdRoot"),fratRoot=$("#fratRoot");
@@ -920,7 +1003,7 @@
 
   function closeGlobalMenu(){ globalMenuSheet.classList.add("hide"); }
   function toggleGlobalMenu(){ globalMenuSheet.classList.toggle("hide"); }
-  globalMenuBtn.addEventListener("click",(e)=>{ e.stopPropagation(); toggleGlobalMenu(); });
+  onPressPointer(globalMenuBtn,(e)=>{ e.stopPropagation(); toggleGlobalMenu(); });
   document.addEventListener("click",(e)=>{
     if(globalMenuSheet.classList.contains("hide"))return;
     if(!globalMenuSheet.contains(e.target)&&e.target!==globalMenuBtn){ closeGlobalMenu(); }
@@ -942,7 +1025,14 @@
     closeExplainer(); closePrintOverlay();
   }
 
-  function goMain(){ hideAllAppScreens(); show(modeCard); scrollTopNow(); }
+  function goMain(){
+  hideAllAppScreens();
+  show(modeCard);
+  scrollTopNow();
+  document.querySelectorAll('input[name="fratRules"]').forEach(x=>x.checked=false);
+  document.querySelectorAll('input[name="fratExp"]').forEach(x=>x.checked=false);
+  fratBeginBtn.disabled=true;
+}
   function openCognitionHome(){ hideAllAppScreens(); show(tmdRoot); show(tmdHome); scrollTopNow(); }
   function openFrat(){ hideAllAppScreens(); show(fratRoot); show(fratIntroCard); scrollTopNow(); }
   function openAbout(){ hideAllAppScreens(); show(appInfoCard); scrollTopNow(); appInfoCard.scrollIntoView({behavior:"auto"}); }
@@ -951,19 +1041,19 @@
     scrollTopNow(); baselineCard.scrollIntoView({behavior:"auto"});
   }
 
-  goTmdBtn.addEventListener("click",openCognitionHome);
-  goFratBtn.addEventListener("click",openFrat);
-  $("#backFromFrat").addEventListener("click",goMain);
-  appInfoLink.addEventListener("click",openAbout);
-  appInfoBackBtn.addEventListener("click",goMain);
+  onPressPointer(goTmdBtn,openCognitionHome);
+  onPressPointer(goFratBtn,openFrat);
+  onPressPointer($("#backFromFrat"),goMain);
+  onPressPointer(appInfoLink,openAbout);
+  onPressPointer(appInfoBackBtn,goMain);
 
-  tmdInfoBtn.addEventListener("click",()=>{ hide(tmdHome); hide(tmdMenu); show(tmdInfoCard); scrollTopNow(); });
-  tmdInfoBackBtn.addEventListener("click",()=>{ hide(tmdInfoCard); show(tmdHome); scrollTopNow(); });
+  onPressPointer(tmdInfoBtn,()=>{ hide(tmdHome); hide(tmdMenu); show(tmdInfoCard); scrollTopNow(); });
+  onPressPointer(tmdInfoBackBtn,()=>{ hide(tmdInfoCard); show(tmdHome); scrollTopNow(); });
 
-  $("#menuMainGlobal").addEventListener("click",()=>{ closeGlobalMenu(); goMain(); });
-  $("#menuCogGlobal").addEventListener("click",()=>{ closeGlobalMenu(); openCognitionHome(); });
-  $("#menuFratGlobal").addEventListener("click",()=>{ closeGlobalMenu(); openFrat(); });
-  $("#menuAboutGlobal").addEventListener("click",()=>{ closeGlobalMenu(); openAbout(); });
+  onPressPointer($("#menuMainGlobal"),()=>{ closeGlobalMenu(); goMain(); });
+  onPressPointer($("#menuCogGlobal"),()=>{ closeGlobalMenu(); openCognitionHome(); });
+  onPressPointer($("#menuFratGlobal"),()=>{ closeGlobalMenu(); openFrat(); });
+  onPressPointer($("#menuAboutGlobal"),()=>{ closeGlobalMenu(); openAbout(); });
 
   const lastPress=new WeakMap();
   function onPressPointer(el,fn,db=200){
@@ -1007,29 +1097,33 @@
 
   function setProgress(p){progressBar.style.width=(p*100).toFixed(1)+"%";}
 
-  tmdMenuBtn.addEventListener("click",()=>{ if(tmdMenu.classList.contains("hide")) show(tmdMenu); else hide(tmdMenu); });
-  menuAddBaseline.addEventListener("click",()=>{ hide(tmdMenu); addCurrentToBaseline(); });
-  menuManageBaseline.addEventListener("click",()=>{
+  onPressPointer(tmdMenuBtn,()=>{ if(tmdMenu.classList.contains("hide")) show(tmdMenu); else hide(tmdMenu); });
+  onPressPointer(menuAddBaseline,()=>{ hide(tmdMenu); addCurrentToBaseline(); });
+  onPressPointer(menuManageBaseline,()=>{
     hide(tmdMenu); updateBaselineList();
     hide(resultCard);hide(testCard);hide(tmdInfoCard);
     show(baselineCard);scrollTopNow();
   });
-  menuExport.addEventListener("click",()=>{ hide(tmdMenu); exportPDF(); });
-  menuMain.addEventListener("click",()=>{ hide(tmdMenu);hide(baselineCard);hide(testCard);hide(resultCard);hide(tmdInfoCard); goMain(); });
-  menuAbout.addEventListener("click",()=>{ hide(tmdMenu); openAbout(); });
-  backToMainBtn.addEventListener("click",()=>{ hide(resultCard);hide(testCard);hide(baselineCard);hide(tmdInfoCard); goMain(); });
+  onPressPointer(menuExport,()=>{ hide(tmdMenu); exportPDF(); });
+  onPressPointer(menuMain,()=>{ hide(tmdMenu);hide(baselineCard);hide(testCard);hide(resultCard);hide(tmdInfoCard); goMain(); });
+  onPressPointer(menuAbout,()=>{ hide(tmdMenu); openAbout(); });
+  onPressPointer(backToMainBtn,()=>{ hide(resultCard);hide(testCard);hide(baselineCard);hide(tmdInfoCard); goMain(); });
+  onPressPointer(document.getElementById('backToCogBtn'),()=>{ hide(resultCard); hide(testCard); hide(baselineCard); show(tmdRoot); show(tmdHome); scrollTopNow(); });
 
-  startBtn.addEventListener('click',runTest);
-  againBtn.addEventListener('click',runTest);
-  addBaselineBtn2.addEventListener('click',addCurrentToBaseline);
-  deleteBaselineBtn.addEventListener('click',()=>{
+  onPressPointer(startBtn,runTest);
+  onPressPointer(document.getElementById('cancelTestBtn'),()=>{
+  if(typeof cancelTestConfirm === 'function') cancelTestConfirm();
+});
+  onPressPointer(againBtn,runTest);
+  onPressPointer(addBaselineBtn2,addCurrentToBaseline);
+  onPressPointer(deleteBaselineBtn,()=>{
     if(confirm("Delete ALL baseline sessions on this device?")){
       baselineSessions=[];saveBaseline(baselineSessions);updateBaselineList();
     }
   });
-  closeBaselineBtn.addEventListener('click',()=>hide(baselineCard));
+  onPressPointer(closeBaselineBtn,()=>{ hide(baselineCard); show(tmdRoot); show(tmdHome); scrollTopNow(); });
 
-  $("#menuBaselineGlobal").addEventListener("click",()=>{
+  onPressPointer($("#menuBaselineGlobal"),()=>{
     closeGlobalMenu();
     if(!baselineSessions.length){
       alert("No baseline sessions stored on this device yet. Run the assessment on a good day and add results to baseline first.");
@@ -1037,7 +1131,7 @@
     }
     updateBaselineList(); openBaselineOnly();
   });
-  $("#menuExportGlobal").addEventListener("click",()=>{ closeGlobalMenu(); exportPDF(); });
+  onPressPointer($("#menuExportGlobal"),()=>{ closeGlobalMenu(); exportPDF(); });
 
   const DUR={warmup:5,srt:30,stroop:45,nbackGroups:12};
   const TOTAL_TIME=DUR.warmup+DUR.srt+5+DUR.stroop+6+15;
@@ -1076,6 +1170,12 @@
     });
     hide(betweenPane);
   }
+
+  function cancelTestConfirm(){
+  hide(testCard);
+  show(tmdHome);
+  scrollTopNow();
+}
 
   async function runTest(){
     sessionResult=null;addBaselineBtn2.disabled=true;
@@ -1431,13 +1531,13 @@
     openPrintOverlay("Second Opinion — Cognition & Acuity Summary",html);
   }
 
-  disclaimerLink?.addEventListener("click",()=>{ hide(resultCard);show(disclaimerCard);scrollTopNow();disclaimerCard.scrollIntoView({behavior:"auto"}); });
-  disclaimerBackBtn.addEventListener("click",()=>{ hide(disclaimerCard);show(resultCard);scrollTopNow(); });
+  if(disclaimerLink) onPressPointer(disclaimerLink,()=>{ hide(resultCard);show(disclaimerCard);scrollTopNow();disclaimerCard.scrollIntoView({behavior:"auto"}); });
+  onPressPointer(disclaimerBackBtn,()=>{ hide(disclaimerCard);show(resultCard);scrollTopNow(); });
 
   // FRAT
   const fratBeginBtn=$("#fratBeginBtn"),fratQCounter=$("#fratQCounter"),fratRunningTotal=$("#fratRunningTotal");
   const fratQCategory=$("#fratQCategory"),fratQText=$("#fratQText"),fratQScoreHint=$("#fratQScoreHint");
-  const fratNextBtn=$("#fratNextBtn"),fratQuitBtn=$("#fratQuitBtn"),fratRestartBtn=$("#fratRestartBtn"),fratResetBtn=$("#fratResetBtn");
+  const fratQuitBtn=$("#fratQuitBtn"),fratRestartBtn=$("#fratRestartBtn"),fratResetBtn=$("#fratResetBtn");
   const fratDot=$("#fratDot"),fratStatusLabel=$("#fratStatusLabel"),fratScoreText=$("#fratScoreText");
   const fratNarrative=$("#fratNarrative"),fratGuidance=$("#fratGuidance"),fratBreakdown=$("#fratBreakdown");
   const fratBandRef=$("#fratBandRef"),fratExportBtn=$("#fratExportBtn"),fratReviewList=$("#fratReviewList");
@@ -1472,15 +1572,21 @@
   function getFratProfile(){ return{rules:document.querySelector('input[name="fratRules"]:checked')?.value||null,exp:document.querySelector('input[name="fratExp"]:checked')?.value||null}; }
   function applicableToRules(itemRule,rules){ return itemRule==="BOTH"||itemRule===rules; }
   function updateBeginEnabled(){ const{rules,exp}=getFratProfile(); fratBeginBtn.disabled=!(rules&&exp); }
-  document.querySelectorAll('input[name="fratRules"],input[name="fratExp"]').forEach(r=>{ r.addEventListener("change",()=>{updateBeginEnabled();resetFratRunUIOnly();}); });
+  document.querySelectorAll('input[name="fratRules"],input[name="fratExp"]').forEach(r=>{ r.addEventListener("change",()=>{updateBeginEnabled();}); });
   updateBeginEnabled();
 
   function resetFratRunUIOnly(){
-    hide(fratWizardCard);hide(fratResultCard);show(fratIntroCard);
-    fratReviewList.innerHTML="";
-    document.querySelectorAll('input[name="fratWizardAns"]').forEach(x=>x.checked=false);
-    fratNextBtn.disabled=true;fratNextBtn.textContent="Next";
-  }
+  hide(fratWizardCard);
+  hide(fratResultCard);
+  show(fratIntroCard);
+  fratReviewList.innerHTML="";
+  document.querySelectorAll('input[name="fratWizardAns"]').forEach(x=>x.checked=false);
+  document.querySelectorAll('input[name="fratRules"]').forEach(x=>x.checked=false);
+  document.querySelectorAll('input[name="fratExp"]').forEach(x=>x.checked=false);
+  fratBeginBtn.disabled=true;
+  fratNextBtn.disabled=true;
+  fratNextBtn.textContent="Next";
+}
 
   function startFratWizard(){
     const{rules,exp}=getFratProfile();
@@ -1492,7 +1598,7 @@
     scrollTopNow();fratWizardCard.scrollIntoView({behavior:"auto"});
     renderFratQuestion();
   }
-  fratBeginBtn.addEventListener("click",startFratWizard);
+  onPressPointer(fratBeginBtn,startFratWizard);
 
   function runningTotal(){ let t=0;for(const it of fratState.items){if(fratState.answers[it.id]===true)t+=it.score;}return t; }
 
@@ -1507,22 +1613,49 @@
     document.querySelectorAll('input[name="fratWizardAns"]').forEach(r=>{ r.checked=(String(saved)===r.value); });
     fratNextBtn.textContent=(i===items.length-1)?"Finish":"Next";
     fratNextBtn.disabled=(saved!==true&&saved!==false);
+    document.getElementById('fratPrevBtn').disabled=(fratState.idx===0);
     scrollTopNow();fratWizardCard.scrollIntoView({behavior:"auto"});
   }
-  document.querySelectorAll('input[name="fratWizardAns"]').forEach(r=>{ r.addEventListener("change",()=>{fratNextBtn.disabled=false;}); });
-
-  fratQuitBtn.addEventListener("click",()=>{ if(confirm("Quit FRAT and discard this run?")){fratState.idx=0;fratState.answers={};resetFratRunUIOnly();scrollTopNow();} });
-  fratNextBtn.addEventListener("click",()=>{
-    const it=fratState.items[fratState.idx];
-    const selected=document.querySelector('input[name="fratWizardAns"]:checked')?.value;
-    if(selected!=="true"&&selected!=="false"){alert("Select True or False, then tap Next.");return;}
-    fratState.answers[it.id]=(selected==="true");
-    document.querySelectorAll('input[name="fratWizardAns"]').forEach(x=>x.checked=false);
-    if(fratState.idx>=fratState.items.length-1){computeAndShowFratResults();return;}
-    fratState.idx++;renderFratQuestion();
+  document.querySelectorAll('input[name="fratWizardAns"]').forEach(r=>{
+    r.addEventListener("change",()=>{
+      const it=fratState.items[fratState.idx];
+      const selected=document.querySelector('input[name="fratWizardAns"]:checked')?.value;
+      if(selected!=="true"&&selected!=="false") return;
+      fratState.answers[it.id]=(selected==="true");
+      document.querySelectorAll('input[name="fratWizardAns"]').forEach(x=>x.checked=false);
+      if(fratState.idx>=fratState.items.length-1){
+        computeAndShowFratResults();
+        return;
+      }
+      fratState.idx++;
+      renderFratQuestion();
+    });
   });
-  fratRestartBtn?.addEventListener("click",()=>startFratWizard());
-  fratResetBtn.addEventListener("click",()=>{ if(confirm("Clear FRAT answers and results?")){fratState.answers={};fratReviewList.innerHTML="";hide(fratResultCard);hide(fratWizardCard);show(fratIntroCard);scrollTopNow();} });
+
+  onPressPointer(fratQuitBtn,()=>{ fratState.idx=0;fratState.answers={};resetFratRunUIOnly();scrollTopNow(); });
+
+  onPressPointer(document.getElementById('fratPrevBtn'), ()=>{
+  if(fratState.idx<=0){ resetFratRunUIOnly(); scrollTopNow(); return; }
+  const it=fratState.items[fratState.idx];
+  const selected=document.querySelector('input[name="fratWizardAns"]:checked')?.value;
+  if(selected==="true"||selected==="false") fratState.answers[it.id]=(selected==="true");
+  document.querySelectorAll('input[name="fratWizardAns"]').forEach(x=>x.checked=false);
+  fratState.idx--;
+  renderFratQuestion();
+});
+  if(fratRestartBtn) onPressPointer(fratRestartBtn,()=>startFratWizard());
+  onPressPointer(document.getElementById('fratMainMenuBtn'),()=>{ goMain(); });
+  onPressPointer(fratResetBtn,()=>{
+  fratState.answers={};
+  fratReviewList.innerHTML="";
+  hide(fratResultCard);
+  hide(fratWizardCard);
+  show(fratIntroCard);
+  document.querySelectorAll('input[name="fratRules"]').forEach(x=>x.checked=false);
+  document.querySelectorAll('input[name="fratExp"]').forEach(x=>x.checked=false);
+  fratBeginBtn.disabled=true;
+  scrollTopNow();
+});
 
   function computeAndShowFratResults(){
     const rules=fratState.rules,exp=fratState.exp;
@@ -1558,7 +1691,8 @@
     fratBreakdown.innerHTML=catLines.length?catLines.join(""):"<div>No items scored True.</div>";
     fratBandRef.textContent=bandText;
     buildFratReviewList();
-    hide(fratWizardCard);show(fratResultCard);scrollTopNow();fratResultCard.scrollIntoView({behavior:"auto"});
+    hide(fratWizardCard);show(fratResultCard);
+    setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50);
     fratResultCard.dataset.payload=JSON.stringify({total,band,byCat,rules,exp,answers:fratState.answers,items:fratState.items});
   }
 
@@ -1572,7 +1706,7 @@
     fratReviewList.innerHTML=html||"<div class='muted'>No questions.</div>";
   }
 
-  fratExportBtn.addEventListener("click",()=>{
+  onPressPointer(fratExportBtn,()=>{
     const payload=fratResultCard.dataset.payload?JSON.parse(fratResultCard.dataset.payload):null;
     const when=new Date().toLocaleString();
     if(!payload){openPrintOverlay("Second Opinion — FRAT Summary",`<div class="printDoc"><h1>Second Opinion — Flight Risk Assessment (FRAT)</h1><div class="pmuted">Generated: ${when}</div><div class="pbox"><b>No FRAT result to export.</b></div></div>`);return;}
