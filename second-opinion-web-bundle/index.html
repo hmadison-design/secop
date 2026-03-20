@@ -41,8 +41,7 @@
     margin:0 auto;
     padding:16px 16px 24px;
     min-height:100vh;
-    position:relative;
-    z-index:1;
+    transform:translateZ(0);
   }
   .card{
     background:var(--card);
@@ -172,22 +171,37 @@
 
   .globalMenuBtn{
     position:fixed;
-    top:10px;right:10px;
-    width:40px;height:40px;
+    top:52px;right:16px;
+    width:48px;height:48px;
     border-radius:999px;
     border:1px solid var(--border);
     background:rgba(255,255,255,0.85);
     color:#0d1b2a;
     display:flex;align-items:center;justify-content:center;
     font-size:1.1rem;
-    z-index:9999;
+    z-index:99998;
     cursor:pointer;
     box-shadow:0 4px 12px rgba(0,0,0,.45);
   }
   .globalMenuBtn:active{transform:translateY(1px) scale(.97);}
   .globalMenuSheet{
-    position:fixed;top:56px;right:10px;
-    width:260px;z-index:9998;
+    position:fixed;top:110px;right:16px;
+    width:260px;z-index:99997;
+  }
+  .globalMenuSheet{
+    background:#1a2f45 !important;
+    border:1px solid rgba(255,255,255,.15) !important;
+  }
+  .globalMenuSheet h3{
+    color:#ffffff;
+  }
+  .globalMenuSheet .btn{
+    background:#1a2f45;
+    color:#ffffff;
+    border:1px solid rgba(255,255,255,.3);
+  }
+  .globalMenuSheet .hr{
+    background:rgba(255,255,255,.2);
   }
   .globalMenuSheet .btn{
     width:100%;justify-content:flex-start;text-align:left;
@@ -455,7 +469,7 @@
   <section id="globalMenuSheet" class="card globalMenuSheet hide" aria-label="Second Opinion menu">
     <h3 style="margin-top:0;">Menu</h3>
     <button id="menuMainGlobal"     type="button" class="btn btn-ghost">Main Menu</button>
-    <button id="menuCogGlobal"      type="button" class="btn btn-sm">Cog. &amp; Acuity</button>
+    <button id="menuCogGlobal"      type="button" class="btn btn-ghost">Cognition/Acuity</button>
     <button id="menuFratGlobal"     type="button" class="btn btn-ghost">FRAT Survey</button>
     <div class="hr"></div>
     <button id="menuBaselineGlobal" type="button" class="btn btn-ghost">Baselines</button>
@@ -819,7 +833,7 @@
   if(introScreen){
     setTimeout(()=>{
       introScreen.classList.add('fade-out');
-      setTimeout(()=>{ introScreen.style.display='none'; }, 600);
+      setTimeout(()=>{ introScreen.style.display='none'; introScreen.style.zIndex='-1'; }, 600);
     }, 3100);
   }
 
