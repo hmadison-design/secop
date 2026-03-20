@@ -54,7 +54,7 @@
     display:flex;
     flex-direction:column;
     position:relative;
-    justify-content:space-between;
+    justify-content:flex-start;
     padding:20px 16px 28px;
   }
   #modeCard .footer-link{
@@ -220,7 +220,7 @@
     flex-direction:column;
     align-items:center;
     text-align:center;
-    padding:14px 8px 8px;
+    padding:24px 8px 4px;
     gap:4px;
   }
   .app-icon-wrap img{
@@ -231,14 +231,23 @@
     border:1px solid rgba(255,255,255,.08);
   }
   .app-name{
-    font-size:1.9rem;font-weight:700;
+    font-size:2.8rem;font-weight:700;
     color:#0d1b2a;
     letter-spacing:-.02em;
     margin:8px 0 0;
+    margin-bottom:0;
     line-height:1.1;
   }
+  .app-name-accent{
+    display:block;
+    width:48px;
+    height:3px;
+    background:var(--accent);
+    border-radius:999px;
+    margin:10px auto 12px;
+  }
   .app-tagline{
-    font-size:1.15rem;color:#3a6186;font-weight:500;
+    font-size:1.2rem;color:#3a6186;font-weight:500;
     margin:3px 0 0;letter-spacing:-.01em;
   }
 
@@ -247,18 +256,19 @@
     display:flex;
     flex-direction:row;
     align-items:stretch;
-    gap:10px;
-    margin-top:auto;
+    gap:14px;
+    margin-top:32px;
   }
   .mainActions .btn{
     flex:1;
+    flex-direction:column;
     justify-content:center;
     text-align:center;
     padding:22px 12px;
-    font-size:1.1rem;
+    font-size:1.15rem;
     letter-spacing:-.01em;
     font-weight:700;
-    min-height:80px;
+    min-height:130px;
     border-radius:14px;
     gap:14px;
     white-space:normal;
@@ -361,6 +371,7 @@
       <img src="SecOpIconFinal.png" alt="Second Opinion app icon"
            onerror="this.style.opacity='.4'">
       <div class="app-name">Second Opinion</div>
+      <span class="app-name-accent"></span>
       <div class="app-tagline">Real Flights · Human Factors · Safer Skies</div>
       <div style="margin-top:8px;">
         <a href="javascript:void(0)" id="appInfoLink" class="infoLink">What is this?</a>
