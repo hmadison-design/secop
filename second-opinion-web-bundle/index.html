@@ -17,7 +17,7 @@
      Nothing here that wasn't already working in the original.
      ============================================================ */
   :root{
-    --bg:#f0f4f8;
+    --bg:#b8e0f7;
     --card:#ffffff;
     --ink:#0d1b2a;
     --muted:#5a7184;
@@ -31,6 +31,7 @@
   body{
     margin:0;
     background:var(--bg);
+    background: #b8e0f7;
     color:var(--ink);
     font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
     color: var(--ink);
@@ -40,6 +41,8 @@
     margin:0 auto;
     padding:16px 16px 24px;
     min-height:100vh;
+    position:relative;
+    z-index:1;
   }
   .card{
     background:var(--card);
@@ -56,6 +59,9 @@
     position:relative;
     justify-content:flex-start;
     padding:20px 16px 28px;
+    background:transparent;
+    border:none;
+    box-shadow:none;
   }
   #modeCard .footer-link{
     position:static;
@@ -344,11 +350,105 @@
   .row>*,.grid>*{min-width:0;}
   .card{max-width:100%;}
   h1,h2,h3,p,div,span{overflow-wrap:anywhere;word-break:normal;}
+
+  /* ============================================================
+     INTRO ANIMATION
+     ============================================================ */
+  #introScreen{
+    position:fixed;
+    inset:0;
+    background:#0a0f16;
+    z-index:99999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+  }
+  #introScreen.fade-out{
+    animation:introFadeOut .6s ease-in forwards;
+  }
+  @keyframes introFadeOut{
+    from{opacity:1;}
+    to{opacity:0;pointer-events:none;}
+  }
+  .intro-phrase{
+    position:absolute;
+    font-size:clamp(2.4rem,11vw,4.2rem);
+    font-weight:800;
+    color:#ffffff;
+    letter-spacing:-.03em;
+    line-height:1.1;
+    text-align:center;
+    padding:0 24px;
+    opacity:0;
+  }
+  .intro-phrase.p1{animation:phraseAnim .9s ease-in-out forwards;animation-delay:.05s;}
+  .intro-phrase.p2{animation:phraseAnim .9s ease-in-out forwards;animation-delay:.85s;}
+  .intro-phrase.p3{animation:phraseAnim .9s ease-in-out forwards;animation-delay:1.65s;}
+  @keyframes phraseAnim{
+    0%{opacity:0;transform:translateY(8px);}
+    25%{opacity:1;transform:translateY(0);}
+    75%{opacity:1;transform:translateY(0);}
+    100%{opacity:0;transform:translateY(-8px);}
+  }
+  .intro-logo{
+    position:absolute;
+    opacity:0;
+    animation:logoAnim 1.2s ease-in forwards;
+    animation-delay:2.45s;
+  }
+  .intro-logo img{
+    width:140vw;
+    max-width:none;
+    height:auto;
+    border-radius:24px;
+  }
+  @keyframes logoAnim{
+    0%{opacity:1;transform:scale(1);}
+    100%{opacity:0;transform:scale(.3);}
+  }
+
+  /* ============================================================
+     MAIN SCREEN — post-intro
+     ============================================================ */
+  .main-heading{
+    font-size:clamp(2rem,9.5vw,3.6rem);
+    font-weight:800;
+    letter-spacing:-.03em;
+    text-align:center;
+    color:#1a2f45;
+    line-height:1.05;
+    margin:0 0 8px;
+    padding:0 8px;
+  }
+  body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 180'%3E%3Cg fill='white' fill-opacity='0.78'%3E%3Cellipse cx='130' cy='155' rx='118' ry='22'/%3E%3Cellipse cx='90' cy='140' rx='72' ry='28'/%3E%3Cellipse cx='160' cy='135' rx='68' ry='30'/%3E%3Cellipse cx='115' cy='118' rx='58' ry='32'/%3E%3Cellipse cx='75' cy='108' rx='44' ry='28'/%3E%3Cellipse cx='155' cy='105' rx='50' ry='30'/%3E%3Cellipse cx='108' cy='90' rx='42' ry='28'/%3E%3Cellipse cx='140' cy='82' rx='36' ry='26'/%3E%3Cellipse cx='95' cy='72' rx='30' ry='24'/%3E%3Cellipse cx='125' cy='60' rx='24' ry='20'/%3E%3Cellipse cx='108' cy='48' rx='18' ry='16'/%3E%3Cellipse cx='118' cy='38' rx='14' ry='12'/%3E%3Cellipse cx='50' cy='125' rx='28' ry='18'/%3E%3Cellipse cx='200' cy='120' rx='32' ry='20'/%3E%3Cellipse cx='35' cy='148' rx='22' ry='14'/%3E%3Cellipse cx='220' cy='145' rx='26' ry='16'/%3E%3Cellipse cx='170' cy='68' rx='22' ry='18'/%3E%3Cellipse cx='178' cy='52' rx='16' ry='14'/%3E%3C/g%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 160'%3E%3Cg fill='white' fill-opacity='0.65'%3E%3Cellipse cx='100' cy='138' rx='90' ry='20'/%3E%3Cellipse cx='68' cy='122' rx='58' ry='26'/%3E%3Cellipse cx='130' cy='118' rx='54' ry='28'/%3E%3Cellipse cx='96' cy='102' rx='46' ry='28'/%3E%3Cellipse cx='62' cy='90' rx='36' ry='24'/%3E%3Cellipse cx='128' cy='86' rx='40' ry='26'/%3E%3Cellipse cx='92' cy='72' rx='32' ry='22'/%3E%3Cellipse cx='115' cy='60' rx='26' ry='20'/%3E%3Cellipse cx='86' cy='48' rx='20' ry='18'/%3E%3Cellipse cx='100' cy='36' rx='15' ry='14'/%3E%3Cellipse cx='108' cy='24' rx='11' ry='10'/%3E%3Cellipse cx='38' cy='110' rx='24' ry='15'/%3E%3Cellipse cx='162' cy='106' rx='26' ry='16'/%3E%3Cellipse cx='148' cy='72' rx='18' ry='14'/%3E%3Cellipse cx='154' cy='56' rx='13' ry='11'/%3E%3C/g%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 140'%3E%3Cg fill='white' fill-opacity='0.58'%3E%3Cellipse cx='90' cy='122' rx='80' ry='17'/%3E%3Cellipse cx='62' cy='108' rx='52' ry='24'/%3E%3Cellipse cx='116' cy='104' rx='48' ry='25'/%3E%3Cellipse cx='86' cy='88' rx='40' ry='25'/%3E%3Cellipse cx='56' cy='76' rx='30' ry='20'/%3E%3Cellipse cx='114' cy='72' rx='34' ry='22'/%3E%3Cellipse cx='82' cy='58' rx='26' ry='19'/%3E%3Cellipse cx='102' cy='46' rx='20' ry='17'/%3E%3Cellipse cx='78' cy='34' rx='15' ry='14'/%3E%3Cellipse cx='90' cy='22' rx='11' ry='10'/%3E%3Cellipse cx='34' cy='96' rx='20' ry='13'/%3E%3Cellipse cx='146' cy='92' rx='22' ry='14'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 62% auto, 44% auto, 36% auto;
+    background-position: -8% 30%, 58% 55%, 18% 75%;
+    background-repeat: no-repeat;
+  }
 </style>
 </head>
 
 <body>
 <div class="wrap">
+
+  <div id="introScreen" aria-hidden="true">
+    <span class="intro-phrase p1">Real Flights</span>
+    <span class="intro-phrase p2">Human Factors</span>
+    <span class="intro-phrase p3">Safer Skies</span>
+    <div class="intro-logo">
+      <img src="SecOpIconFinal.png" alt="Second Opinion">
+    </div>
+  </div>
 
   <!-- GLOBAL MENU -->
   <button id="globalMenuBtn" type="button" class="globalMenuBtn" aria-label="Open menu">☰</button>
@@ -367,27 +467,17 @@
   <!-- MAIN MENU -->
   <section id="modeCard" class="card">
 
-    <div class="app-icon-wrap">
-      <img src="SecOpIconFinal.png" alt="Second Opinion app icon"
-           onerror="this.style.opacity='.4'">
-      <div class="app-name">Second Opinion</div>
-      <span class="app-name-accent"></span>
-      <div class="app-tagline">Real Flights · Human Factors · Safer Skies</div>
-      <div style="margin-top:8px;">
-        <a href="javascript:void(0)" id="appInfoLink" class="infoLink">What is this?</a>
-      </div>
+    <div style="display:flex;flex-direction:column;align-items:center;padding:48px 8px 8px;gap:6px;">
+      <div class="main-heading">SELECT AN<br>ASSESSMENT</div>
     </div>
 
-    <div class="mainActions">
-      <button id="goTmdBtn" type="button" class="btn">
-        Cognition &amp; Acuity
-      </button>
-      <button id="goFratBtn" type="button" class="btn" style="background:#1a2f45;">
-        FRAT Assessment
-      </button>
+    <div class="mainActions" style="margin-top:auto;margin-bottom:120px;">
+      <button id="goTmdBtn" type="button" class="btn" style="background:#1a2f45;">Cognition &amp; Acuity</button>
+      <button id="goFratBtn" type="button" class="btn" style="background:#1a2f45;">FRAT Assessment</button>
     </div>
 
-    <div class="footer-link muted" style="font-style:italic;">
+    <div class="footer-link muted" style="font-style:italic;text-align:center;margin-top:auto;padding-top:16px;">
+      <a href="javascript:void(0)" id="appInfoLink" class="infoLink" style="display:block;margin-bottom:6px;">What is this?</a>
       © Flying M 2025
     </div>
   </section>
@@ -724,6 +814,15 @@
 
 <script>
 (function(){
+  // Intro animation
+  const introScreen = document.getElementById('introScreen');
+  if(introScreen){
+    setTimeout(()=>{
+      introScreen.classList.add('fade-out');
+      setTimeout(()=>{ introScreen.style.display='none'; }, 600);
+    }, 3100);
+  }
+
   const $ = s=>document.querySelector(s);
   const fmt = n=>(typeof n==="number"&&isFinite(n)?Math.round(n*10)/10:n);
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
