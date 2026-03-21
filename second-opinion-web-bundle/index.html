@@ -41,7 +41,8 @@
     margin:0 auto;
     padding:16px 16px 24px;
     min-height:100vh;
-    transform:translateZ(0);
+    position:relative;
+    z-index:1;
   }
   .card{
     background:var(--card);
@@ -525,6 +526,24 @@
 .printDoc b{
   color:#1a2f45 !important;
 }
+#resultCard .muted{ color:#5a7184 !important; }
+#resultCard h3{ color:#1a2f45 !important; }
+#resultCard .resultLine.green{ color:var(--good); }
+#resultCard .resultLine.amber{ color:var(--warn); }
+#resultCard .resultLine.red{ color:var(--bad); }
+#baselineCard h2{ color:#1a2f45; }
+#baselineCard .muted{ color:#5a7184; }
+#tmdInfoCard{ margin-top:60px; background:#ffffff; border:1px solid #dce4ed; }
+#tmdInfoCard h2{ color:#1a2f45; }
+#tmdInfoCard .muted{ color:#5a7184; }
+#disclaimerCard{ margin-top:60px; background:#ffffff; border:1px solid #dce4ed; }
+#disclaimerCard h2{ color:#1a2f45; }
+#disclaimerCard .muted{ color:#5a7184; }
+#appInfoCard{ margin-top:80px; background:#ffffff; border:1px solid #dce4ed; }
+#appInfoCard h2{ color:#1a2f45; }
+#appInfoCard .muted{ color:#5a7184; }
+.pill{ background:#f0f6ff; border:1px solid #dce4ed; color:#5a7184; }
+.bar{ background:#dce4ed; }
 </style>
 </head>
 
@@ -549,7 +568,7 @@
     <button id="menuFratGlobal"     type="button" class="btn btn-ghost">FRAT Survey</button>
     <div class="hr"></div>
     <button id="menuBaselineGlobal" type="button" class="btn btn-ghost">Baselines</button>
-    <button id="menuExportGlobal"   type="button" class="btn btn-ghost">Export Data</button>
+    <button id="menuExportGlobal"   type="button" class="btn btn-ghost">Export Assessment</button>
     <div class="hr"></div>
     <button id="menuAboutGlobal"    type="button" class="btn btn-ghost">About</button>
   </section>
@@ -623,42 +642,17 @@
 
   <!-- COGNITION & ACUITY ROOT -->
   <div id="tmdRoot" class="hide">
-    <section id="tmdHome" class="card">
-      <div class="row" style="justify-content:space-between;align-items:flex-start">
-        <div class="row" style="align-items:center;gap:18px">
-          <div style="background:#ffffff;border-radius:16px;padding:12px 16px;">
-            <img src="SVG_VERSION_OST_Main_Logo.svg" alt="On Second Thought logo" style="height:100px;display:block;">
-          </div>
-          <div>
-            <h1>Cognition &amp; Acuity Assessment</h1>
-            <div class="muted" style="margin-top:4px;">
-              A quick mental snapshot before you fly: reaction speed, color–word control, and 2-back working memory.
-            </div>
-            <div style="margin-top:12px;">
-              <button id="startBtn" type="button" class="btn">Start Assessment</button>
-            </div>
-            <div style="margin-top:8px;">
-              <a href="javascript:void(0)" id="tmdInfoBtn" class="infoLink">What is this?</a>
-            </div>
-          </div>
-        </div>
-        <button id="tmdMenuBtn" type="button" class="btn btn-sm btn-ghost" aria-label="Cognition &amp; Acuity menu">☰</button>
+    <section id="tmdHome" class="card" style="margin-top:60px;background:#ffffff;border:1px solid #dce4ed;">
+      <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px 8px 12px;gap:6px;">
+        <h1 style="font-size:2rem;font-weight:800;letter-spacing:-.025em;color:#1a2f45;margin:0;">Cognition &amp; Acuity</h1>
+        <p class="muted" style="font-size:1rem;margin:4px 0 0;color:#5a7184;max-width:320px;">A quick mental snapshot before you fly — reaction speed, color–word control, and working memory.</p>
+        <a href="javascript:void(0)" id="tmdInfoBtn" class="infoLink" style="margin-top:4px;">What is this?</a>
       </div>
-      <div id="tmdMenu" class="card hide">
-        <h3>Cognition &amp; Acuity menu</h3>
-        <div class="muted" style="margin-bottom:4px;font-size:.9rem">Actions apply to this device only.</div>
-        <div class="row" style="margin-top:4px;">
-          <button id="menuAddBaseline"    type="button" class="btn btn-sm">Add this result to baseline</button>
-          <button id="menuManageBaseline" type="button" class="btn btn-sm btn-ghost">Manage baseline</button>
-        </div>
-        <div class="row" style="margin-top:8px;">
-          <button id="menuExport" type="button" class="btn btn-sm btn-ghost">Export Assessment PDF</button>
-          <button id="menuAbout"  type="button" class="btn btn-sm btn-ghost">About</button>
-          <button id="menuMain"   type="button" class="btn btn-sm btn-ghost">Main Menu</button>
-        </div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin:auto 0;padding:8px 0;">
+        <button id="startBtn" type="button" class="btn" style="width:100%;min-height:88px;font-size:1.3rem;font-weight:800;letter-spacing:-.01em;background:#1a2f45;">Start Assessment</button>
       </div>
-      <div class="footer-link muted">
-        Learn more at <a href="https://OnSecondThought.me" target="_blank" rel="noopener noreferrer">OnSecondThought.me</a>.
+      <div style="margin-top:auto;padding-top:16px;text-align:center;font-size:.85rem;color:#5a7184;font-style:italic;">
+        <a href="https://OnSecondThought.me" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none;">OnSecondThought.me</a>
       </div>
     </section>
 
@@ -679,7 +673,7 @@
       <button id="tmdInfoBackBtn" type="button" class="btn btn-ghost">Back to Cognition &amp; Acuity</button>
     </section>
 
-    <section id="testCard" class="card hide">
+    <section id="testCard" class="card hide" style="margin-top:60px;background:#ffffff;border:1px solid #dce4ed;">
       <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
   <button id="cancelTestBtn" type="button" class="btn btn-ghost btn-sm">Cancel Assessment</button>
 </div>
@@ -709,8 +703,8 @@
         <div id="betweenCountdown" class="big" style="font-size:3rem;">5</div>
       </div>
       <div id="preNbackPane" class="center hide" style="min-height:120px;margin-top:10px;flex-direction:column;gap:8px;">
-        <div class="muted">When you're ready, start the working-memory segment.</div>
-        <button id="startNbackBtn" type="button" class="btn">Tap to begin 2-Back Test</button>
+        <div class="muted">When you're ready, start the 2-and-4 working memory test.</div>
+        <button id="startNbackBtn" type="button" class="btn">Tap to begin 2-and-4 Test</button>
         <div class="muted" id="preNbackHint"></div>
       </div>
       <div id="nbackPane" class="hide" style="min-height:260px">
@@ -726,35 +720,35 @@
             <button id="btnNotTarget" type="button" class="btn btn-ghost">NOT TARGET</button>
           </div>
         </div>
-        <div class="muted center" style="margin-top:8px">
-          Each group: flash 2 digits, then show the 3rd and respond.
-          Keyboard: <span class="kbd">Space</span>=TARGET &nbsp; <span class="kbd">N</span>=NOT TARGET.
+        <div class="muted center" style="margin-top:8px;font-size:.85rem;">
+          Does the 2nd number match the 4th?
         </div>
       </div>
     </section>
 
-    <section id="resultCard" class="card hide">
+    <section id="resultCard" class="card hide" style="margin-top:80px;background:#ffffff;border:1px solid #dce4ed;">
+      <div id="resultTimestamp" style="font-size:.8rem;color:#5a7184;text-align:right;margin-bottom:8px;"></div>
       <div id="resultLine" class="resultLine amber">RESULT: —</div>
-      <div class="card" style="margin:10px 0;background:#0f1622;border:1px solid #1e3050">
+      <div style="margin:10px 0;background:#f0f6ff;border:1px solid #dce4ed;border-radius:14px;padding:14px;">
         <b>SECOND OPINION:</b> <span id="guidanceText">—</span>
       </div>
       <div class="grid grid-2" style="margin-top:6px;">
-        <div><h3>Today's metrics</h3><div class="muted" id="metricToday"></div></div>
-        <div><h3>Baseline Averages</h3><div class="muted" id="metricBase"></div></div>
+        <div><h3 style="color:#1a2f45;">Today's metrics</h3><div class="muted" id="metricToday"></div></div>
+        <div><h3 style="color:#1a2f45;">Baseline Averages</h3><div class="muted" id="metricBase"></div></div>
       </div>
       <div class="hr"></div>
-      <div class="row" style="gap:10px;">
-        <button id="againBtn"        type="button" class="btn">Start Assessment Again</button>
-        <button id="backToCogBtn"    type="button" class="btn btn-ghost">Back to Cognition &amp; Acuity</button>
-        <button id="addBaselineBtn2" type="button" class="btn btn-ghost" disabled>Add This Result to Baseline</button>
-        <button id="backToMainBtn"   type="button" class="btn btn-ghost">Main Menu</button>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;">
+        <button id="againBtn" type="button" class="btn" style="background:#1a2f45;">Start Again</button>
+        <button id="backToCogBtn" type="button" class="btn btn-ghost">Cog &amp; Acuity</button>
+        <button id="addBaselineBtn2" type="button" class="btn btn-ghost" disabled>Add to Baseline</button>
+        <button id="backToMainBtn" type="button" class="btn btn-ghost">Main Menu</button>
       </div>
       <div class="footer-link muted" style="margin-top:10px;">
         <a href="javascript:void(0)" id="disclaimerLink">Disclaimer</a>
       </div>
     </section>
 
-    <section id="baselineCard" class="card hide">
+    <section id="baselineCard" class="card hide" style="margin-top:60px;background:#ffffff;border:1px solid #dce4ed;">
       <h2>Baseline Sessions</h2>
       <div id="baselineList" class="muted">No baseline yet.</div>
       <div class="row" style="margin-top:10px">
@@ -1012,7 +1006,6 @@
   const testCard=$("#testCard");
   const resultCard=$("#resultCard");
   const baselineCard=$("#baselineCard");
-  const tmdMenu=$("#tmdMenu");
   const fratResultCard=$("#fratResultCard");
   const fratIntroCard=$("#fratIntroCard");
   const fratWizardCard=$("#fratWizardCard");
@@ -1020,7 +1013,7 @@
   function hideAllAppScreens(){
     hide(modeCard);hide(appInfoCard);hide(disclaimerCard);
     hide(tmdRoot);hide(fratRoot);
-    hide(tmdHome);hide(tmdInfoCard);hide(testCard);hide(resultCard);hide(baselineCard);hide(tmdMenu);
+    hide(tmdHome);hide(tmdInfoCard);hide(testCard);hide(resultCard);hide(baselineCard);
     hide(fratIntroCard);hide(fratWizardCard);hide(fratResultCard);
     closeExplainer(); closePrintOverlay();
   }
@@ -1033,9 +1026,9 @@
   document.querySelectorAll('input[name="fratExp"]').forEach(x=>x.checked=false);
   fratBeginBtn.disabled=true;
 }
-  function openCognitionHome(){ hideAllAppScreens(); show(tmdRoot); show(tmdHome); scrollTopNow(); }
-  function openFrat(){ hideAllAppScreens(); show(fratRoot); show(fratIntroCard); scrollTopNow(); }
-  function openAbout(){ hideAllAppScreens(); show(appInfoCard); scrollTopNow(); appInfoCard.scrollIntoView({behavior:"auto"}); }
+  function openCognitionHome(){ hideAllAppScreens(); show(tmdRoot); show(tmdHome); setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50); }
+  function openFrat(){ hideAllAppScreens(); show(fratRoot); show(fratIntroCard); setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50); }
+  function openAbout(){ hideAllAppScreens(); show(appInfoCard); setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50); }
   function openBaselineOnly(){
     hideAllAppScreens(); show(tmdRoot); show(baselineCard);
     scrollTopNow(); baselineCard.scrollIntoView({behavior:"auto"});
@@ -1047,7 +1040,7 @@
   onPressPointer(appInfoLink,openAbout);
   onPressPointer(appInfoBackBtn,goMain);
 
-  onPressPointer(tmdInfoBtn,()=>{ hide(tmdHome); hide(tmdMenu); show(tmdInfoCard); scrollTopNow(); });
+  onPressPointer(tmdInfoBtn,()=>{ hide(tmdHome); show(tmdInfoCard); setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50); });
   onPressPointer(tmdInfoBackBtn,()=>{ hide(tmdInfoCard); show(tmdHome); scrollTopNow(); });
 
   onPressPointer($("#menuMainGlobal"),()=>{ closeGlobalMenu(); goMain(); });
@@ -1076,11 +1069,11 @@
   const storeKey="flyingm_imsafe_baseline_v2";
   const loadBaseline=()=>{try{return JSON.parse(localStorage.getItem(storeKey)||"[]");}catch{return[];}};
   const saveBaseline=s=>localStorage.setItem(storeKey,JSON.stringify(s||[]));
+  const resultsKey="flyingm_all_results_v1";
+  const loadAllResults=()=>{try{return JSON.parse(localStorage.getItem(resultsKey)||"[]");}catch{return[];}};
+  const saveAllResults=s=>localStorage.setItem(resultsKey,JSON.stringify(s||[]));
 
   const startBtn=$("#startBtn"),addBaselineBtn2=$("#addBaselineBtn2");
-  const tmdMenuBtn=$("#tmdMenuBtn");
-  const menuAddBaseline=$("#menuAddBaseline"),menuManageBaseline=$("#menuManageBaseline");
-  const menuExport=$("#menuExport"),menuMain=$("#menuMain"),menuAbout=$("#menuAbout");
   const stepName=$("#stepName"),countdown=$("#countdown"),progressBar=$("#progressBar");
   const srtPane=$("#srtPane"),srtTarget=$("#srtTarget");
   const stroopPane=$("#stroopPane"),stroopWord=$("#stroopWord"),btnMatch=$("#btnMatch"),btnMismatch=$("#btnMismatch");
@@ -1097,18 +1090,8 @@
 
   function setProgress(p){progressBar.style.width=(p*100).toFixed(1)+"%";}
 
-  onPressPointer(tmdMenuBtn,()=>{ if(tmdMenu.classList.contains("hide")) show(tmdMenu); else hide(tmdMenu); });
-  onPressPointer(menuAddBaseline,()=>{ hide(tmdMenu); addCurrentToBaseline(); });
-  onPressPointer(menuManageBaseline,()=>{
-    hide(tmdMenu); updateBaselineList();
-    hide(resultCard);hide(testCard);hide(tmdInfoCard);
-    show(baselineCard);scrollTopNow();
-  });
-  onPressPointer(menuExport,()=>{ hide(tmdMenu); exportPDF(); });
-  onPressPointer(menuMain,()=>{ hide(tmdMenu);hide(baselineCard);hide(testCard);hide(resultCard);hide(tmdInfoCard); goMain(); });
-  onPressPointer(menuAbout,()=>{ hide(tmdMenu); openAbout(); });
-  onPressPointer(backToMainBtn,()=>{ hide(resultCard);hide(testCard);hide(baselineCard);hide(tmdInfoCard); goMain(); });
-  onPressPointer(document.getElementById('backToCogBtn'),()=>{ hide(resultCard); hide(testCard); hide(baselineCard); show(tmdRoot); show(tmdHome); scrollTopNow(); });
+  onPressPointer(backToMainBtn,()=>{ hide(resultCard);hide(testCard);hide(baselineCard);hide(tmdInfoCard); goMain(); setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50); });
+  onPressPointer(document.getElementById('backToCogBtn'),()=>{ hide(resultCard); hide(testCard); hide(baselineCard); show(tmdRoot); show(tmdHome); setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50); });
 
   onPressPointer(startBtn,runTest);
   onPressPointer(document.getElementById('cancelTestBtn'),()=>{
@@ -1117,16 +1100,17 @@
   onPressPointer(againBtn,runTest);
   onPressPointer(addBaselineBtn2,addCurrentToBaseline);
   onPressPointer(deleteBaselineBtn,()=>{
-    if(confirm("Delete ALL baseline sessions on this device?")){
-      baselineSessions=[];saveBaseline(baselineSessions);updateBaselineList();
-    }
+    baselineSessions=[];
+    saveBaseline(baselineSessions);
+    updateBaselineList();
+    showToast("All baseline sessions deleted.");
   });
   onPressPointer(closeBaselineBtn,()=>{ hide(baselineCard); show(tmdRoot); show(tmdHome); scrollTopNow(); });
 
   onPressPointer($("#menuBaselineGlobal"),()=>{
     closeGlobalMenu();
     if(!baselineSessions.length){
-      alert("No baseline sessions stored on this device yet. Run the assessment on a good day and add results to baseline first.");
+      showToast("No baseline sessions yet. Run an assessment on a good day first.");
       return;
     }
     updateBaselineList(); openBaselineOnly();
@@ -1196,10 +1180,10 @@
     hide(preNbackPane);
     if(!started){
       hide(testCard);
-      alert("2-back segment was not started within 10 seconds. The assessment has been cancelled. Please run it again for valid results.");
+      showToast("Assessment cancelled — 2\u00264 segment not started in time. Please run again.");
       show(tmdHome);scrollTopNow();return;
     }
-    const nb=await runTwoBack(DUR.nbackGroups);
+    const nb=await runTwoAndFour(DUR.nbackGroups);
     sessionResult=computeScoring(srt,stro,nb,baselineSessions);
     renderResults(sessionResult,srt,stro,nb,baselineSessions);
     scrollTopNow();resultCard.scrollIntoView({behavior:"auto"});
@@ -1218,7 +1202,11 @@
     });
   }
 
-  function randomGap(){ return 1000+Math.random()*4500; }
+  function randomGap(){
+    const ranges=[[800,1400],[1400,2200],[2200,3200],[1000,2800]];
+    const r=ranges[Math.floor(Math.random()*ranges.length)];
+    return r[0]+Math.random()*(r[1]-r[0]);
+  }
 
   async function runSRT(sec){
     show(srtPane);hide(stroopPane);hide(nbackPane);hide(preNbackPane);hide(betweenPane);
@@ -1305,9 +1293,7 @@
       }
       function nextPair(){
         let wantCong;
-        if(prevCongruent===true&&runLen>=2) wantCong=false;
-        else if(prevCongruent===false&&runLen>=2) wantCong=true;
-        else wantCong=Math.random()<0.5;
+        wantCong=Math.random()<0.5;
         let wordChoices=names.filter(w=>w!==prevWord);
         if(!wordChoices.length)wordChoices=names.slice();
         let word=wordChoices[Math.floor(Math.random()*wordChoices.length)];
@@ -1367,51 +1353,171 @@
     });
   }
 
-  async function runTwoBack(groups){
+  async function runTwoAndFour(groups){
     show(nbackPane);hide(srtPane);hide(stroopPane);hide(preNbackPane);hide(betweenPane);
-    setDigit("",false);twoBackButtons.style.visibility="hidden";
+
+    setDigit("",false);
+    twoBackButtons.style.visibility="hidden";
     await sleep(2000);
-    let group=1,hits=0,fas=0,miss=0,hitRTs=[];
-    const VIS=250,GAP=100;let tStim=0;
-    function setDigit(d,vis){ nbackDigit.textContent=String(d||"");nbackDigit.style.visibility=vis?"visible":"hidden"; }
-    function randBetween(min,max){return Math.floor(min+Math.random()*(max-min+1));}
-    function rDigit(except){ let d; do{d=Math.floor(1+Math.random()*9);}while(d===except); return d; }
+
+    let group=1;
+    let matchHits=0,matchMiss=0,matchFA=0;
+    let probeHits=0,probeMiss=0;
+    let probeGroups=[];
+
+    // Pick 4 random group indices (1-based) for recall probes
+    const allIdx=[...Array(groups)].map((_,i)=>i+1);
+    while(probeGroups.length<4){
+      const idx=allIdx[Math.floor(Math.random()*allIdx.length)];
+      if(!probeGroups.includes(idx)) probeGroups.push(idx);
+    }
+
+    const VIS=220,GAP=120;
+    let tStim=0;
+
+    function setDigit(d,vis){
+      nbackDigit.textContent=String(d||"");
+      nbackDigit.style.visibility=vis?"visible":"hidden";
+    }
+    function rDigit(except=[]){
+      let d;
+      do{ d=Math.floor(1+Math.random()*9); }while(except.includes(d));
+      return d;
+    }
+    function randBetween(min,max){ return Math.floor(min+Math.random()*(max-min+1)); }
+
+    async function flashDigit(d){
+      setDigit(d,true);
+      await sleep(VIS);
+      setDigit("",false);
+      await sleep(GAP);
+    }
+
     async function doGroup(){
-      if(group>groups)return;
-      if(group>1){ setDigit("",false);twoBackButtons.style.visibility="hidden";await sleep(randBetween(1500,3000)); }
-      groupLabel.textContent=`Group ${group}`;twoBackButtons.style.visibility="hidden";
-      const a=rDigit(null);const b=rDigit(a);const target=Math.random()<0.5;const c=target?a:rDigit(a);
-      await new Promise(res=>{
-        let awaiting=false;
-        function showA(){setDigit(a,true);setTimeout(()=>{setDigit(a,false);setTimeout(showB,GAP);},VIS);}
-        function showB(){setDigit(b,true);setTimeout(()=>{setDigit(b,false);setTimeout(showC,GAP);},VIS);}
-        function showC(){setDigit(c,true);setTimeout(()=>{setDigit(c,false);},VIS);twoBackButtons.style.visibility="visible";awaiting=true;tStim=now();}
-        function evalResp(isTarget){
-          if(!awaiting)return;awaiting=false;
-          const rt=now()-tStim,correctTarget=(c===a);
-          if(isTarget){if(correctTarget){hits++;if(rt>=100&&rt<=3000)hitRTs.push(rt);}else{fas++;}}
-          else{if(correctTarget){miss++;}}
-          setDigit("",false);twoBackButtons.style.visibility="hidden";
-          offT();offNT();offKey();res();
+      if(group>groups) return;
+
+      if(group>1){
+        setDigit("",false);
+        twoBackButtons.style.visibility="hidden";
+        await sleep(randBetween(1200,2500));
+      }
+
+      groupLabel.textContent=`Group ${group}`;
+      twoBackButtons.style.visibility="hidden";
+
+      // Generate 4 digits — d2 and d4 match ~50% of the time
+      const d1=rDigit([]);
+      const d2=rDigit([d1]);
+      const d3=rDigit([d1,d2]);
+      const shouldMatch=Math.random()<0.5;
+      const d4=shouldMatch?d2:rDigit([d2]);
+      const digits=[d1,d2,d3,d4];
+      const correctMatch=d2===d4;
+
+      // Flash all 4 digits
+      await flashDigit(d1);
+      await flashDigit(d2);
+      await flashDigit(d3);
+      await flashDigit(d4);
+
+      // Show MATCH / NO MATCH
+      tStim=performance.now();
+      twoBackButtons.style.visibility="visible";
+      btnTarget.textContent="MATCH";
+      btnNotTarget.textContent="NO MATCH";
+
+      const matchAnswer=await new Promise(res=>{
+        let done=false;
+        function answer(isMatch){
+          if(done)return; done=true;
+          offT();offNT();offKey();
+          res(isMatch);
         }
-        const offT=onPressPointer(btnTarget,()=>evalResp(true));
-        const offNT=onPressPointer(btnNotTarget,()=>evalResp(false));
-        function key(e){ if(e.code==='Space'){e.preventDefault();evalResp(true);}if(e.key&&e.key.toLowerCase()==='n'){e.preventDefault();evalResp(false);} }
+        const offT=onPressPointer(btnTarget,()=>answer(true));
+        const offNT=onPressPointer(btnNotTarget,()=>answer(false));
+        function key(e){
+          if(e.code==='Space'){e.preventDefault();answer(true);}
+          if(e.key&&e.key.toLowerCase()==='n'){e.preventDefault();answer(false);}
+        }
         function offKey(){window.removeEventListener('keydown',key);}
         window.addEventListener('keydown',key);
-        showA();
       });
-      group++;await doGroup();
+
+      twoBackButtons.style.visibility="hidden";
+
+      if(matchAnswer===true && correctMatch) matchHits++;
+      else if(matchAnswer===true && !correctMatch) matchFA++;
+      else if(matchAnswer===false && correctMatch) matchMiss++;
+
+      // Recall probe for selected groups
+      if(probeGroups.includes(group)){
+        const probePos=Math.random()<0.5?0:2; // ask about d1 or d3
+        const correctDigit=digits[probePos];
+        const uniqueDigits=[...new Set(digits)].sort(()=>Math.random()-0.5);
+
+        // Show probe question
+        stepName.textContent=`What was the ${probePos===0?"1st":"3rd"} number?`;
+
+        // Build answer buttons
+        const probeContainer=document.createElement('div');
+        probeContainer.style.cssText='display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px;';
+        nbackPane.appendChild(probeContainer);
+
+        const probeAnswer=await new Promise(res=>{
+          let done=false;
+          uniqueDigits.forEach(d=>{
+            const btn=document.createElement('button');
+            btn.type='button';
+            btn.className='btn';
+            btn.textContent=String(d);
+            btn.style.cssText='min-width:64px;font-size:1.8rem;font-weight:800;';
+            onPressPointer(btn,()=>{
+              if(done)return; done=true;
+              res(d);
+            });
+            probeContainer.appendChild(btn);
+          });
+        });
+
+        nbackPane.removeChild(probeContainer);
+        stepName.textContent=`Group ${group}`;
+
+        if(probeAnswer===correctDigit) probeHits++;
+        else probeMiss++;
+      }
+
+      group++;
+      await doGroup();
     }
+
     await doGroup();
-    const total=groups;
-    const targets=Math.max(1,hits+miss);const nonTargets=Math.max(1,total-(hits+miss));
-    const hitRate=(hits/targets)*100,faRate=(fas/nonTargets)*100;
+
+    // Compute scoring
+    const totalMatch=groups;
+    const matchTargets=Math.max(1,matchHits+matchMiss);
+    const matchNonTargets=Math.max(1,totalMatch-matchTargets);
+    const hitRate=(matchHits/matchTargets)*100;
+    const faRate=(matchFA/matchNonTargets)*100;
     const rawD=dPrimeApprox(hitRate/100,faRate/100);
     let scaledD=rawD;
-    if(isFinite(rawD)){ if(total<=5)scaledD=rawD*0.4; else if(total<=10)scaledD=rawD*0.7; }
-    const meanHitRT=hitRTs.length?mean(hitRTs):NaN;
-    return{hitRate,faRate,dprime:scaledD,rawDprime:rawD,meanHitRT,counts:{hits,fas,miss},groups:total};
+    if(isFinite(rawD)){
+      if(totalMatch<=5) scaledD=rawD*0.4;
+      else if(totalMatch<=10) scaledD=rawD*0.7;
+    }
+
+    const probeTotal=probeGroups.length;
+    const probeAcc=probeTotal>0?(probeHits/probeTotal)*100:0;
+
+    // Weighted composite: match correct% + probe correct% * 1.5, normalized
+    const matchAcc=totalMatch>0?((matchHits/(matchHits+matchMiss+matchFA))||0)*100:0;
+    const weightedScore=(matchAcc + probeAcc*1.5)/2.5;
+
+    return{
+      hitRate,faRate,dprime:scaledD,rawDprime:rawD,
+      counts:{hits:matchHits,fas:matchFA,miss:matchMiss},
+      probeHits,probeMiss,probeAcc,probeTotal,
+      weightedScore,groups:totalMatch
+    };
   }
 
   function dPrimeApprox(H,F){
@@ -1438,7 +1544,7 @@
   }
 
   function computeScoring(srt,stro,nb,baseline){
-    const today={srt_median:srt.medianRT,srt_lapses:srt.lapses,srt_false:srt.falseStarts,stro_acc:stro.acc,stro_mean_rt:stro.meanRTCorrect,stro_cost:stro.congruencyCost,stro_score:stro.stroopScore,nb_hit:nb.hitRate,nb_fa:nb.faRate,nb_d:nb.dprime,nb_hit_rt:nb.meanHitRT};
+    const today={srt_median:srt.medianRT,srt_lapses:srt.lapses,srt_false:srt.falseStarts,stro_acc:stro.acc,stro_mean_rt:stro.meanRTCorrect,stro_cost:stro.congruencyCost,stro_score:stro.stroopScore,nb_hit:nb.hitRate,nb_fa:nb.faRate,nb_d:nb.dprime,nb_hit_rt:isFinite(nb.meanHitRT)?nb.meanHitRT:0};
     const base=computeBaselineStats(baseline);
     function sdEff(key,raw){ let min=0;if(key==="srt_median")min=30;else if(key==="stro_mean_rt")min=50;else if(key==="stro_cost")min=25;if(!isFinite(raw)||raw<=0)return min||1;return Math.max(raw,min||raw); }
     function zLower(key){ const m=base.mean[key],rawS=base.sd[key],s=sdEff(key,rawS);if(!isFinite(m)||!isFinite(today[key])||!isFinite(s))return NaN;return(today[key]-m)/s; }
@@ -1479,13 +1585,106 @@
     return{today,baseStats:base,z:{speed:zSpeed,stroop:zStroop,nback:zNback,max:maxZ},readiness,light,statusLabel,guidance,driver,hasBaseline,nbackNote};
   }
 
+  async function captureLocationForResult(){
+    return new Promise(resolve=>{
+      if(!navigator.geolocation){
+        resolve({lat:null,lon:null,icao:null,airportName:null});
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        async pos=>{
+          const lat=pos.coords.latitude;
+          const lon=pos.coords.longitude;
+          let icao=null,airportName=null;
+          try{
+            const resp=await fetch('airports.json');
+            const data=await resp.json();
+            const MILES=2;
+            const DEG_PER_MILE=1/69.0;
+            const threshold=MILES*DEG_PER_MILE;
+            let closest=null,closestDist=Infinity;
+            for(const ap of data.airports){
+              const dlat=ap.lat-lat;
+              const dlon=ap.lon-lon;
+              const dist=Math.sqrt(dlat*dlat+dlon*dlon);
+              if(dist<threshold&&dist<closestDist){
+                closestDist=dist;
+                closest=ap;
+              }
+            }
+            if(closest){icao=closest.icao;airportName=closest.name;}
+          }catch(_e){}
+          resolve({lat,lon,icao,airportName});
+        },
+        ()=>resolve({lat:null,lon:null,icao:null,airportName:null}),
+        {timeout:5000,maximumAge:30000,enableHighAccuracy:false}
+      );
+    });
+  }
+
   function renderResults(res,srt,stro,nb){
     hide(testCard);hide(baselineCard);show(resultCard);
+    setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50);
+    document.getElementById('resultTimestamp').textContent="";
     const colorClass=res.hasBaseline?(res.light==="green"?"green":res.light==="red"?"red":"amber"):"amber";
-    resultLine.className="resultLine "+colorClass;
+    const statusColors={
+      green:{bg:"#e8f8f1",border:"#28c77c",text:"#0d5c35",dot:"#28c77c"},
+      amber:{bg:"#fff8e8",border:"#f0a629",text:"#7a4f00",dot:"#f0a629"},
+      red:{bg:"#fef0f0",border:"#f05454",text:"#7a1515",dot:"#f05454"}
+    };
+    const sc=statusColors[colorClass]||statusColors.amber;
     const label=res.hasBaseline?res.statusLabel:"Baseline needed";
-    resultLine.textContent="RESULT: "+label;
+    resultLine.className="resultLine";
+    resultLine.style.cssText="";
+    resultLine.innerHTML=`
+      <div style="
+        display:flex;align-items:center;gap:12px;
+        background:${sc.bg};
+        border:1.5px solid ${sc.border};
+        border-radius:16px;
+        padding:14px 16px;
+        margin-bottom:4px;
+      ">
+        <div style="
+          width:14px;height:14px;border-radius:50%;
+          background:${sc.dot};flex-shrink:0;
+          box-shadow:0 0 0 4px ${sc.bg},0 0 0 6px ${sc.border}40;
+        "></div>
+        <div>
+          <div style="font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${sc.text};opacity:.7;margin-bottom:2px;">Assessment Result</div>
+          <div style="font-size:1.35rem;font-weight:800;letter-spacing:-.02em;color:${sc.text};line-height:1.1;">${label}</div>
+          <div style="font-size:.75rem;color:${sc.text};opacity:.6;margin-top:4px;" id="resultTimestampInner"></div>
+        </div>
+      </div>
+    `;
     guidanceText.textContent=res.guidance;
+    const allResults=loadAllResults();
+    const tsEl=document.getElementById('resultTimestampInner');
+    tsEl.textContent=new Date().toLocaleString();
+    captureLocationForResult().then(loc=>{
+      if(loc.icao){
+        tsEl.textContent=new Date().toLocaleString()+' · '+loc.icao+' — '+loc.airportName;
+      } else {
+        tsEl.textContent=new Date().toLocaleString();
+      }
+      allResults.push({
+        timestamp:new Date().toISOString(),
+        lat:loc.lat,
+        lon:loc.lon,
+        icao:loc.icao,
+        airportName:loc.airportName,
+        ...res.today,
+        statusLabel:res.statusLabel,
+        light:res.light,
+        hasBaseline:res.hasBaseline,
+        probe_hits:nb.probeHits,
+        probe_miss:nb.probeMiss,
+        probe_acc:nb.probeAcc,
+        probe_total:nb.probeTotal,
+        weighted_score:nb.weightedScore
+      });
+      saveAllResults(allResults);
+    });
     addBaselineBtn2.disabled=false;
     const shownNbD=res.today.nb_d;
     metricToday.innerHTML=[
@@ -1495,27 +1694,38 @@
       `Word Color accuracy: <b>${fmt(stro.acc)}%</b>`,
       `<a class="metricLink" href="javascript:void(0)" data-explain="wordColorMeanRT">Word Color mean RT</a>: <b>${fmt(stro.meanRTCorrect)} ms</b>`,
       `<a class="metricLink" href="javascript:void(0)" data-explain="wordColorCost">Word Color cost</a>: <b>${isFinite(stro.congruencyCost)?fmt(stro.congruencyCost):"—"} ms</b>`,
-      `<a class="metricLink" href="javascript:void(0)" data-explain="dPrime">2-back d′ (scaled)</a>: <b>${isFinite(shownNbD)?fmt(shownNbD):"—"}</b>`,
-      `<a class="metricLink" href="javascript:void(0)" data-explain="hitsFaMiss">2-back hits / FA / miss</a>: <b>${nb.counts.hits}/${nb.counts.fas}/${nb.counts.miss}</b>`,
+      `<a class="metricLink" href="javascript:void(0)" data-explain="dPrime">2&amp;4 d′ (scaled)</a>: <b>${isFinite(shownNbD)?fmt(shownNbD):"—"}</b>`,
+      `<a class="metricLink" href="javascript:void(0)" data-explain="hitsFaMiss">2&amp;4 match hits / FA / miss</a>: <b>${nb.counts.hits}/${nb.counts.fas}/${nb.counts.miss}</b>`,
+      `<div>2&amp;4 recall probe: <b>${nb.probeHits}/${nb.probeTotal} correct (${fmt(nb.probeAcc)}%)</b></div>`,
       res.nbackNote?`<span class="muted">${res.nbackNote}</span>`:``
     ].map(x=>`<div>${x}</div>`).join("");
     const b=res.baseStats;
     function baseAvg(label,key,unit=""){ const m=b.mean[key]; return `<div>${label}: <b>${isFinite(m)?fmt(m):"—"}${unit}</b></div>`; }
-    metricBase.innerHTML=[baseAvg("Reaction median","srt_median"," ms"),baseAvg("Reactions > 1/2 sec","srt_lapses",""),baseAvg("False starts","srt_false",""),baseAvg("Word Color accuracy","stro_acc","%"),baseAvg("Word Color mean RT","stro_mean_rt"," ms"),baseAvg("Word Color cost","stro_cost"," ms"),baseAvg("Word Color score (acc)","stro_score",""),baseAvg("2-back d′ (scaled)","nb_d","")].join("");
+    metricBase.innerHTML=[baseAvg("Reaction median","srt_median"," ms"),baseAvg("Reactions > 1/2 sec","srt_lapses",""),baseAvg("False starts","srt_false",""),baseAvg("Word Color accuracy","stro_acc","%"),baseAvg("Word Color mean RT","stro_mean_rt"," ms"),baseAvg("Word Color cost","stro_cost"," ms"),baseAvg("Word Color score (acc)","stro_score",""),baseAvg("2&4 d′ (scaled)","nb_d","")].join("");
     resultCard.dataset.payload=JSON.stringify({srt,stro,nb,res});
+  }
+
+  function showToast(msg){
+    const t=document.createElement('div');
+    t.textContent=msg;
+    t.style.cssText='position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#1a2f45;color:#fff;padding:12px 20px;border-radius:12px;font-size:.9rem;font-weight:600;z-index:99999;max-width:85vw;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,.25);';
+    document.body.appendChild(t);
+    setTimeout(()=>{ t.style.opacity='0'; t.style.transition='opacity .4s'; setTimeout(()=>document.body.removeChild(t),400); },2800);
   }
 
   function addCurrentToBaseline(){
     const payload=resultCard.dataset.payload?JSON.parse(resultCard.dataset.payload):null;
-    if(!payload){alert("Run an assessment and view the results before adding to baseline.");return;}
+    if(!payload){ showToast("Run an assessment first, then add to baseline."); return; }
     const{res}=payload;
-    baselineSessions.push(res.today);saveBaseline(baselineSessions);updateBaselineList();
-    alert("Added to baseline. Collect at least 3 baseline sessions on good days to make the comparisons meaningful.");
+    baselineSessions.push(res.today);
+    saveBaseline(baselineSessions);
+    updateBaselineList();
+    showToast("Added to baseline. Collect at least 3 good-day sessions for meaningful comparisons.");
   }
 
   function updateBaselineList(){
     if(!baselineSessions.length){baselineList.textContent="No baseline yet.";return;}
-    const lines=baselineSessions.map((s,i)=>`#${i+1} • medRT ${fmt(s.srt_median)} ms • lapses ${fmt(s.srt_lapses)} • Stroop acc ${fmt(s.stro_acc)}% • 2-back d′ ${fmt(s.nb_d)}`);
+    const lines=baselineSessions.map((s,i)=>`#${i+1} • medRT ${fmt(s.srt_median)} ms • lapses ${fmt(s.srt_lapses)} • Stroop acc ${fmt(s.stro_acc)}% • 2&4 d′ ${fmt(s.nb_d)}`);
     baselineList.innerHTML=lines.map(l=>`<div>${l}</div>`).join("");
   }
 
@@ -1531,7 +1741,7 @@
     openPrintOverlay("Second Opinion — Cognition & Acuity Summary",html);
   }
 
-  if(disclaimerLink) onPressPointer(disclaimerLink,()=>{ hide(resultCard);show(disclaimerCard);scrollTopNow();disclaimerCard.scrollIntoView({behavior:"auto"}); });
+  if(disclaimerLink) onPressPointer(disclaimerLink,()=>{ hide(resultCard);show(disclaimerCard);setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50); });
   onPressPointer(disclaimerBackBtn,()=>{ hide(disclaimerCard);show(resultCard);scrollTopNow(); });
 
   // FRAT
@@ -1590,7 +1800,7 @@
 
   function startFratWizard(){
     const{rules,exp}=getFratProfile();
-    if(!rules||!exp){alert("Please select flight rules (VFR/IFR) and experience in type before starting.");return;}
+    if(!rules||!exp){showToast("Please select flight rules and experience in type first.");return;}
     fratState.rules=rules;fratState.exp=exp;
     fratState.items=FRAT_ITEMS.filter(i=>applicableToRules(i.rule,rules));
     fratState.idx=0;fratState.answers={};fratReviewList.innerHTML="";
@@ -1632,7 +1842,7 @@
     });
   });
 
-  onPressPointer(fratQuitBtn,()=>{ fratState.idx=0;fratState.answers={};resetFratRunUIOnly();scrollTopNow(); });
+  onPressPointer(fratQuitBtn,()=>{ fratState.idx=0;fratState.answers={};resetFratRunUIOnly();setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); },50); });
 
   onPressPointer(document.getElementById('fratPrevBtn'), ()=>{
   if(fratState.idx<=0){ resetFratRunUIOnly(); scrollTopNow(); return; }
