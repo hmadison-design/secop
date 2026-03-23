@@ -544,6 +544,10 @@
 #appInfoCard .muted{ color:#5a7184; }
 .pill{ background:#f0f6ff; border:1px solid #dce4ed; color:#5a7184; }
 .bar{ background:#dce4ed; }
+#testCard.active-test ~ .globalMenuBtn,
+body.test-active .globalMenuBtn{
+  display:none !important;
+}
 </style>
 </head>
 
@@ -1156,6 +1160,8 @@
   }
 
   function cancelTestConfirm(){
+  document.body.classList.remove('test-active');
+  globalMenuBtn.style.display='';
   hide(testCard);
   show(tmdHome);
   scrollTopNow();
@@ -1165,17 +1171,53 @@
     sessionResult=null;addBaselineBtn2.disabled=true;
     hide(resultCard);hide(baselineCard);hide(tmdHome);hide(tmdInfoCard);
     show(testCard);scrollTopNow();testCard.scrollIntoView({behavior:"auto"});
+    document.body.classList.add('test-active');
+    globalMenuBtn.style.display='none';
 
-    await sectionTimer("Get Ready!",DUR.warmup,(t,p)=>{
-      countdown.textContent=Math.ceil(t)+"s";
-      setProgress((DUR.warmup-t)/TOTAL_TIME);
-      srtTarget.textContent="WAIT";srtTarget.className="tapTarget ready";
-      show(srtPane);hide(stroopPane);hide(nbackPane);hide(preNbackPane);hide(betweenPane);
+    await new Promise(res=>{
+      hide(srtPane);hide(stroopPane);hide(nbackPane);hide(preNbackPane);hide(betweenPane);
+      const overlay=document.createElement('div');
+      overlay.style.cssText='position:fixed;inset:0;background:#ffffff;z-index:99990;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;';
+      const numEl=document.createElement('div');
+      numEl.style.cssText='font-size:clamp(8rem,30vw,14rem);font-weight:900;color:#1a2f45;line-height:1;letter-spacing:-.05em;transition:transform .15s,opacity .15s;';
+      const labelEl=document.createElement('div');
+      labelEl.style.cssText='font-size:1.2rem;font-weight:600;color:#5a7184;letter-spacing:.05em;text-transform:uppercase;';
+      labelEl.textContent='Get ready';
+      overlay.appendChild(numEl);
+      overlay.appendChild(labelEl);
+      document.body.appendChild(overlay);
+      stepName.textContent='Get Ready!';
+      countdown.textContent='';
+      setProgress(0);
+      let count=3;
+      function tick(){
+        numEl.style.transform='scale(1.15)';
+        numEl.style.opacity='1';
+        numEl.textContent=String(count);
+        setTimeout(()=>{
+          numEl.style.transform='scale(0.85)';
+          numEl.style.opacity='0.3';
+        },700);
+        count--;
+        if(count>0){
+          setTimeout(tick,1000);
+        } else {
+          setTimeout(()=>{
+            document.body.removeChild(overlay);
+            show(srtPane);
+            srtTarget.textContent="WAIT";
+            srtTarget.className="tapTarget ready";
+            setProgress(0);
+            res();
+          },1000);
+        }
+      }
+      tick();
     });
     const srt=await runSRT(DUR.srt);
     await endMessageThenMaybeCountdown({messageText:"TEST OVER\nGET READY FOR THE NEXT ONE",messageMs:3000,countdownSeconds:5,elapsedBefore:DUR.warmup+DUR.srt});
     const stro=await runStroop(DUR.stroop);
-    await endMessageThenMaybeCountdown({messageText:"TEST OVER\nGET READY FOR THE NEXT ONE",messageMs:3000,countdownSeconds:0,elapsedBefore:DUR.warmup+DUR.srt+5+DUR.stroop});
+    hide(betweenPane);
     const started=await waitForNbackStart(10000);
     hide(preNbackPane);
     if(!started){
@@ -1185,6 +1227,8 @@
     }
     const nb=await runTwoAndFour(DUR.nbackGroups);
     sessionResult=computeScoring(srt,stro,nb,baselineSessions);
+    document.body.classList.remove('test-active');
+    globalMenuBtn.style.display='';
     renderResults(sessionResult,srt,stro,nb,baselineSessions);
     scrollTopNow();resultCard.scrollIntoView({behavior:"auto"});
   }
@@ -1363,6 +1407,7 @@
     let group=1;
     let matchHits=0,matchMiss=0,matchFA=0;
     let probeHits=0,probeMiss=0;
+    let hitRTs=[];
     let probeGroups=[];
 
     // Pick 4 random group indices (1-based) for recall probes
@@ -1430,6 +1475,7 @@
         let done=false;
         function answer(isMatch){
           if(done)return; done=true;
+          clearTimeout(autoTimeout);
           offT();offNT();offKey();
           res(isMatch);
         }
@@ -1441,12 +1487,18 @@
         }
         function offKey(){window.removeEventListener('keydown',key);}
         window.addEventListener('keydown',key);
+        const autoTimeout=setTimeout(()=>answer(null),5000);
       });
 
       twoBackButtons.style.visibility="hidden";
 
-      if(matchAnswer===true && correctMatch) matchHits++;
-      else if(matchAnswer===true && !correctMatch) matchFA++;
+      if(matchAnswer===null){
+        if(correctMatch) matchMiss++; else matchFA++;
+      } else if(matchAnswer===true && correctMatch){
+        matchHits++;
+        const rt=performance.now()-tStim;
+        if(rt>=100&&rt<=3000) hitRTs.push(rt);
+      } else if(matchAnswer===true && !correctMatch) matchFA++;
       else if(matchAnswer===false && correctMatch) matchMiss++;
 
       // Recall probe for selected groups
@@ -1512,8 +1564,9 @@
     const matchAcc=totalMatch>0?((matchHits/(matchHits+matchMiss+matchFA))||0)*100:0;
     const weightedScore=(matchAcc + probeAcc*1.5)/2.5;
 
+    const meanHitRT=hitRTs.length?hitRTs.reduce((a,b)=>a+b,0)/hitRTs.length:NaN;
     return{
-      hitRate,faRate,dprime:scaledD,rawDprime:rawD,
+      hitRate,faRate,dprime:scaledD,rawDprime:rawD,meanHitRT,
       counts:{hits:matchHits,fas:matchFA,miss:matchMiss},
       probeHits,probeMiss,probeAcc,probeTotal,
       weightedScore,groups:totalMatch
@@ -1585,40 +1638,70 @@
     return{today,baseStats:base,z:{speed:zSpeed,stroop:zStroop,nback:zNback,max:maxZ},readiness,light,statusLabel,guidance,driver,hasBaseline,nbackNote};
   }
 
-  async function captureLocationForResult(){
-    return new Promise(resolve=>{
-      if(!navigator.geolocation){
-        resolve({lat:null,lon:null,icao:null,airportName:null});
-        return;
+  let airportCache=null;
+  async function findNearestAirport(lat,lon){
+    try{
+      if(!airportCache){
+        if(window._airportDataRaw){
+          airportCache=window._airportDataRaw;
+        } else {
+          return null;
+        }
       }
-      navigator.geolocation.getCurrentPosition(
-        async pos=>{
-          const lat=pos.coords.latitude;
-          const lon=pos.coords.longitude;
-          let icao=null,airportName=null;
-          try{
-            const resp=await fetch('airports.json');
-            const data=await resp.json();
-            const MILES=2;
-            const DEG_PER_MILE=1/69.0;
-            const threshold=MILES*DEG_PER_MILE;
-            let closest=null,closestDist=Infinity;
-            for(const ap of data.airports){
-              const dlat=ap.lat-lat;
-              const dlon=ap.lon-lon;
-              const dist=Math.sqrt(dlat*dlat+dlon*dlon);
-              if(dist<threshold&&dist<closestDist){
-                closestDist=dist;
-                closest=ap;
-              }
-            }
-            if(closest){icao=closest.icao;airportName=closest.name;}
-          }catch(_e){}
-          resolve({lat,lon,icao,airportName});
-        },
-        ()=>resolve({lat:null,lon:null,icao:null,airportName:null}),
-        {timeout:5000,maximumAge:30000,enableHighAccuracy:false}
-      );
+      const MILES=5;
+      let closest=null,closestDistMiles=Infinity;
+      const R=3958.8;
+      for(const ap of airportCache.airports){
+        const dLat=(ap.lat-lat)*Math.PI/180;
+        const dLon=(ap.lon-lon)*Math.PI/180;
+        const a=Math.sin(dLat/2)*Math.sin(dLat/2)+
+                Math.cos(lat*Math.PI/180)*Math.cos(ap.lat*Math.PI/180)*
+                Math.sin(dLon/2)*Math.sin(dLon/2);
+        const distMiles=R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+        if(distMiles<MILES&&distMiles<closestDistMiles){
+          closestDistMiles=distMiles;
+          closest=ap;
+        }
+      }
+      return closest;
+    }catch(e){
+      return null;
+    }
+  }
+
+  function captureLocationForResult(){
+    return new Promise(resolve=>{
+      const timeout=setTimeout(()=>{
+        console.log('[Location] Timed out after 8 seconds');
+        window.onNativeLocation=null;
+        resolve({lat:null,lon:null,icao:null,airportName:null});
+      },8000);
+
+      window.onNativeLocation=function(lat,lon){
+        console.log('[Location] Received from native: lat='+lat+' lon='+lon);
+        clearTimeout(timeout);
+        window.onNativeLocation=null;
+        if(lat===null||lon===null){
+          console.log('[Location] Got null coordinates');
+          resolve({lat:null,lon:null,icao:null,airportName:null});
+          return;
+        }
+        findNearestAirport(lat,lon).then(ap=>{
+          console.log('[Location] Nearest airport: '+(ap?ap.icao:'none'));
+          resolve({lat,lon,icao:ap?ap.icao:null,airportName:ap?ap.name:null});
+        });
+      };
+
+      console.log('[Location] Posting getLocation message to native');
+      try{
+        window.webkit.messageHandlers.getLocation.postMessage({});
+        console.log('[Location] Message posted successfully');
+      }catch(_e){
+        console.log('[Location] Failed to post message: '+_e);
+        clearTimeout(timeout);
+        window.onNativeLocation=null;
+        resolve({lat:null,lon:null,icao:null,airportName:null});
+      }
     });
   }
 
@@ -1660,7 +1743,7 @@
     guidanceText.textContent=res.guidance;
     const allResults=loadAllResults();
     const tsEl=document.getElementById('resultTimestampInner');
-    tsEl.textContent=new Date().toLocaleString();
+    tsEl.textContent='DEBUG TEXT VISIBLE';
     captureLocationForResult().then(loc=>{
       if(loc.icao){
         tsEl.textContent=new Date().toLocaleString()+' · '+loc.icao+' — '+loc.airportName;
