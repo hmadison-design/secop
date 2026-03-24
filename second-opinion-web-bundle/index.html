@@ -604,7 +604,7 @@ body.test-active .globalMenuBtn{
       decisions about their fitness to fly at any given moment.</p>
       <p>The underlying tasks draw on established brain-science paradigms: a simple reaction-time task related
       to the Psychomotor Vigilance Task used in fatigue research; a color–word interference (Stroop) task for
-      executive control; and a 2-back working-memory task widely used in cognitive neuroscience.</p>
+      executive control; and a 2&amp;4 working-memory task widely used in cognitive neuroscience.</p>
       <p>The app is designed to be one tool among many in your IM SAFE and ADM workflow. These tools support
       your decision-making; they do not replace your CFI, the regulations, or your own judgment. All go/no-go
       decisions remain entirely the responsibility of each pilot—just as they always have.</p>
@@ -667,7 +667,7 @@ body.test-active .globalMenuBtn{
         <ul>
           <li><b>Reaction:</b> how quickly you respond to a simple "go" cue.</li>
           <li><b>Color–Word (Stroop):</b> how well you resist interference between words and colors.</li>
-          <li><b>2-back:</b> a small working-memory task, similar to what's used in many lab studies.</li>
+          <li><b>2&amp;4:</b> a small working-memory task, similar to what's used in many lab studies.</li>
         </ul>
         <p>The goal isn't to diagnose anything. It's to give you a private, repeatable sense of whether today feels
         like one of your "good" days, a "soft" day, or a "not today" day—<b>before</b> you add the workload of a flight.</p>
@@ -681,11 +681,14 @@ body.test-active .globalMenuBtn{
       <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
   <button id="cancelTestBtn" type="button" class="btn btn-ghost btn-sm">Cancel Assessment</button>
 </div>
-      <div class="row" style="justify-content:space-between;align-items:center">
-        <div class="pill"><span>Step:</span> <b id="stepName">Get Ready!</b></div>
-        <div class="pill"><span>Time:</span> <b id="countdown">0s</b></div>
+      <div style="display:flex;justify-content:center;align-items:center;margin-bottom:4px;">
+        <div class="pill"><span>Phase:</span> <b id="stepName">Get Ready!</b></div>
       </div>
-      <div class="bar" style="margin:12px 0 10px"><i id="progressBar"></i></div>
+      <b id="countdown" style="display:none;"></b>
+      <div class="bar" style="margin:8px 0 10px"><i id="progressBar"></i></div>
+      <div style="display:flex;justify-content:center;margin-bottom:4px;">
+        <button id="debugSkipBtn" type="button" class="btn btn-ghost btn-sm" style="font-size:.75rem;opacity:.45;border-style:dashed;">⚡ DEBUG: Skip to Results</button>
+      </div>
       <div id="srtPane" class="center" style="min-height:260px">
         <div id="srtTarget" class="tapTarget" role="button" aria-label="Tap when it turns green">WAIT</div>
       </div>
@@ -736,10 +739,10 @@ body.test-active .globalMenuBtn{
       <div style="margin:10px 0;background:#f0f6ff;border:1px solid #dce4ed;border-radius:14px;padding:14px;">
         <b>SECOND OPINION:</b> <span id="guidanceText">—</span>
       </div>
-      <div class="grid grid-2" style="margin-top:6px;">
-        <div><h3 style="color:#1a2f45;">Today's metrics</h3><div class="muted" id="metricToday"></div></div>
-        <div><h3 style="color:#1a2f45;">Baseline Averages</h3><div class="muted" id="metricBase"></div></div>
-      </div>
+      <div id="metricsTable" style="margin-top:10px;"></div>
+      <!-- legacy targets kept hidden so JS references don't break -->
+      <div id="metricToday" style="display:none;"></div>
+      <div id="metricBase"  style="display:none;"></div>
       <div class="hr"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;">
         <button id="againBtn" type="button" class="btn" style="background:#1a2f45;">Start Again</button>
@@ -945,8 +948,8 @@ body.test-active .globalMenuBtn{
   const EXPLAIN={
     wordColorMeanRT:{title:"Word Color mean RT",html:`<p><b>Mean RT</b> here is the average response time on <b>correct</b> Word Color trials.</p><p>Slower mean RT can indicate reduced processing speed or more time spent resolving interference.</p>`},
     wordColorCost:{title:"Word Color cost",html:`<p><b>Cost</b> is the extra time needed on "conflict" items (word vs ink don't match) compared to easier items.</p><p>Higher cost usually means more struggle suppressing the automatic "read the word" response.</p>`},
-    dPrime:{title:"2-back d′ (d-prime)",html:`<p><b>d′</b> is a signal-detection metric: how well you separate <b>targets</b> from <b>non-targets</b>.</p><ul><li>More hits with few false alarms → higher d′</li><li>Lots of false alarms or misses → lower d′</li></ul><p>Plain English: it summarizes both accuracy and "trigger discipline."</p>`},
-    hitsFaMiss:{title:"2-back hits / FA / miss",html:`<ul><li><b>Hit:</b> you said "TARGET" when it truly was a target.</li><li><b>False Alarm (FA):</b> you said "TARGET" when it was not.</li><li><b>Miss:</b> you said "NOT TARGET" when it truly was a target.</li></ul>`}
+    dPrime:{title:"2&4 d′ (d-prime)",html:`<p><b>d′</b> is a signal-detection metric: how well you separate <b>targets</b> from <b>non-targets</b>.</p><ul><li>More hits with few false alarms → higher d′</li><li>Lots of false alarms or misses → lower d′</li></ul><p>Plain English: it summarizes both accuracy and "trigger discipline."</p>`},
+    hitsFaMiss:{title:"2&4 hits / FA / miss",html:`<ul><li><b>Hit:</b> you said "TARGET" when it truly was a target.</li><li><b>False Alarm (FA):</b> you said "TARGET" when it was not.</li><li><b>Miss:</b> you said "NOT TARGET" when it truly was a target.</li></ul>`}
   };
 
   function openExplainer(key){
@@ -958,8 +961,8 @@ body.test-active .globalMenuBtn{
   onPressPointer(explainerClose,()=>closeExplainer());
   explainerModal.addEventListener("click",(e)=>{ if(e.target===explainerModal) closeExplainer(); });
   document.addEventListener("click",(e)=>{
-    const link=e.target.closest('a[data-explain]');
-    if(!link)return; e.preventDefault(); openExplainer(link.getAttribute("data-explain"));
+    const el=e.target.closest('[data-explain]');
+    if(!el)return; e.preventDefault(); openExplainer(el.getAttribute("data-explain"));
   });
 
   const printOverlay=$("#printOverlay");
@@ -1097,6 +1100,20 @@ body.test-active .globalMenuBtn{
   onPressPointer(backToMainBtn,()=>{ hide(resultCard);hide(testCard);hide(baselineCard);hide(tmdInfoCard); goMain(); setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50); });
   onPressPointer(document.getElementById('backToCogBtn'),()=>{ hide(resultCard); hide(testCard); hide(baselineCard); show(tmdRoot); show(tmdHome); setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50); });
 
+  onPressPointer(document.getElementById('debugSkipBtn'), ()=>{
+    // Immediately end the test and render results with stub data
+    document.body.classList.remove('test-active');
+    globalMenuBtn.style.display='';
+    hide(testCard);
+    const stubSrt = {medianRT:285, lapses:0, falseStarts:1, n:18};
+    const stubStro = {acc:88, meanRTCorrect:520, congruencyCost:45, n:22, stroopScore:88, nCong:11, nIncong:11};
+    const stubNb = {hitRate:75, faRate:20, dprime:1.1, rawDprime:1.4, meanHitRT:640,
+      counts:{hits:9,fas:2,miss:3}, probeHits:3, probeMiss:1, probeAcc:75, probeTotal:4, weightedScore:75, groups:12};
+    sessionResult = computeScoring(stubSrt, stubStro, stubNb, baselineSessions);
+    renderResults(sessionResult, stubSrt, stubStro, stubNb, baselineSessions);
+    scrollTopNow(); resultCard.scrollIntoView({behavior:"auto"});
+  });
+
   onPressPointer(startBtn,runTest);
   onPressPointer(document.getElementById('cancelTestBtn'),()=>{
   if(typeof cancelTestConfirm === 'function') cancelTestConfirm();
@@ -1139,12 +1156,12 @@ body.test-active .globalMenuBtn{
     });
   }
 
-  async function endMessageThenMaybeCountdown({messageText="TEST OVER\nGET READY FOR THE NEXT ONE",messageMs=3000,countdownSeconds=5,elapsedBefore=0}={}){
+  async function endMessageThenMaybeCountdown({messageText="TEST OVER\nGET READY FOR THE NEXT ONE",messageMs=3000,countdownSeconds=5}={}){
     show(betweenPane);hide(srtPane);hide(stroopPane);hide(nbackPane);hide(preNbackPane);
     betweenLabel.textContent="";
     betweenMessage.style.display="block";betweenMessage.textContent=messageText;
     betweenCountdown.style.display="none";countdown.textContent="—";
-    setProgress(elapsedBefore/TOTAL_TIME);
+    setProgress(0);
     await sleep(messageMs);
     if(!countdownSeconds||countdownSeconds<=0){
       hide(betweenPane);betweenMessage.style.display="none";betweenCountdown.style.display="";return;
@@ -1154,7 +1171,7 @@ body.test-active .globalMenuBtn{
     await sectionTimer("Pause",countdownSeconds,(tleft,p)=>{
       countdown.textContent=Math.ceil(tleft)+"s";
       betweenCountdown.textContent=Math.ceil(tleft);
-      setProgress(elapsedBefore+(countdownSeconds-tleft)/TOTAL_TIME);
+      setProgress(p);
     });
     hide(betweenPane);
   }
@@ -1215,7 +1232,7 @@ body.test-active .globalMenuBtn{
       tick();
     });
     const srt=await runSRT(DUR.srt);
-    await endMessageThenMaybeCountdown({messageText:"TEST OVER\nGET READY FOR THE NEXT ONE",messageMs:3000,countdownSeconds:5,elapsedBefore:DUR.warmup+DUR.srt});
+    await endMessageThenMaybeCountdown({messageText:"TEST OVER\nGET READY FOR THE NEXT ONE",messageMs:3000,countdownSeconds:5});
     const stro=await runStroop(DUR.stroop);
     hide(betweenPane);
     const started=await waitForNbackStart(10000);
@@ -1236,7 +1253,7 @@ body.test-active .globalMenuBtn{
   function waitForNbackStart(timeoutMs){
     show(preNbackPane);hide(srtPane);hide(stroopPane);hide(nbackPane);hide(betweenPane);
     preNbackHint.textContent="If you don't start within about 10 seconds, this run will be cancelled.";
-    countdown.textContent="—";stepName.textContent="Prepare: 2-back";
+    countdown.textContent="—";stepName.textContent="Prepare: 2&4";
     return new Promise(res=>{
       let done=false;
       function finish(ok){ if(done)return; done=true; startNbackBtn.removeEventListener('click',onClick); clearTimeout(to); res(ok); }
@@ -1295,10 +1312,11 @@ body.test-active .globalMenuBtn{
           waiting=false;goTime=now();finalTapArmed=true;
         }else{ scheduleNext(); }
       });
+      setProgress(0);
       scheduleNext();
       sectionTimer("Reaction",sec,(tleft,p)=>{
-        countdown.textContent=Math.ceil(tleft)+"s";
-        setProgress((DUR.warmup+(DUR.srt-tleft))/TOTAL_TIME);
+        countdown.textContent="—";
+        setProgress(p);
       }).then(()=>{
         timeOver=true;if(finished)return;
         if(waiting){ srtTarget.textContent="TAP";srtTarget.className="tapTarget go";waiting=false;goTime=now(); }
@@ -1386,10 +1404,11 @@ body.test-active .globalMenuBtn{
       offMM=onPressPointer(btnMismatch,()=>respond("MISMATCH"));
       function keyHandler(e){ const k=e.key?.toLowerCase(); if(k==='f'){e.preventDefault();respond("MATCH");}if(k==='j'){e.preventDefault();respond("MISMATCH");} }
       window.addEventListener('keydown',keyHandler);
+      setProgress(0);
       showTrial();
       sectionTimer("Color–Word",sec,(tleft,p)=>{
         countdown.textContent=Math.ceil(tleft)+"s";
-        setProgress((DUR.warmup+DUR.srt+5+(DUR.stroop-tleft))/TOTAL_TIME);
+        setProgress(p);
       }).then(()=>{
         timeOver=true;if(finished)return;finalResponseArmed=true;
         if(awaiting)return;allowFinalTrial=true;showTrial();allowFinalTrial=false;
@@ -1632,9 +1651,9 @@ body.test-active .globalMenuBtn{
     const drivers=[];
     if(Number.isFinite(zSpeed)&&zSpeed>=1)drivers.push("slower reaction and/or more lapses");
     if(Number.isFinite(zStroop)&&zStroop>=1)drivers.push("weaker color–word control");
-    if(Number.isFinite(zNback)&&zNback>=1)drivers.push("reduced 2-back working memory");
+    if(Number.isFinite(zNback)&&zNback>=1)drivers.push("reduced 2&4 working memory");
     const driver=!hasBaseline?"Baseline not established yet; this run is best treated as practice.":(drivers.length?("Most of the difference from baseline seems to come from: "+drivers.join(" + ")+"."):"Nothing stands far from your baseline; differences are small and spread across domains.");
-    const nbackNote=(DUR.nbackGroups<=5)?"Note: 2-back d′ is based on a very small number of groups and scaled for small-sample stability; for research-level work you'd want 10–20 groups.":"";
+    const nbackNote=(DUR.nbackGroups<=5)?"Note: 2&4 d′ is based on a very small number of groups and scaled for small-sample stability; for research-level work you'd want 10–20 groups.":"";
     return{today,baseStats:base,z:{speed:zSpeed,stroop:zStroop,nback:zNback,max:maxZ},readiness,light,statusLabel,guidance,driver,hasBaseline,nbackNote};
   }
 
@@ -1669,41 +1688,69 @@ body.test-active .globalMenuBtn{
     }
   }
 
-  function captureLocationForResult(){
+
+  // Ask native layer to reverse-geocode coordinates.
+  // Resolves to a display string: "ICAO — Name", "City, ST", "Outside US/Canada", or "Unavailable".
+  function reverseGeocodeNative(lat, lon){
     return new Promise(resolve=>{
       const timeout=setTimeout(()=>{
-        console.log('[Location] Timed out after 8 seconds');
-        window.onNativeLocation=null;
-        resolve({lat:null,lon:null,icao:null,airportName:null});
-      },8000);
-
-      window.onNativeLocation=function(lat,lon){
-        console.log('[Location] Received from native: lat='+lat+' lon='+lon);
+        window.onNativeGeocode=null;
+        resolve('Unavailable');
+      }, 12000);
+      window.onNativeGeocode=function(result){
         clearTimeout(timeout);
-        window.onNativeLocation=null;
-        if(lat===null||lon===null){
-          console.log('[Location] Got null coordinates');
-          resolve({lat:null,lon:null,icao:null,airportName:null});
-          return;
-        }
-        findNearestAirport(lat,lon).then(ap=>{
-          console.log('[Location] Nearest airport: '+(ap?ap.icao:'none'));
-          resolve({lat,lon,icao:ap?ap.icao:null,airportName:ap?ap.name:null});
-        });
+        window.onNativeGeocode=null;
+        resolve(result||'Unavailable');
       };
-
-      console.log('[Location] Posting getLocation message to native');
       try{
-        window.webkit.messageHandlers.getLocation.postMessage({});
-        console.log('[Location] Message posted successfully');
+        window.webkit.messageHandlers.reverseGeocode.postMessage({lat,lon});
       }catch(_e){
-        console.log('[Location] Failed to post message: '+_e);
         clearTimeout(timeout);
-        window.onNativeLocation=null;
-        resolve({lat:null,lon:null,icao:null,airportName:null});
+        window.onNativeGeocode=null;
+        resolve('Unavailable');
       }
     });
   }
+
+  function captureLocationForResult(){
+    return new Promise(resolve=>{
+      const timeout=setTimeout(()=>{
+        window.onNativeLocation=null;
+        resolve({lat:null,lon:null,locationLabel:'Unavailable'});
+      },8000);
+
+      window.onNativeLocation=async function(lat,lon){
+        clearTimeout(timeout);
+        window.onNativeLocation=null;
+
+        // No coordinates — permission denied or failed
+        if(lat===null||lon===null){
+          resolve({lat:null,lon:null,locationLabel:'Unavailable'});
+          return;
+        }
+
+        // 1. Check for nearby airport first (offline, fast)
+        const ap=await findNearestAirport(lat,lon);
+        if(ap){
+          resolve({lat,lon,locationLabel:ap.icao+' — '+ap.name});
+          return;
+        }
+
+        // 2. No nearby airport — reverse geocode for city/region
+        const geoLabel=await reverseGeocodeNative(lat,lon);
+        resolve({lat,lon,locationLabel:geoLabel});
+      };
+
+      try{
+        window.webkit.messageHandlers.getLocation.postMessage({});
+      }catch(_e){
+        clearTimeout(timeout);
+        window.onNativeLocation=null;
+        resolve({lat:null,lon:null,locationLabel:'Unavailable'});
+      }
+    });
+  }
+
 
   function renderResults(res,srt,stro,nb){
     hide(testCard);hide(baselineCard);show(resultCard);
@@ -1743,19 +1790,17 @@ body.test-active .globalMenuBtn{
     guidanceText.textContent=res.guidance;
     const allResults=loadAllResults();
     const tsEl=document.getElementById('resultTimestampInner');
-    tsEl.textContent='DEBUG TEXT VISIBLE';
     captureLocationForResult().then(loc=>{
-      if(loc.icao){
-        tsEl.textContent=new Date().toLocaleString()+' · '+loc.icao+' — '+loc.airportName;
-      } else {
-        tsEl.textContent=new Date().toLocaleString();
-      }
+      const locStr = loc.locationLabel && loc.locationLabel !== 'Unavailable'
+        ? loc.locationLabel : null;
+      tsEl.textContent = locStr
+        ? new Date().toLocaleString() + ' · ' + locStr
+        : new Date().toLocaleString();
       allResults.push({
         timestamp:new Date().toISOString(),
         lat:loc.lat,
         lon:loc.lon,
-        icao:loc.icao,
-        airportName:loc.airportName,
+        locationLabel:loc.locationLabel||'Unavailable',
         ...res.today,
         statusLabel:res.statusLabel,
         light:res.light,
@@ -1770,21 +1815,63 @@ body.test-active .globalMenuBtn{
     });
     addBaselineBtn2.disabled=false;
     const shownNbD=res.today.nb_d;
-    metricToday.innerHTML=[
-      `Reaction median: <b>${fmt(srt.medianRT)} ms</b>`,
-      `Reactions &gt; 1/2 sec: <b>${srt.lapses}</b>`,
-      `False starts: <b>${srt.falseStarts}</b>`,
-      `Word Color accuracy: <b>${fmt(stro.acc)}%</b>`,
-      `<a class="metricLink" href="javascript:void(0)" data-explain="wordColorMeanRT">Word Color mean RT</a>: <b>${fmt(stro.meanRTCorrect)} ms</b>`,
-      `<a class="metricLink" href="javascript:void(0)" data-explain="wordColorCost">Word Color cost</a>: <b>${isFinite(stro.congruencyCost)?fmt(stro.congruencyCost):"—"} ms</b>`,
-      `<a class="metricLink" href="javascript:void(0)" data-explain="dPrime">2&amp;4 d′ (scaled)</a>: <b>${isFinite(shownNbD)?fmt(shownNbD):"—"}</b>`,
-      `<a class="metricLink" href="javascript:void(0)" data-explain="hitsFaMiss">2&amp;4 match hits / FA / miss</a>: <b>${nb.counts.hits}/${nb.counts.fas}/${nb.counts.miss}</b>`,
-      `<div>2&amp;4 recall probe: <b>${nb.probeHits}/${nb.probeTotal} correct (${fmt(nb.probeAcc)}%)</b></div>`,
-      res.nbackNote?`<span class="muted">${res.nbackNote}</span>`:``
-    ].map(x=>`<div>${x}</div>`).join("");
     const b=res.baseStats;
-    function baseAvg(label,key,unit=""){ const m=b.mean[key]; return `<div>${label}: <b>${isFinite(m)?fmt(m):"—"}${unit}</b></div>`; }
-    metricBase.innerHTML=[baseAvg("Reaction median","srt_median"," ms"),baseAvg("Reactions > 1/2 sec","srt_lapses",""),baseAvg("False starts","srt_false",""),baseAvg("Word Color accuracy","stro_acc","%"),baseAvg("Word Color mean RT","stro_mean_rt"," ms"),baseAvg("Word Color cost","stro_cost"," ms"),baseAvg("Word Color score (acc)","stro_score",""),baseAvg("2&4 d′ (scaled)","nb_d","")].join("");
+    const bm=b.mean;
+    const noBase='—';
+    function bv(key,unit=""){ const m=bm[key]; return isFinite(m)?fmt(m)+unit:noBase; }
+
+    // Build unified comparison table
+    const tblStyle=`width:100%;border-collapse:collapse;font-size:.92rem;`;
+    const thStyle=`padding:5px 6px;font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#5a7184;text-align:right;border-bottom:2px solid #dce4ed;`;
+    const thLabelStyle=`padding:5px 6px;font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#5a7184;text-align:left;border-bottom:2px solid #dce4ed;`;
+    const secStyle=`font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#9ab0c4;padding:10px 6px 3px;`;
+    const secStyleTop=`font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#9ab0c4;padding:18px 6px 3px;`;
+    const tdLabel=`padding:6px 6px 6px 4px;color:var(--accent);white-space:nowrap;`;
+    const tdVal=`padding:6px 6px;font-weight:700;color:#1a2f45;text-align:right;white-space:nowrap;`;
+    const tdBase=`padding:6px 6px;font-weight:600;color:#5a7184;text-align:right;white-space:nowrap;`;
+    const trEven=`background:#e8f0f8;`;
+
+    function row(label, todayVal, baseVal, explainKey='', rowIdx=0){
+      const infoBtn = explainKey
+        ? ` <button type="button" data-explain="${explainKey}" style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;border:1.5px solid #2979ff;background:transparent;color:#2979ff;font-size:.6rem;font-weight:800;cursor:pointer;vertical-align:middle;margin-left:4px;padding:0;line-height:1;flex-shrink:0;">i</button>`
+        : '';
+      const labelCell = explainKey
+        ? `<td style="${tdLabel}"><span style="cursor:pointer;" data-explain="${explainKey}">${label}</span>${infoBtn}</td>`
+        : `<td style="${tdLabel}">${label}</td>`;
+      const bg = rowIdx%2===1 ? `style="${trEven}"` : '';
+      return `<tr ${bg}>${labelCell}<td style="${tdVal}">${todayVal}</td><td style="${tdBase}">${baseVal}</td></tr>`;
+    }
+    function secRow(title, extraTop=false){
+      return `<tr><td colspan="3" style="${extraTop?secStyleTop:secStyle}">${title}</td></tr>`;
+    }
+
+    const tableHTML=`
+      <table style="${tblStyle}">
+        <thead>
+          <tr>
+            <th style="${thLabelStyle}">Metric</th>
+            <th style="${thStyle}">Today</th>
+            <th style="${thStyle}">Baseline avg</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${secRow('Reaction')}
+          ${row('Median RT',             fmt(srt.medianRT)+' ms',   bv('srt_median',' ms'), '', 0)}
+          ${row('Slow responses (>½s)',  srt.lapses,                bv('srt_lapses'),       '', 1)}
+          ${row('False starts',          srt.falseStarts,           bv('srt_false'),        '', 0)}
+          ${secRow('Word Color (Stroop)', true)}
+          ${row('Accuracy',              fmt(stro.acc)+'%',         bv('stro_acc','%'),     '', 1)}
+          ${row('Mean RT',               fmt(stro.meanRTCorrect)+' ms', bv('stro_mean_rt',' ms'), 'wordColorMeanRT', 0)}
+          ${row('Interference cost',     isFinite(stro.congruencyCost)?fmt(stro.congruencyCost)+' ms':'—', bv('stro_cost',' ms'), 'wordColorCost', 1)}
+          ${secRow('Working Memory (2&4)', true)}
+          ${row('d′ (scaled)',           isFinite(shownNbD)?fmt(shownNbD):'—', bv('nb_d'), 'dPrime', 0)}
+          ${row('Hits / FA / miss',      `${nb.counts.hits} / ${nb.counts.fas} / ${nb.counts.miss}`, noBase, 'hitsFaMiss', 1)}
+          ${row('Recall probe',          `${nb.probeHits}/${nb.probeTotal} (${fmt(nb.probeAcc)}%)`, noBase, '', 0)}
+        </tbody>
+      </table>
+      ${res.nbackNote?`<div style="font-size:.78rem;color:#9ab0c4;margin-top:6px;padding:0 4px;">${res.nbackNote}</div>`:''}
+    `;
+    document.getElementById('metricsTable').innerHTML=tableHTML;
     resultCard.dataset.payload=JSON.stringify({srt,stro,nb,res});
   }
 
@@ -1820,7 +1907,7 @@ body.test-active .globalMenuBtn{
       return;
     }
     const{srt,stro,nb,res}=payload;const shownNbD=res.today.nb_d;
-    const html=`<div class="printDoc"><h1>Second Opinion — Cognition &amp; Acuity (Summary)</h1><div class="pmuted">Generated: ${when} • Baseline sessions: ${bcount} • Version: v0.7 experimental</div><div class="pbox"><div><b>Status:</b> ${res.statusLabel}${res.hasBaseline?" (baseline-referenced)":" (baseline not yet established)"}</div><div style="margin-top:6px;"><b>On Second Thought…</b> ${res.guidance}</div><div style="margin-top:6px;"><b>Driver:</b> ${res.driver}</div></div><div class="pgrid" style="margin-top:10px;"><div class="pbox"><h2>Reaction</h2><div>Median RT: <b>${fmt(srt.medianRT)} ms</b></div><div>Lapses (&gt;500 ms): <b>${srt.lapses}</b></div><div>False starts: <b>${srt.falseStarts}</b></div></div><div class="pbox"><h2>Stroop (Executive Function)</h2><div>Accuracy: <b>${fmt(stro.acc)}%</b></div><div>Mean RT (correct): <b>${fmt(stro.meanRTCorrect)} ms</b></div><div>Cost (incong − cong): <b>${isFinite(stro.congruencyCost)?fmt(stro.congruencyCost):"—"} ms</b></div></div></div><div class="pbox" style="margin-top:10px;"><h2>2-back (Working Memory)</h2><div>d′ (scaled): <b>${isFinite(shownNbD)?fmt(shownNbD):"—"}</b></div><div>Hits / False Alarms / Misses: <b>${nb.counts.hits}/${nb.counts.fas}/${nb.counts.miss}</b> (${nb.groups} groups)</div>${res.nbackNote?`<div class="pmuted" style="margin-top:6px;">${res.nbackNote}</div>`:""}</div></div>`;
+    const html=`<div class="printDoc"><h1>Second Opinion — Cognition &amp; Acuity (Summary)</h1><div class="pmuted">Generated: ${when} • Baseline sessions: ${bcount} • Version: v0.7 experimental</div><div class="pbox"><div><b>Status:</b> ${res.statusLabel}${res.hasBaseline?" (baseline-referenced)":" (baseline not yet established)"}</div><div style="margin-top:6px;"><b>On Second Thought…</b> ${res.guidance}</div><div style="margin-top:6px;"><b>Driver:</b> ${res.driver}</div></div><div class="pgrid" style="margin-top:10px;"><div class="pbox"><h2>Reaction</h2><div>Median RT: <b>${fmt(srt.medianRT)} ms</b></div><div>Lapses (&gt;500 ms): <b>${srt.lapses}</b></div><div>False starts: <b>${srt.falseStarts}</b></div></div><div class="pbox"><h2>Stroop (Executive Function)</h2><div>Accuracy: <b>${fmt(stro.acc)}%</b></div><div>Mean RT (correct): <b>${fmt(stro.meanRTCorrect)} ms</b></div><div>Cost (incong − cong): <b>${isFinite(stro.congruencyCost)?fmt(stro.congruencyCost):"—"} ms</b></div></div></div><div class="pbox" style="margin-top:10px;"><h2>2&4 (Working Memory)</h2><div>d′ (scaled): <b>${isFinite(shownNbD)?fmt(shownNbD):"—"}</b></div><div>Hits / False Alarms / Misses: <b>${nb.counts.hits}/${nb.counts.fas}/${nb.counts.miss}</b> (${nb.groups} groups)</div>${res.nbackNote?`<div class="pmuted" style="margin-top:6px;">${res.nbackNote}</div>`:""}</div></div>`;
     openPrintOverlay("Second Opinion — Cognition & Acuity Summary",html);
   }
 
@@ -2020,4 +2107,3 @@ if("serviceWorker" in navigator){
 </script>
 </body>
 </html>
-

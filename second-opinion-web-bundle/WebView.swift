@@ -17,6 +17,7 @@ struct WebView: UIViewRepresentable {
         config.userContentController.add(context.coordinator, name: "openURL")
         config.userContentController.add(context.coordinator, name: "shareText")
         config.userContentController.add(context.coordinator, name: "getLocation")
+        config.userContentController.add(context.coordinator, name: "reverseGeocode")
 
         let webView = WKWebView(frame: .zero, configuration: config)
         webView.scrollView.bounces = false
@@ -125,8 +126,80 @@ struct WebView: UIViewRepresentable {
                 } else {
                     sendLocationToJS(lat: nil, lon: nil)
                 }
+                return
+            }
+
+            if message.name == "reverseGeocode",
+               let body = message.body as? [String: Any],
+               let lat = body["lat"] as? Double,
+               let lon = body["lon"] as? Double {
+                reverseGeocode(lat: lat, lon: lon)
+                return
             }
         }
+
+        // MARK: - Reverse geocoding
+
+        func reverseGeocode(lat: Double, lon: Double) {
+            let location = CLLocation(latitude: lat, longitude: lon)
+            let geocoder = CLGeocoder()
+
+            // 10-second timeout — if geocoder doesn't respond, send "Unavailable"
+            var didRespond = false
+            let timeoutTimer = DispatchWorkItem {
+                if !didRespond {
+                    didRespond = true
+                    self.sendGeocodeToJS(result: "Unavailable")
+                }
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: timeoutTimer)
+
+            geocoder.reverseGeocodeLocation(location) { [weak self] placemarks, error in
+                guard let self = self else { return }
+
+                timeoutTimer.cancel()
+                guard !didRespond else { return }
+                didRespond = true
+
+                guard error == nil, let placemark = placemarks?.first else {
+                    self.sendGeocodeToJS(result: "Unavailable")
+                    return
+                }
+
+                let countryCode = placemark.isoCountryCode ?? ""
+
+                // Outside US and Canada
+                guard countryCode == "US" || countryCode == "CA" else {
+                    self.sendGeocodeToJS(result: "Outside US/Canada")
+                    return
+                }
+
+                // Build "City/County, State/Province" string
+                // Prefer city (locality), fall back to sub-administrative area (county),
+                // then administrative area (state/province) alone if nothing else available.
+                let place  = placemark.locality
+                          ?? placemark.subAdministrativeArea
+                          ?? placemark.administrativeArea
+                          ?? "Unavailable"
+                let region = placemark.administrativeArea ?? ""
+
+                let result = region.isEmpty ? place : "\(place), \(region)"
+                self.sendGeocodeToJS(result: result)
+            }
+        }
+
+        func sendGeocodeToJS(result: String) {
+            // Escape any quotes in place names (e.g. "St. John's, NL")
+            let safe = result
+                .replacingOccurrences(of: "\\", with: "\\\\")
+                .replacingOccurrences(of: "'",  with: "\\'")
+            let js = "window.onNativeGeocode && window.onNativeGeocode('\(safe)');"
+            DispatchQueue.main.async {
+                self.webView?.evaluateJavaScript(js, completionHandler: nil)
+            }
+        }
+
+        // MARK: - CLLocationManagerDelegate
 
         func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
             if manager.authorizationStatus == .authorizedWhenInUse ||
