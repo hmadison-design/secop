@@ -571,10 +571,11 @@ body.test-active .globalMenuBtn{
     <button id="menuCogGlobal"      type="button" class="btn btn-ghost">Cognition/Acuity</button>
     <button id="menuFratGlobal"     type="button" class="btn btn-ghost">FRAT Survey</button>
     <div class="hr"></div>
-    <button id="menuBaselineGlobal" type="button" class="btn btn-ghost">Baselines</button>
-    <button id="menuExportGlobal"   type="button" class="btn btn-ghost">Export Assessment</button>
+    <button id="menuBaselineGlobal"   type="button" class="btn btn-ghost">Baselines</button>
+    <button id="menuExportGlobal"     type="button" class="btn btn-ghost">Export Assessment</button>
+    <button id="menuAllResultsGlobal" type="button" class="btn btn-ghost">All Results</button>
     <div class="hr"></div>
-    <button id="menuAboutGlobal"    type="button" class="btn btn-ghost">About</button>
+    <button id="menuAboutGlobal"      type="button" class="btn btn-ghost">About</button>
   </section>
 
   <!-- MAIN MENU -->
@@ -591,7 +592,7 @@ body.test-active .globalMenuBtn{
 
     <div class="footer-link muted" style="font-style:italic;text-align:center;margin-top:auto;padding-top:16px;">
       <a href="javascript:void(0)" id="appInfoLink" class="infoLink" style="display:block;margin-bottom:6px;">What is this?</a>
-      © Flying M 2025
+      © Flying M 2026
     </div>
   </section>
 
@@ -643,6 +644,61 @@ body.test-active .globalMenuBtn{
     <div class="hr"></div>
     <button id="disclaimerBackBtn" type="button" class="btn btn-ghost">Back</button>
   </section>
+
+  <!-- ALL RESULTS -->
+  <section id="allResultsCard" class="card hide" style="margin-top:60px;background:#ffffff;border:1px solid #dce4ed;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+      <h2 style="color:#1a2f45;margin:0;">All Results</h2>
+      <div class="row" style="gap:8px;">
+        <button id="arExportPDFBtn"  type="button" class="btn btn-sm btn-ghost">Share PDF</button>
+        <button id="arExportBtn"     type="button" class="btn btn-ghost btn-sm">Share Text</button>
+        <button id="arClearBtn"      type="button" class="btn btn-ghost btn-sm" style="color:var(--bad);border-color:var(--bad);">Clear All</button>
+        <button id="arBackBtn"       type="button" class="btn btn-ghost btn-sm">Close</button>
+      </div>
+    </div>
+    <div class="hr"></div>
+    <div id="arChartsWrap" style="display:none;">
+      <div style="font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#9ab0c4;margin-bottom:6px;">Trends</div>
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+        <canvas id="arChartMedianRT" height="120"></canvas>
+      </div>
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:12px;">
+        <canvas id="arChartStroopAcc" height="120"></canvas>
+      </div>
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:12px;">
+        <canvas id="arChartNbD" height="120"></canvas>
+      </div>
+      <div class="hr"></div>
+    </div>
+    <div id="arQuadrantWrap" style="display:none;">
+      <div style="font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#9ab0c4;margin-bottom:6px;">Risk Dashboard</div>
+      <div id="arQuadrantSummary" style="margin-bottom:10px;"></div>
+      <div style="display:flex;justify-content:center;">
+        <canvas id="arQuadrantCanvas" width="300" height="300" style="max-width:100%;border-radius:12px;"></canvas>
+      </div>
+      <div id="arQuadrantLegend" style="font-size:.75rem;color:#5a7184;margin-top:8px;text-align:center;"></div>
+      <div class="hr"></div>
+    </div>
+    <div style="font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#9ab0c4;margin-bottom:6px;">History</div>
+    <div id="arList"></div>
+    <div id="arEmpty" class="muted" style="display:none;text-align:center;padding:24px 0;">No results yet. Run an assessment to get started.</div>
+  </section>
+
+  <!-- ALL RESULTS DETAIL MODAL -->
+  <div id="arDetailOverlay" class="modalOverlay hide" aria-hidden="true">
+    <div class="modalSheet" role="dialog" aria-modal="true" aria-labelledby="arDetailTitle">
+      <div class="modalHeader">
+        <h3 id="arDetailTitle" class="modalTitle">Result Detail</h3>
+        <div class="row" style="gap:6px;flex-wrap:wrap;">
+          <button id="arDetailPDFBtn"    type="button" class="btn btn-sm">Share PDF</button>
+          <button id="arDetailTextBtn"   type="button" class="btn btn-ghost btn-sm">Share Text</button>
+          <button id="arDetailDeleteBtn" type="button" class="btn btn-ghost btn-sm" style="color:var(--bad);border-color:var(--bad);">Delete</button>
+          <button id="arDetailCloseBtn"  type="button" class="btn btn-ghost btn-sm modalCloseBtn">Close</button>
+        </div>
+      </div>
+      <div id="arDetailBody" class="modalBody"></div>
+    </div>
+  </div>
 
   <!-- COGNITION & ACUITY ROOT -->
   <div id="tmdRoot" class="hide">
@@ -733,7 +789,7 @@ body.test-active .globalMenuBtn{
       </div>
     </section>
 
-    <section id="resultCard" class="card hide" style="margin-top:80px;background:#ffffff;border:1px solid #dce4ed;">
+    <section id="resultCard" class="card hide" style="margin-top:80px;background:#ffffff;border:1px solid #dce4ed;padding-bottom:40px;">
       <div id="resultTimestamp" style="font-size:.8rem;color:#5a7184;text-align:right;margin-bottom:8px;"></div>
       <div id="resultLine" class="resultLine amber">RESULT: —</div>
       <div style="margin:10px 0;background:#f0f6ff;border:1px solid #dce4ed;border-radius:14px;padding:14px;">
@@ -746,9 +802,10 @@ body.test-active .globalMenuBtn{
       <div class="hr"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;">
         <button id="againBtn" type="button" class="btn" style="background:#1a2f45;">Start Again</button>
-        <button id="backToCogBtn" type="button" class="btn btn-ghost">Cog &amp; Acuity</button>
+        <button id="goFratFromResultBtn" type="button" class="btn btn-ghost">FRAT Assessment</button>
         <button id="addBaselineBtn2" type="button" class="btn btn-ghost" disabled>Add to Baseline</button>
-        <button id="backToMainBtn" type="button" class="btn btn-ghost">Main Menu</button>
+        <button id="exportResultBtn" type="button" class="btn btn-ghost">Printable Summary</button>
+        <button id="backToMainBtn" type="button" class="btn btn-ghost" style="grid-column:1/-1;">Main Menu</button>
       </div>
       <div class="footer-link muted" style="margin-top:10px;">
         <a href="javascript:void(0)" id="disclaimerLink">Disclaimer</a>
@@ -881,7 +938,8 @@ body.test-active .globalMenuBtn{
     <div class="modalHeader">
       <h3 id="printTitle" class="modalTitle">Printable Summary</h3>
       <div class="row" style="gap:8px;">
-        <button id="printNowBtn"   type="button" class="btn btn-sm">Share</button>
+        <button id="printPDFBtn"  type="button" class="btn btn-sm">Share as PDF</button>
+        <button id="printNowBtn"  type="button" class="btn btn-ghost btn-sm">Share as Text</button>
         <button id="printCloseBtn" type="button" class="btn btn-ghost btn-sm modalCloseBtn">Close</button>
       </div>
     </div>
@@ -908,6 +966,26 @@ body.test-active .globalMenuBtn{
   const now=()=>performance.now();
   const sleep = ms => new Promise(r=>setTimeout(r,ms));
   const scrollTopNow = ()=>{ try{ window.scrollTo(0,0); }catch(_e){} };
+
+  const MONTH_NAMES=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+  function formatPilotTimestamp(date){
+    // Local parts
+    const localDay   = date.getDate();
+    const localMon   = MONTH_NAMES[date.getMonth()];
+    const localYear  = date.getFullYear();
+    const localHH    = String(date.getHours()).padStart(2,'0');
+    const localMM    = String(date.getMinutes()).padStart(2,'0');
+    // UTC offset in whole hours (e.g. -5, +1)
+    const offsetMins = -date.getTimezoneOffset(); // getTimezoneOffset returns -300 for UTC-5
+    const offsetHrs  = Math.floor(Math.abs(offsetMins)/60);
+    const offsetSign = offsetMins>=0?'+':'-';
+    const utcLabel   = `UTC${offsetSign}${offsetHrs}`;
+    // Zulu (UTC) parts
+    const zuluDay    = String(date.getUTCDate()).padStart(2,'0');
+    const zuluHH     = String(date.getUTCHours()).padStart(2,'0');
+    const zuluMM     = String(date.getUTCMinutes()).padStart(2,'0');
+    return `${localDay}-${localMon} ${localYear}, ${localHH}${localMM} Local (${utcLabel}), ${zuluDay}${zuluHH}${zuluMM}Z`;
+  }
 
   function show(el){el.classList.remove("hide");}
   function hide(el){el.classList.add("hide");}
@@ -970,26 +1048,47 @@ body.test-active .globalMenuBtn{
   const printBody=$("#printBody");
   const printNowBtn=$("#printNowBtn");
   const printCloseBtn=$("#printCloseBtn");
-  function openPrintOverlay(title,html){
+  function openPrintOverlay(title,html,plainText){
     if(printTitle)printTitle.textContent=title||"Printable Summary";
     if(printBody)printBody.innerHTML=html||"<div class='printDoc'><p>No content.</p></div>";
-    if(printOverlay){printOverlay.setAttribute("aria-hidden","false");show(printOverlay);}
+    if(printOverlay){
+      printOverlay.setAttribute("aria-hidden","false");
+      printOverlay.dataset.sharetext=plainText||"";
+      show(printOverlay);
+    }
   }
   function closePrintOverlay(){ if(printOverlay){hide(printOverlay);printOverlay.setAttribute("aria-hidden","true");} }
   onPressPointer(printCloseBtn,()=>closePrintOverlay());
   onPressPointer(document.getElementById('printNowBtn'),()=>{
-  const text = printBody ? printBody.innerText : "No content";
-  try{
-    if(window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.shareText){
-      window.webkit.messageHandlers.shareText.postMessage(text);return;
-    }
-  }catch(_e){}
-  try{
-    if(navigator.share){
-      navigator.share({title:"Second Opinion Summary",text:text});return;
-    }
-  }catch(_e2){}
-});
+    const text = (printOverlay&&printOverlay.dataset.sharetext)
+      ? printOverlay.dataset.sharetext
+      : (printBody ? printBody.innerText : "No content");
+    try{
+      if(window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.shareText){
+        window.webkit.messageHandlers.shareText.postMessage(text);return;
+      }
+    }catch(_e){}
+    try{
+      if(navigator.share){
+        navigator.share({title:"Second Opinion Summary",text:text});return;
+      }
+    }catch(_e2){}
+  });
+  onPressPointer(document.getElementById('printPDFBtn'),()=>{
+    try{
+      if(window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.sharePDF){
+        const content = printBody ? printBody.innerHTML : '';
+        window.webkit.messageHandlers.sharePDF.postMessage(content);
+        return;
+      }
+    }catch(_e){}
+    showToast("PDF sharing is not available in this environment.");
+  });
+
+  // Called by native if PDF generation fails
+  window.onPDFFailed=function(){
+    showToast("PDF generation failed. Try Share as Text instead.");
+  };
   printOverlay.addEventListener("click",(e)=>{ if(e.target===printOverlay) closePrintOverlay(); });
 
   const modeCard=$("#modeCard"),tmdRoot=$("#tmdRoot"),fratRoot=$("#fratRoot");
@@ -1022,6 +1121,7 @@ body.test-active .globalMenuBtn{
     hide(tmdRoot);hide(fratRoot);
     hide(tmdHome);hide(tmdInfoCard);hide(testCard);hide(resultCard);hide(baselineCard);
     hide(fratIntroCard);hide(fratWizardCard);hide(fratResultCard);
+    hide($("#allResultsCard"));
     closeExplainer(); closePrintOverlay();
   }
 
@@ -1098,7 +1198,8 @@ body.test-active .globalMenuBtn{
   function setProgress(p){progressBar.style.width=(p*100).toFixed(1)+"%";}
 
   onPressPointer(backToMainBtn,()=>{ hide(resultCard);hide(testCard);hide(baselineCard);hide(tmdInfoCard); goMain(); setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50); });
-  onPressPointer(document.getElementById('backToCogBtn'),()=>{ hide(resultCard); hide(testCard); hide(baselineCard); show(tmdRoot); show(tmdHome); setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50); });
+  onPressPointer(document.getElementById('goFratFromResultBtn'),()=>{ openFrat(); });
+  onPressPointer(document.getElementById('exportResultBtn'),()=>{ exportPDF(); });
 
   onPressPointer(document.getElementById('debugSkipBtn'), ()=>{
     // Immediately end the test and render results with stub data
@@ -1193,10 +1294,26 @@ body.test-active .globalMenuBtn{
 
     await new Promise(res=>{
       hide(srtPane);hide(stroopPane);hide(nbackPane);hide(preNbackPane);hide(betweenPane);
+
+      // Inject keyframe animation into document once
+      if(!document.getElementById('countdownKeyframes')){
+        const style=document.createElement('style');
+        style.id='countdownKeyframes';
+        style.textContent=`
+          @keyframes countdownFly {
+            0%   { transform:scale(9);   opacity:0; }
+            45%  { transform:scale(1.05);opacity:1; }
+            75%  { transform:scale(1.0); opacity:1; }
+            100% { transform:scale(1.0); opacity:1; }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+
       const overlay=document.createElement('div');
-      overlay.style.cssText='position:fixed;inset:0;background:#ffffff;z-index:99990;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;';
+      overlay.style.cssText='position:fixed;inset:0;background:#ffffff;z-index:99990;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;overflow:hidden;';
       const numEl=document.createElement('div');
-      numEl.style.cssText='font-size:clamp(8rem,30vw,14rem);font-weight:900;color:#1a2f45;line-height:1;letter-spacing:-.05em;transition:transform .15s,opacity .15s;';
+      numEl.style.cssText='font-size:clamp(8rem,30vw,14rem);font-weight:900;color:#1a2f45;line-height:1;letter-spacing:-.05em;will-change:transform,opacity;';
       const labelEl=document.createElement('div');
       labelEl.style.cssText='font-size:1.2rem;font-weight:600;color:#5a7184;letter-spacing:.05em;text-transform:uppercase;';
       labelEl.textContent='Get ready';
@@ -1208,16 +1325,14 @@ body.test-active .globalMenuBtn{
       setProgress(0);
       let count=3;
       function tick(){
-        numEl.style.transform='scale(1.15)';
-        numEl.style.opacity='1';
         numEl.textContent=String(count);
-        setTimeout(()=>{
-          numEl.style.transform='scale(0.85)';
-          numEl.style.opacity='0.3';
-        },700);
+        // Reset animation by removing and re-triggering
+        numEl.style.animation='none';
+        numEl.offsetHeight; // force reflow
+        numEl.style.animation='countdownFly 900ms cubic-bezier(.2,.6,.4,1) forwards';
         count--;
         if(count>0){
-          setTimeout(tick,1000);
+          setTimeout(tick, 920);
         } else {
           setTimeout(()=>{
             document.body.removeChild(overlay);
@@ -1226,7 +1341,7 @@ body.test-active .globalMenuBtn{
             srtTarget.className="tapTarget ready";
             setProgress(0);
             res();
-          },1000);
+          }, 920);
         }
       }
       tick();
@@ -1716,7 +1831,7 @@ body.test-active .globalMenuBtn{
     return new Promise(resolve=>{
       const timeout=setTimeout(()=>{
         window.onNativeLocation=null;
-        resolve({lat:null,lon:null,locationLabel:'Unavailable'});
+        resolve({lat:null,lon:null,locationLabel:'Unavailable',metar:null});
       },8000);
 
       window.onNativeLocation=async function(lat,lon){
@@ -1725,20 +1840,26 @@ body.test-active .globalMenuBtn{
 
         // No coordinates — permission denied or failed
         if(lat===null||lon===null){
-          resolve({lat:null,lon:null,locationLabel:'Unavailable'});
+          resolve({lat:null,lon:null,locationLabel:'Unavailable',metar:null});
           return;
         }
 
-        // 1. Check for nearby airport first (offline, fast)
-        const ap=await findNearestAirport(lat,lon);
+        // Run airport lookup, reverse geocode, and METAR fetch in parallel
+        const [ap, metar] = await Promise.all([
+          findNearestAirport(lat,lon),
+          fetchNearestMetar(lat,lon)
+        ]);
+
         if(ap){
-          resolve({lat,lon,locationLabel:ap.icao+' — '+ap.name});
+          // Still need to reverse geocode even if we have an airport,
+          // but location label uses the airport
+          resolve({lat,lon,locationLabel:ap.icao+' — '+ap.name,metar});
           return;
         }
 
-        // 2. No nearby airport — reverse geocode for city/region
+        // No nearby airport — reverse geocode for city/region
         const geoLabel=await reverseGeocodeNative(lat,lon);
-        resolve({lat,lon,locationLabel:geoLabel});
+        resolve({lat,lon,locationLabel:geoLabel,metar});
       };
 
       try{
@@ -1746,13 +1867,37 @@ body.test-active .globalMenuBtn{
       }catch(_e){
         clearTimeout(timeout);
         window.onNativeLocation=null;
-        resolve({lat:null,lon:null,locationLabel:'Unavailable'});
+        resolve({lat:null,lon:null,locationLabel:'Unavailable',metar:null});
       }
     });
   }
 
 
-  function renderResults(res,srt,stro,nb){
+  // Fetch nearest METAR via native layer (avoids WKWebView ATS restrictions).
+  // Native posts back via window.onNativeMetar(metarString | null).
+  function fetchNearestMetar(lat, lon){
+    return new Promise(resolve=>{
+      const timeout=setTimeout(()=>{
+        window.onNativeMetar=null;
+        resolve(null);
+      }, 12000);
+      window.onNativeMetar=function(result){
+        clearTimeout(timeout);
+        window.onNativeMetar=null;
+        resolve(result||null);
+      };
+      try{
+        window.webkit.messageHandlers.fetchMetar.postMessage({lat, lon});
+      }catch(_e){
+        clearTimeout(timeout);
+        window.onNativeMetar=null;
+        resolve(null);
+      }
+    });
+  }
+
+
+  function renderResults(res,srt,stro,nb,baselineSessions){
     hide(testCard);hide(baselineCard);show(resultCard);
     setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50);
     document.getElementById('resultTimestamp').textContent="";
@@ -1784,6 +1929,7 @@ body.test-active .globalMenuBtn{
           <div style="font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${sc.text};opacity:.7;margin-bottom:2px;">Assessment Result</div>
           <div style="font-size:1.35rem;font-weight:800;letter-spacing:-.02em;color:${sc.text};line-height:1.1;">${label}</div>
           <div style="font-size:.75rem;color:${sc.text};opacity:.6;margin-top:4px;" id="resultTimestampInner"></div>
+          <div id="resultMetar" style="display:none;font-size:.75rem;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Courier New,monospace;color:${sc.text};opacity:.75;margin-top:3px;"></div>
         </div>
       </div>
     `;
@@ -1791,16 +1937,31 @@ body.test-active .globalMenuBtn{
     const allResults=loadAllResults();
     const tsEl=document.getElementById('resultTimestampInner');
     captureLocationForResult().then(loc=>{
+      const ts = new Date();
+      const pilotTs = formatPilotTimestamp(ts);
       const locStr = loc.locationLabel && loc.locationLabel !== 'Unavailable'
         ? loc.locationLabel : null;
       tsEl.textContent = locStr
-        ? new Date().toLocaleString() + ' · ' + locStr
-        : new Date().toLocaleString();
+        ? pilotTs + ' · ' + locStr
+        : pilotTs;
+      // Show METAR on its own line if available
+      const metarEl = document.getElementById('resultMetar');
+      if(metarEl){
+        metarEl.textContent = loc.metar || 'METAR Unavailable';
+        metarEl.style.display = '';
+      }
+      // Store timestamp, location, and METAR back into payload
+      const existing = resultCard.dataset.payload ? JSON.parse(resultCard.dataset.payload) : {};
+      existing.timestamp = ts.toISOString();
+      existing.locationLabel = loc.locationLabel || 'Unavailable';
+      existing.metar = loc.metar || null;
+      resultCard.dataset.payload = JSON.stringify(existing);
       allResults.push({
-        timestamp:new Date().toISOString(),
+        timestamp:ts.toISOString(),
         lat:loc.lat,
         lon:loc.lon,
         locationLabel:loc.locationLabel||'Unavailable',
+        metar:loc.metar||null,
         ...res.today,
         statusLabel:res.statusLabel,
         light:res.light,
@@ -1814,6 +1975,7 @@ body.test-active .globalMenuBtn{
       saveAllResults(allResults);
     });
     addBaselineBtn2.disabled=false;
+    addBaselineBtn2.textContent="Add to Baseline";
     const shownNbD=res.today.nb_d;
     const b=res.baseStats;
     const bm=b.mean;
@@ -1869,7 +2031,7 @@ body.test-active .globalMenuBtn{
           ${row('Recall probe',          `${nb.probeHits}/${nb.probeTotal} (${fmt(nb.probeAcc)}%)`, noBase, '', 0)}
         </tbody>
       </table>
-      ${res.nbackNote?`<div style="font-size:.78rem;color:#9ab0c4;margin-top:6px;padding:0 4px;">${res.nbackNote}</div>`:''}
+      ${res.nbackNote?`<div style="font-size:.78rem;color:#9ab0c4;margin-top:6px;padding:0 4px;">${res.nbackNote}</div>`:""}
     `;
     document.getElementById('metricsTable').innerHTML=tableHTML;
     resultCard.dataset.payload=JSON.stringify({srt,stro,nb,res});
@@ -1890,6 +2052,8 @@ body.test-active .globalMenuBtn{
     baselineSessions.push(res.today);
     saveBaseline(baselineSessions);
     updateBaselineList();
+    addBaselineBtn2.disabled=true;
+    addBaselineBtn2.textContent="✓ Added to Baseline";
     showToast("Added to baseline. Collect at least 3 good-day sessions for meaningful comparisons.");
   }
 
@@ -1901,15 +2065,860 @@ body.test-active .globalMenuBtn{
 
   function exportPDF(){
     const payload=resultCard.dataset.payload?JSON.parse(resultCard.dataset.payload):null;
-    const bcount=baselineSessions.length;const when=new Date().toLocaleString();
+    const bcount=baselineSessions.length;const when=formatPilotTimestamp(new Date());
     if(!payload){
-      openPrintOverlay("Second Opinion — Cognition & Acuity Summary",`<div class="printDoc"><h1>Second Opinion — Cognition &amp; Acuity (Summary)</h1><div class="pmuted">Generated: ${when} • Baseline sessions: ${bcount} • Version: v0.7 experimental</div><div class="pbox"><b>No recent assessment run to export.</b></div></div>`);
+      openPrintOverlay("Second Opinion — Cognition & Acuity Summary",
+        `<div class="printDoc"><h1>Second Opinion — Cognition &amp; Acuity (Summary)</h1><div class="pmuted">${when} • Baseline sessions: ${bcount}</div><div class="pbox"><b>No recent assessment run to export.</b></div></div>`,
+        "SECOND OPINION — COG & ACUITY\nNo recent assessment to export."
+      );
       return;
     }
     const{srt,stro,nb,res}=payload;const shownNbD=res.today.nb_d;
-    const html=`<div class="printDoc"><h1>Second Opinion — Cognition &amp; Acuity (Summary)</h1><div class="pmuted">Generated: ${when} • Baseline sessions: ${bcount} • Version: v0.7 experimental</div><div class="pbox"><div><b>Status:</b> ${res.statusLabel}${res.hasBaseline?" (baseline-referenced)":" (baseline not yet established)"}</div><div style="margin-top:6px;"><b>On Second Thought…</b> ${res.guidance}</div><div style="margin-top:6px;"><b>Driver:</b> ${res.driver}</div></div><div class="pgrid" style="margin-top:10px;"><div class="pbox"><h2>Reaction</h2><div>Median RT: <b>${fmt(srt.medianRT)} ms</b></div><div>Lapses (&gt;500 ms): <b>${srt.lapses}</b></div><div>False starts: <b>${srt.falseStarts}</b></div></div><div class="pbox"><h2>Stroop (Executive Function)</h2><div>Accuracy: <b>${fmt(stro.acc)}%</b></div><div>Mean RT (correct): <b>${fmt(stro.meanRTCorrect)} ms</b></div><div>Cost (incong − cong): <b>${isFinite(stro.congruencyCost)?fmt(stro.congruencyCost):"—"} ms</b></div></div></div><div class="pbox" style="margin-top:10px;"><h2>2&4 (Working Memory)</h2><div>d′ (scaled): <b>${isFinite(shownNbD)?fmt(shownNbD):"—"}</b></div><div>Hits / False Alarms / Misses: <b>${nb.counts.hits}/${nb.counts.fas}/${nb.counts.miss}</b> (${nb.groups} groups)</div>${res.nbackNote?`<div class="pmuted" style="margin-top:6px;">${res.nbackNote}</div>`:""}</div></div>`;
-    openPrintOverlay("Second Opinion — Cognition & Acuity Summary",html);
+
+    // Timestamp and location — use stored values if available, fall back to now
+    const assessmentTime = payload.timestamp
+      ? formatPilotTimestamp(new Date(payload.timestamp))
+      : when;
+    const locLabel = payload.locationLabel && payload.locationLabel !== 'Unavailable'
+      ? payload.locationLabel : null;
+    const metar = payload.metar || null;
+    const whenLine = locLabel
+      ? `${assessmentTime} · ${locLabel}`
+      : assessmentTime;
+
+    // ── HTML version (for overlay display) ──────────────────────────
+    const html=`<div class="printDoc">
+      <h1>Second Opinion — Cognition &amp; Acuity</h1>
+      <div class="pmuted">${whenLine} &nbsp;•&nbsp; Baseline sessions: ${bcount}</div>
+      ${metar?`<div style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Courier New,monospace;font-size:.85rem;color:#5a7184;margin-top:4px;">${metar}</div>`:`<div style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Courier New,monospace;font-size:.85rem;color:#9ab0c4;margin-top:4px;">METAR Unavailable</div>`}
+      <div class="pbox" style="margin-top:10px;">
+        <div style="font-size:1.05rem;"><b>Status: ${res.statusLabel}</b>${res.hasBaseline?" (baseline-referenced)":" (no baseline yet)"}</div>
+        <div style="margin-top:8px;"><b>On Second Thought…</b> ${res.guidance}</div>
+        <div style="margin-top:6px;color:#5a7184;font-size:.9rem;"><b>Driver:</b> ${res.driver}</div>
+      </div>
+      <div class="pgrid" style="margin-top:10px;">
+        <div class="pbox">
+          <h2>Reaction</h2>
+          <div>Median RT: <b>${fmt(srt.medianRT)} ms</b></div>
+          <div>Slow responses: <b>${srt.lapses}</b></div>
+          <div>False starts: <b>${srt.falseStarts}</b></div>
+        </div>
+        <div class="pbox">
+          <h2>Word Color (Stroop)</h2>
+          <div>Accuracy: <b>${fmt(stro.acc)}%</b></div>
+          <div>Mean RT: <b>${fmt(stro.meanRTCorrect)} ms</b></div>
+          <div>Interference cost: <b>${isFinite(stro.congruencyCost)?fmt(stro.congruencyCost):"—"} ms</b></div>
+        </div>
+      </div>
+      <div class="pbox" style="margin-top:10px;">
+        <h2>Working Memory (2&amp;4)</h2>
+        <div>d′ (scaled): <b>${isFinite(shownNbD)?fmt(shownNbD):"—"}</b></div>
+        <div>Hits / FA / Misses: <b>${nb.counts.hits} / ${nb.counts.fas} / ${nb.counts.miss}</b> (${nb.groups} groups)</div>
+        <div>Recall probe: <b>${nb.probeHits}/${nb.probeTotal} correct (${fmt(nb.probeAcc)}%)</b></div>
+        ${res.nbackNote?`<div class="pmuted" style="margin-top:6px;font-size:.85rem;">${res.nbackNote}</div>`:""}
+      </div>
+      ${res.hasBaseline ? `
+      <div class="pbox" style="margin-top:10px;font-style:italic;font-size:.85rem;color:#5a7184;">
+        <div style="font-weight:700;font-style:normal;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:#9ab0c4;margin-bottom:6px;">Baseline Reference (${res.baseStats.n} session${res.baseStats.n!==1?'s':''})</div>
+        <div>Median RT: ${isFinite(res.baseStats.mean.srt_median)?fmt(res.baseStats.mean.srt_median)+' ms':'—'}
+          &nbsp;·&nbsp; Slow responses: ${isFinite(res.baseStats.mean.srt_lapses)?fmt(res.baseStats.mean.srt_lapses):'—'}
+          &nbsp;·&nbsp; False starts: ${isFinite(res.baseStats.mean.srt_false)?fmt(res.baseStats.mean.srt_false):'—'}</div>
+        <div style="margin-top:3px;">Stroop accuracy: ${isFinite(res.baseStats.mean.stro_acc)?fmt(res.baseStats.mean.stro_acc)+'%':'—'}
+          &nbsp;·&nbsp; Mean RT: ${isFinite(res.baseStats.mean.stro_mean_rt)?fmt(res.baseStats.mean.stro_mean_rt)+' ms':'—'}
+          &nbsp;·&nbsp; Interference cost: ${isFinite(res.baseStats.mean.stro_cost)?fmt(res.baseStats.mean.stro_cost)+' ms':'—'}</div>
+        <div style="margin-top:3px;">2&amp;4 d′: ${isFinite(res.baseStats.mean.nb_d)?fmt(res.baseStats.mean.nb_d):'—'}</div>
+      </div>` : ''}
+    </div>`;
+
+    // ── Plain text version (for share sheet) ────────────────────────
+    const SEP="─────────────────────────────";
+    const baseRef=res.hasBaseline?"(baseline-referenced)":"(no baseline established yet)";
+    const plain=[
+      "SECOND OPINION",
+      "Cognition & Acuity Assessment",
+      SEP,
+      assessmentTime,
+      locLabel ? `Location:          ${locLabel}` : null,
+      metar ? metar : 'METAR Unavailable',
+      `Baseline sessions: ${bcount}`,
+      SEP,
+      `STATUS: ${res.statusLabel} ${baseRef}`,
+      "",
+      "ON SECOND THOUGHT…",
+      res.guidance,
+      "",
+      `Driver: ${res.driver}`,
+      SEP,
+      "REACTION",
+      `  Median RT:        ${fmt(srt.medianRT)} ms`,
+      `  Slow responses:   ${srt.lapses}`,
+      `  False starts:     ${srt.falseStarts}`,
+      "",
+      "WORD COLOR (STROOP)",
+      `  Accuracy:         ${fmt(stro.acc)}%`,
+      `  Mean RT:          ${fmt(stro.meanRTCorrect)} ms`,
+      `  Interference cost:${isFinite(stro.congruencyCost)?fmt(stro.congruencyCost):"—"} ms`,
+      "",
+      "WORKING MEMORY (2&4)",
+      `  d′ (scaled):      ${isFinite(shownNbD)?fmt(shownNbD):"—"}`,
+      `  Hits/FA/Misses:   ${nb.counts.hits} / ${nb.counts.fas} / ${nb.counts.miss} (${nb.groups} groups)`,
+      `  Recall probe:     ${nb.probeHits}/${nb.probeTotal} correct (${fmt(nb.probeAcc)}%)`,
+      res.nbackNote?`\n  Note: ${res.nbackNote}`:null,
+      SEP,
+      ...(res.hasBaseline ? [
+        `BASELINE REFERENCE (${res.baseStats.n} session${res.baseStats.n!==1?'s':''})`,
+        `  Median RT:        ${isFinite(res.baseStats.mean.srt_median)?fmt(res.baseStats.mean.srt_median)+' ms':'—'}`,
+        `  Slow responses:   ${isFinite(res.baseStats.mean.srt_lapses)?fmt(res.baseStats.mean.srt_lapses):'—'}`,
+        `  False starts:     ${isFinite(res.baseStats.mean.srt_false)?fmt(res.baseStats.mean.srt_false):'—'}`,
+        `  Stroop accuracy:  ${isFinite(res.baseStats.mean.stro_acc)?fmt(res.baseStats.mean.stro_acc)+'%':'—'}`,
+        `  Stroop mean RT:   ${isFinite(res.baseStats.mean.stro_mean_rt)?fmt(res.baseStats.mean.stro_mean_rt)+' ms':'—'}`,
+        `  Interf. cost:     ${isFinite(res.baseStats.mean.stro_cost)?fmt(res.baseStats.mean.stro_cost)+' ms':'—'}`,
+        `  2&4 d′:           ${isFinite(res.baseStats.mean.nb_d)?fmt(res.baseStats.mean.nb_d):'—'}`,
+        SEP,
+      ] : []),
+      "Second Opinion — OnSecondThought.me"
+    ].filter(l=>l!==null).join("\n");
+
+    openPrintOverlay("Second Opinion — Cognition & Acuity Summary", html, plain);
   }
+
+
+  // ── ALL RESULTS ──────────────────────────────────────────────
+  (function(){
+    const arCard         = document.getElementById("allResultsCard");
+    const arList         = document.getElementById("arList");
+    const arEmpty        = document.getElementById("arEmpty");
+    const arChartsWrap   = document.getElementById("arChartsWrap");
+    const arBackBtn      = document.getElementById("arBackBtn");
+    const arClearBtn     = document.getElementById("arClearBtn");
+    const arExportBtn    = document.getElementById("arExportBtn");
+    const arExportPDFBtn = document.getElementById("arExportPDFBtn");
+    const arDetailOverlay   = document.getElementById("arDetailOverlay");
+    const arDetailBody      = document.getElementById("arDetailBody");
+    const arDetailTitle     = document.getElementById("arDetailTitle");
+    const arDetailDeleteBtn = document.getElementById("arDetailDeleteBtn");
+    const arDetailCloseBtn  = document.getElementById("arDetailCloseBtn");
+    const arDetailPDFBtn    = document.getElementById("arDetailPDFBtn");
+    const arDetailTextBtn   = document.getElementById("arDetailTextBtn");
+
+    let currentDetailIdx = null;
+    let currentDetailRecord = null;
+
+    // ── navigation ──
+    function openAllResults(){
+      hideAllAppScreens();
+      show(arCard);
+      renderAllResults();
+      scrollTopNow();
+    }
+    window.openAllResults = openAllResults;
+
+    onPressPointer(arBackBtn, ()=>{ hideAllAppScreens(); show(modeCard); scrollTopNow(); });
+
+    onPressPointer(document.getElementById("menuAllResultsGlobal"), ()=>{
+      closeGlobalMenu(); openAllResults();
+    });
+
+    // ── clear all ──
+    onPressPointer(arClearBtn, ()=>{
+      if(!confirm("Delete all saved results? This cannot be undone.")) return;
+      saveAllResults([]);
+      renderAllResults();
+      showToast("All results cleared.");
+    });
+
+    // ── export / share ──
+    // All Results — Share Text
+    onPressPointer(arExportBtn, ()=>{
+      const results = loadAllResults();
+      if(!results.length){ showToast("No results to export."); return; }
+      const SEP = "─────────────────────────────";
+      const lines = [
+        "SECOND OPINION — All Results",
+        SEP,
+        `Exported: ${formatPilotTimestamp(new Date())}`,
+        `Total runs: ${results.length}`,
+        SEP,
+        ""
+      ];
+      [...results].reverse().forEach((r, i)=>{
+        const ts = r.timestamp ? formatPilotTimestamp(new Date(r.timestamp)) : "Unknown date";
+        const loc = (r.locationLabel && r.locationLabel !== "Unavailable") ? r.locationLabel : null;
+        const fmt2 = v => isFinite(v) ? Math.round(v*10)/10 : "—";
+        lines.push(`#${results.length - i}  ${ts}`);
+        if(loc)     lines.push(`   Location: ${loc}`);
+        if(r.metar) lines.push(`   ${r.metar}`);
+        else        lines.push(`   METAR Unavailable`);
+        lines.push(`   Status: ${r.statusLabel||"—"}`);
+        lines.push(`   Reaction median RT: ${isFinite(r.srt_median)?Math.round(r.srt_median)+" ms":"—"}`);
+        lines.push(`   Stroop accuracy:    ${fmt2(r.stro_acc)}%`);
+        lines.push(`   2&4 d′ (scaled):    ${fmt2(r.nb_d)}`);
+        lines.push("");
+      });
+      lines.push("Second Opinion — OnSecondThought.me");
+      const text = lines.join("\n");
+      try{
+        if(window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.shareText){
+          window.webkit.messageHandlers.shareText.postMessage(text); return;
+        }
+      }catch(_e){}
+      try{ if(navigator.share){ navigator.share({title:"Second Opinion — All Results",text}); return; } }catch(_e2){}
+      showToast("Sharing not available in this environment.");
+    });
+
+    // All Results — Share PDF
+    onPressPointer(arExportPDFBtn, ()=>{
+      const results = loadAllResults();
+      if(!results.length){ showToast("No results to export."); return; }
+      const html = allResultsToHTML(results);
+      try{
+        if(window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.sharePDF){
+          window.webkit.messageHandlers.sharePDF.postMessage(html); return;
+        }
+      }catch(_e){}
+      showToast("PDF sharing is not available in this environment.");
+    });
+
+    // ── detail modal ──
+    // ── shared helper: build plain-text for one result ──
+    function resultToPlainText(r){
+      const SEP = "─────────────────────────────";
+      const ts = r.timestamp ? formatPilotTimestamp(new Date(r.timestamp)) : "Unknown date";
+      const fmt2 = v => isFinite(v) ? Math.round(v*10)/10 : "—";
+      if(r.type === 'frat'){
+        const cats = Object.keys(r.byCat||{}).sort();
+        return [
+          "SECOND OPINION",
+          "Flight Risk Assessment (FRAT)",
+          SEP,
+          ts,
+          `Rules: ${r.rules||"—"}  •  Experience: ${r.exp||"—"} hrs in type`,
+          SEP,
+          `RISK BAND:   ${r.band||"—"}`,
+          `TOTAL SCORE: ${isFinite(r.total)?r.total:"—"}`,
+          "",
+          "CATEGORY BREAKDOWN",
+          ...cats.map(cat=>`  ${cat}: ${r.byCat[cat]} pts`),
+          SEP,
+          "Second Opinion — OnSecondThought.me"
+        ].join("\n");
+      }
+      const loc = (r.locationLabel && r.locationLabel !== "Unavailable") ? r.locationLabel : null;
+      return [
+        "SECOND OPINION",
+        "Cognition & Acuity Assessment",
+        SEP,
+        ts,
+        loc   ? `Location:          ${loc}` : null,
+        r.metar ? r.metar : "METAR Unavailable",
+        SEP,
+        `STATUS: ${r.statusLabel||"—"}`,
+        "",
+        "REACTION",
+        `  Median RT:        ${isFinite(r.srt_median)?Math.round(r.srt_median)+" ms":"—"}`,
+        `  Slow responses:   ${isFinite(r.srt_lapses)?r.srt_lapses:"—"}`,
+        `  False starts:     ${isFinite(r.srt_false)?r.srt_false:"—"}`,
+        "",
+        "WORD COLOR (STROOP)",
+        `  Accuracy:         ${fmt2(r.stro_acc)}%`,
+        `  Mean RT:          ${fmt2(r.stro_mean_rt)} ms`,
+        `  Interference cost:${fmt2(r.stro_cost)} ms`,
+        "",
+        "WORKING MEMORY (2&4)",
+        `  d′ (scaled):      ${fmt2(r.nb_d)}`,
+        `  Recall probe acc: ${fmt2(r.probe_acc)}%`,
+        SEP,
+        "Second Opinion — OnSecondThought.me"
+      ].filter(l=>l!==null).join("\n");
+    }
+
+    // ── shared helper: build HTML for one result (for PDF) ──
+    function resultToHTML(r){
+      const ts = r.timestamp ? formatPilotTimestamp(new Date(r.timestamp)) : "Unknown date";
+      const sc = statusColors(r.light || "amber");
+      const fmt2 = v => isFinite(v) ? Math.round(v*10)/10 : "—";
+      const row = (label, val) =>
+        `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #eef2f7;">
+           <span style="color:#5a7184;font-size:.9rem;">${label}</span>
+           <span style="font-weight:700;color:#1a2f45;font-size:.9rem;">${val}</span>
+         </div>`;
+      const secHead = title =>
+        `<div style="font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#9ab0c4;padding:12px 0 4px;">${title}</div>`;
+      if(r.type === 'frat'){
+        const cats = Object.keys(r.byCat||{}).sort();
+        const catRows = cats.map(cat=>row(cat, (r.byCat[cat]||0)+" pts")).join("") || row("No items scored True","");
+        return `<div class="printDoc">
+          <h1>Second Opinion &mdash; FRAT</h1>
+          <div class="pmuted">${ts}</div>
+          <div class="pbox" style="margin-top:10px;background:${sc.bg};border-color:${sc.border};">
+            <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${sc.text};opacity:.7;">FRAT Result</div>
+            <div style="font-size:1.15rem;font-weight:800;color:${sc.text};margin-top:2px;">${r.band||"—"} risk band</div>
+            <div style="font-size:.85rem;color:${sc.text};margin-top:3px;">Score: ${isFinite(r.total)?r.total:"—"} &nbsp;•&nbsp; ${r.rules||"—"} &nbsp;•&nbsp; ${r.exp||"—"} hrs in type</div>
+          </div>
+          <div class="pbox" style="margin-top:10px;">
+            ${secHead("Category Breakdown")}${catRows}
+          </div>
+        </div>`;
+      }
+      const loc = (r.locationLabel && r.locationLabel !== "Unavailable") ? r.locationLabel : null;
+      const metarLine = r.metar
+        ? `<div style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Courier New,monospace;font-size:.8rem;color:#5a7184;margin-top:4px;">${r.metar}</div>`
+        : `<div style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Courier New,monospace;font-size:.8rem;color:#9ab0c4;margin-top:4px;">METAR Unavailable</div>`;
+      return `<div class="printDoc">
+        <h1>Second Opinion &mdash; Cognition &amp; Acuity</h1>
+        <div class="pmuted">${ts}</div>
+        ${loc ? `<div class="pmuted">${loc}</div>` : ""}
+        ${metarLine}
+        <div class="pbox" style="margin-top:10px;background:${sc.bg};border-color:${sc.border};">
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${sc.text};opacity:.7;">Assessment Result</div>
+          <div style="font-size:1.15rem;font-weight:800;color:${sc.text};margin-top:2px;">${r.statusLabel||"—"}</div>
+        </div>
+        <div class="pbox" style="margin-top:10px;">
+          ${secHead("Reaction")}
+          ${row("Median RT",        isFinite(r.srt_median)?fmt2(r.srt_median)+" ms":"—")}
+          ${row("Slow responses",   isFinite(r.srt_lapses)?r.srt_lapses:"—")}
+          ${row("False starts",     isFinite(r.srt_false)?r.srt_false:"—")}
+          ${secHead("Word Color (Stroop)")}
+          ${row("Accuracy",         isFinite(r.stro_acc)?fmt2(r.stro_acc)+"%":"—")}
+          ${row("Mean RT",          isFinite(r.stro_mean_rt)?fmt2(r.stro_mean_rt)+" ms":"—")}
+          ${row("Interference cost",isFinite(r.stro_cost)?fmt2(r.stro_cost)+" ms":"—")}
+          ${secHead("Working Memory (2&amp;4)")}
+          ${row("d′ (scaled)", isFinite(r.nb_d)?fmt2(r.nb_d):"—")}
+          ${row("Recall probe acc", isFinite(r.probe_acc)?fmt2(r.probe_acc)+"%":"—")}
+        </div>
+      </div>`;
+    }
+
+    // ── shared helper: build HTML for all results (for PDF) ──
+    function allResultsToHTML(results){
+      const fmt2 = v => isFinite(v) ? Math.round(v*10)/10 : "—";
+      const rows = [...results].reverse().map((r, revIdx)=>{
+        const idx = results.length - revIdx;
+        const isFrat = r.type === 'frat';
+        const ts = r.timestamp ? formatPilotTimestamp(new Date(r.timestamp)) : "Unknown";
+        const loc = (r.locationLabel && r.locationLabel !== "Unavailable") ? r.locationLabel : null;
+        const sc = statusColors(r.light || "amber");
+        const dotColor = {green:"#13c27a",red:"#ff5b5b",amber:"#ffb31a"}[r.light||"amber"];
+        const dot = `<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${dotColor};margin-right:6px;vertical-align:middle;"></span>`;
+        const badge = isFrat
+          ? `<span style="font-size:.6rem;font-weight:800;background:#e8f0ff;color:#2979ff;border-radius:3px;padding:1px 4px;margin-left:5px;">FRAT</span>`
+          : `<span style="font-size:.6rem;font-weight:800;background:#e8f8f4;color:#0a9a7a;border-radius:3px;padding:1px 4px;margin-left:5px;">COG</span>`;
+        const statLine = isFrat
+          ? `<span><b style="color:#1a2f45;">${isFinite(r.total)?r.total:"—"}</b> <span style="color:#9ab0c4;">score</span></span>
+             <span><b style="color:#5a7184;">${r.rules||"—"}</b></span>`
+          : `<span><b style="color:#1a2f45;">${isFinite(r.srt_median)?Math.round(r.srt_median)+" ms":"—"}</b> <span style="color:#9ab0c4;">RT</span></span>
+             <span><b style="color:#1a2f45;">${fmt2(r.stro_acc)}%</b> <span style="color:#9ab0c4;">Stroop</span></span>
+             <span><b style="color:#1a2f45;">${fmt2(r.nb_d)}</b> <span style="color:#9ab0c4;">d′</span></span>`;
+        return `<div style="border:1px solid #dce4ed;border-radius:10px;padding:10px 12px;margin-bottom:8px;">
+          <div style="font-size:.78rem;font-weight:800;color:${sc.text};">${dot}#${idx}${badge} &nbsp; ${r.statusLabel||"—"}</div>
+          <div style="font-size:.75rem;color:#5a7184;margin-top:3px;">${ts}</div>
+          ${loc ? `<div style="font-size:.72rem;color:#9ab0c4;">${loc}</div>` : ""}
+          ${!isFrat && r.metar ? `<div style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Courier New,monospace;font-size:.72rem;color:#9ab0c4;margin-top:2px;">${r.metar}</div>` : ""}
+          <div style="display:flex;gap:14px;margin-top:6px;font-size:.82rem;">${statLine}</div>
+        </div>`;
+      }).join("");
+      return `<div class="printDoc">
+        <h1>Second Opinion &mdash; All Results</h1>
+        <div class="pmuted">Exported: ${formatPilotTimestamp(new Date())} &nbsp;&bull;&nbsp; ${results.length} run${results.length!==1?"s":""}</div>
+        <div style="margin-top:12px;">${rows}</div>
+      </div>`;
+    }
+
+    function openDetail(idx){
+      const results = loadAllResults();
+      const r = results[idx];
+      if(!r) return;
+      currentDetailIdx = idx;
+      currentDetailRecord = r;
+      const ts = r.timestamp ? formatPilotTimestamp(new Date(r.timestamp)) : "Unknown date";
+      const loc = (r.locationLabel && r.locationLabel !== "Unavailable") ? r.locationLabel : null;
+      const sc = statusColors(r.light || "amber");
+
+      arDetailTitle.textContent = ts;
+
+      const metarLine = r.metar
+        ? `<div style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Courier New,monospace;font-size:.78rem;color:#5a7184;margin-top:4px;">${r.metar}</div>`
+        : `<div style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Courier New,monospace;font-size:.78rem;color:#9ab0c4;margin-top:4px;">METAR Unavailable</div>`;
+
+      const tbl = (label, val) => `
+        <tr>
+          <td style="padding:5px 4px;color:var(--accent);font-size:.92rem;">${label}</td>
+          <td style="padding:5px 6px;font-weight:700;color:#1a2f45;text-align:right;font-size:.92rem;">${val}</td>
+        </tr>`;
+      const secHdr = title => `<tr><td colspan="2" style="font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#9ab0c4;padding:10px 4px 3px;">${title}</td></tr>`;
+      const fmt2 = v => isFinite(v) ? Math.round(v*10)/10 : "—";
+
+      if(r.type === 'frat'){
+        const cats = Object.keys(r.byCat||{}).sort();
+        const catRows = cats.length
+          ? cats.map(cat=>tbl(cat, (r.byCat[cat]||0)+" pts")).join("")
+          : `<tr><td colspan="2" style="color:#9ab0c4;font-size:.85rem;padding:6px 4px;">No items scored True.</td></tr>`;
+        arDetailBody.innerHTML = `
+          <div style="background:${sc.bg};border:1.5px solid ${sc.border};border-radius:14px;padding:12px 14px;margin:10px 0 10px;">
+            <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${sc.text};opacity:.7;">FRAT Result</div>
+            <div style="font-size:1.2rem;font-weight:800;color:${sc.text};margin-top:2px;">${r.band||"—"} risk band</div>
+            <div style="font-size:.85rem;color:${sc.text};opacity:.8;margin-top:3px;">Score: ${isFinite(r.total)?r.total:"—"} • ${r.rules||"—"} • ${r.exp||"—"} hrs in type</div>
+          </div>
+          <table style="width:100%;border-collapse:collapse;">
+            <tbody>
+              ${secHdr("Category Breakdown")}
+              ${catRows}
+            </tbody>
+          </table>`;
+      } else {
+        arDetailBody.innerHTML = `
+          <div style="background:${sc.bg};border:1.5px solid ${sc.border};border-radius:14px;padding:12px 14px;margin:10px 0 10px;">
+            <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${sc.text};opacity:.7;">Cognition &amp; Acuity Result</div>
+            <div style="font-size:1.2rem;font-weight:800;color:${sc.text};margin-top:2px;">${r.statusLabel||"—"}</div>
+            ${loc ? `<div style="font-size:.8rem;color:${sc.text};opacity:.75;margin-top:4px;">${loc}</div>` : ""}
+            ${metarLine}
+          </div>
+          <table style="width:100%;border-collapse:collapse;">
+            <tbody>
+              ${secHdr("Reaction")}
+              ${tbl("Median RT",        isFinite(r.srt_median)?fmt2(r.srt_median)+" ms":"—")}
+              ${tbl("Slow responses",   isFinite(r.srt_lapses)?r.srt_lapses:"—")}
+              ${tbl("False starts",     isFinite(r.srt_false)?r.srt_false:"—")}
+              ${secHdr("Word Color (Stroop)")}
+              ${tbl("Accuracy",         isFinite(r.stro_acc)?fmt2(r.stro_acc)+"%":"—")}
+              ${tbl("Mean RT",          isFinite(r.stro_mean_rt)?fmt2(r.stro_mean_rt)+" ms":"—")}
+              ${tbl("Interference cost",isFinite(r.stro_cost)?fmt2(r.stro_cost)+" ms":"—")}
+              ${secHdr("Working Memory (2&amp;4)")}
+              ${tbl("d′ (scaled)", isFinite(r.nb_d)?fmt2(r.nb_d):"—")}
+              ${tbl("Recall probe acc", isFinite(r.probe_acc)?fmt2(r.probe_acc)+"%":"—")}
+            </tbody>
+          </table>`;
+      }
+
+      arDetailOverlay.setAttribute("aria-hidden","false");
+      show(arDetailOverlay);
+    }
+
+    function closeDetail(){
+      hide(arDetailOverlay);
+      arDetailOverlay.setAttribute("aria-hidden","true");
+      currentDetailIdx = null;
+      currentDetailRecord = null;
+    }
+
+    onPressPointer(arDetailCloseBtn, closeDetail);
+    arDetailOverlay.addEventListener("click", e=>{ if(e.target===arDetailOverlay) closeDetail(); });
+
+    onPressPointer(arDetailDeleteBtn, ()=>{
+      if(currentDetailIdx === null) return;
+      if(!confirm("Delete this result?")) return;
+      const results = loadAllResults();
+      results.splice(currentDetailIdx, 1);
+      saveAllResults(results);
+      closeDetail();
+      renderAllResults();
+      showToast("Result deleted.");
+    });
+
+    onPressPointer(arDetailTextBtn, ()=>{
+      if(!currentDetailRecord) return;
+      const text = resultToPlainText(currentDetailRecord);
+      try{
+        if(window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.shareText){
+          window.webkit.messageHandlers.shareText.postMessage(text); return;
+        }
+      }catch(_e){}
+      try{ if(navigator.share){ navigator.share({title:"Second Opinion Result",text}); return; } }catch(_e2){}
+      showToast("Sharing not available in this environment.");
+    });
+
+    onPressPointer(arDetailPDFBtn, ()=>{
+      if(!currentDetailRecord) return;
+      const html = resultToHTML(currentDetailRecord);
+      const ts = currentDetailRecord.timestamp
+        ? formatPilotTimestamp(new Date(currentDetailRecord.timestamp))
+        : "Result";
+      try{
+        if(window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.sharePDF){
+          window.webkit.messageHandlers.sharePDF.postMessage(html); return;
+        }
+      }catch(_e){}
+      showToast("PDF sharing is not available in this environment.");
+    });
+
+    // ── status color helper ──
+    function statusColors(light){
+      const map = {
+        green:{bg:"#e8f8f1",border:"#28c77c",text:"#0d5c35"},
+        amber:{bg:"#fff8e8",border:"#f0a629",text:"#7a4f00"},
+        red:  {bg:"#fef0f0",border:"#f05454",text:"#7a1515"}
+      };
+      return map[light] || map.amber;
+    }
+
+    // ── render list ──
+    function renderList(results){
+      if(!results.length){
+        arList.innerHTML = "";
+        arEmpty.style.display = "";
+        return;
+      }
+      arEmpty.style.display = "none";
+      const html = [...results].reverse().map((r, revIdx)=>{
+        const idx = results.length - 1 - revIdx;
+        const isFrat = r.type === 'frat';
+        const ts = r.timestamp ? formatPilotTimestamp(new Date(r.timestamp)) : "Unknown date";
+        const loc = (r.locationLabel && r.locationLabel !== "Unavailable") ? r.locationLabel : null;
+        const dotColor = {green:"var(--good)",amber:"var(--warn)",red:"var(--bad)"}[r.light||"amber"];
+        const badge = isFrat
+          ? `<span style="font-size:.65rem;font-weight:800;letter-spacing:.07em;background:#e8f0ff;color:#2979ff;border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:middle;">FRAT</span>`
+          : `<span style="font-size:.65rem;font-weight:800;letter-spacing:.07em;background:#e8f8f4;color:#0a9a7a;border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:middle;">COG</span>`;
+        const rightVal = isFrat
+          ? `<div style="font-size:.78rem;color:#5a7184;">${isFinite(r.total)?r.total:"—"}</div><div style="font-size:.72rem;color:#9ab0c4;">score</div>`
+          : `<div style="font-size:.78rem;color:#5a7184;">${isFinite(r.srt_median)?Math.round(r.srt_median)+" ms":"—"}</div><div style="font-size:.72rem;color:#9ab0c4;">RT</div>`;
+        return `<div data-aridx="${idx}" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;border:1px solid #dce4ed;background:#f8fafc;margin-bottom:8px;cursor:pointer;">
+          <div style="width:10px;height:10px;border-radius:50%;background:${dotColor};flex-shrink:0;"></div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:700;font-size:.88rem;color:#1a2f45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.statusLabel||"—"}${badge}</div>
+            <div style="font-size:.78rem;color:#5a7184;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ts}</div>
+            ${loc ? `<div style="font-size:.75rem;color:#9ab0c4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${loc}</div>` : ""}
+          </div>
+          <div style="text-align:right;flex-shrink:0;">${rightVal}</div>
+        </div>`;
+      }).join("");
+      arList.innerHTML = html;
+      arList.querySelectorAll("[data-aridx]").forEach(el=>{
+        el.addEventListener("pointerdown", ()=>{
+          openDetail(parseInt(el.dataset.aridx));
+        });
+      });
+    }
+
+    // ── render charts (pure canvas, no lib dependency) ──
+    function renderCharts(results){
+      if(results.length < 2){
+        arChartsWrap.style.display = "none";
+        destroyCharts();
+        return;
+      }
+      arChartsWrap.style.display = "";
+
+      // Charts only plot COG records — FRAT uses different axes (quadrant dashboard)
+      const cogResults = results.filter(r => r.type !== 'frat');
+      if(cogResults.length < 2){
+        arChartsWrap.style.display = "none";
+        destroyCharts();
+        return;
+      }
+      const N = Math.min(cogResults.length, 30);
+      const recent = cogResults.slice(-N);
+      const labels = recent.map((r,i)=>{
+        if(!r.timestamp) return "#"+(results.length - N + i + 1);
+        const d = new Date(r.timestamp);
+        return (d.getMonth()+1)+"/"+(d.getDate());
+      });
+
+      const W = Math.max(Math.min(window.innerWidth - 48, 800), 300);
+      const pointW = Math.max(W / N, 32);
+      const canvasW = Math.round(pointW * N);
+
+      function drawChart(canvasId, label, values, baselineVal, unit, colorStroke, colorFill, invertBad){
+        const canvas = document.getElementById(canvasId);
+        if(!canvas) return;
+        canvas.width  = canvasW;
+        canvas.height = 120;
+        canvas.style.width  = canvasW + "px";
+        canvas.style.minWidth = canvasW + "px";
+        const ctx = canvas.getContext("2d");
+        const PAD = {top:22, right:8, bottom:28, left:44};
+        const cw = canvasW, ch = 120;
+        const gw = cw - PAD.left - PAD.right;
+        const gh = ch - PAD.top - PAD.bottom;
+
+        const valid = values.filter(v=>isFinite(v));
+        if(!valid.length){ ctx.fillStyle="#9ab0c4"; ctx.font="12px system-ui"; ctx.fillText("No data",PAD.left,ch/2); return; }
+        const rawMin = Math.min(...valid), rawMax = Math.max(...valid);
+        const spread = rawMax - rawMin || 1;
+        const pad = spread * 0.25;
+        let yMin = rawMin - pad, yMax = rawMax + pad;
+        if(isFinite(baselineVal)){
+          yMin = Math.min(yMin, baselineVal - pad);
+          yMax = Math.max(yMax, baselineVal + pad);
+        }
+        const yRange = yMax - yMin || 1;
+
+        const xOf = i => PAD.left + (i / (values.length - 1 || 1)) * gw;
+        const yOf = v => PAD.top + (1 - (v - yMin)/yRange) * gh;
+
+        ctx.clearRect(0, 0, cw, ch);
+
+        // baseline reference line
+        if(isFinite(baselineVal)){
+          const by = yOf(baselineVal);
+          ctx.save();
+          ctx.setLineDash([4,4]);
+          ctx.strokeStyle = "rgba(10,184,180,0.45)";
+          ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.moveTo(PAD.left, by); ctx.lineTo(cw-PAD.right, by); ctx.stroke();
+          ctx.restore();
+          ctx.fillStyle = "rgba(10,184,180,0.7)";
+          ctx.font = "bold 9px system-ui";
+          ctx.fillText("BASE", PAD.left - 40, by + 3);
+        }
+
+        // filled area
+        const pts = values.map((v,i)=>({x:xOf(i),y:isFinite(v)?yOf(v):null}));
+        ctx.beginPath();
+        let started = false;
+        pts.forEach(p=>{ if(p.y!==null){ if(!started){ctx.moveTo(p.x,p.y);started=true;}else ctx.lineTo(p.x,p.y); } });
+        if(started){
+          const lastPt = pts.filter(p=>p.y!==null).slice(-1)[0];
+          const firstPt = pts.filter(p=>p.y!==null)[0];
+          ctx.lineTo(lastPt.x, PAD.top+gh);
+          ctx.lineTo(firstPt.x, PAD.top+gh);
+          ctx.closePath();
+          ctx.fillStyle = colorFill;
+          ctx.fill();
+        }
+
+        // line
+        ctx.beginPath(); started=false;
+        pts.forEach(p=>{ if(p.y!==null){ if(!started){ctx.moveTo(p.x,p.y);started=true;}else ctx.lineTo(p.x,p.y); } });
+        ctx.strokeStyle = colorStroke; ctx.lineWidth = 2; ctx.lineJoin="round"; ctx.stroke();
+
+        // dots
+        pts.forEach((p,i)=>{
+          if(p.y===null) return;
+          const light = recent[i].light || "amber";
+          const dc = light==="green"?"#13c27a":light==="red"?"#ff5b5b":"#ffb31a";
+          ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI*2);
+          ctx.fillStyle = dc; ctx.fill();
+          ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.5; ctx.stroke();
+        });
+
+        // x-axis labels
+        ctx.fillStyle = "#9ab0c4"; ctx.font = "9px system-ui"; ctx.textAlign = "center";
+        const step = Math.ceil(values.length / 8);
+        values.forEach((v,i)=>{ if(i%step===0||i===values.length-1) ctx.fillText(labels[i], xOf(i), ch-4); });
+
+        // y-axis labels
+        ctx.textAlign = "right";
+        [0, 0.5, 1].forEach(t=>{
+          const yv = yMin + t*yRange;
+          const yp = PAD.top + (1-t)*gh;
+          ctx.fillText(Math.round(yv), PAD.left-6, yp+3);
+        });
+
+        // chart label
+        ctx.fillStyle = "#1a2f45"; ctx.font = "bold 10px system-ui"; ctx.textAlign = "left";
+        ctx.fillText(label + (unit?" ("+unit+")":""), PAD.left, 13);
+      }
+
+      const baselineSess = loadBaseline();
+      function baselineMean(key){
+        const vals = baselineSess.map(s=>s[key]).filter(v=>isFinite(v));
+        return vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : NaN;
+      }
+
+      const rtVals   = recent.map(r=>isFinite(r.srt_median)?r.srt_median:NaN);
+      const stVals   = recent.map(r=>isFinite(r.stro_acc)?r.stro_acc:NaN);
+      const nbVals   = recent.map(r=>isFinite(r.nb_d)?r.nb_d:NaN);
+
+      destroyCharts();
+      drawChart("arChartMedianRT",  "Reaction Median RT",  rtVals, baselineMean("srt_median"), "ms",  "#4da3ff","rgba(77,163,255,0.12)", true);
+      drawChart("arChartStroopAcc", "Stroop Accuracy",     stVals, baselineMean("stro_acc"),   "%",   "#13c27a","rgba(19,194,122,0.12)", false);
+      drawChart("arChartNbD",       "2&4 d′ (scaled)",nbVals, baselineMean("nb_d"),       "",    "#ab7eff","rgba(171,126,255,0.12)", false);
+    }
+
+    function destroyCharts(){
+      // Nothing to destroy — we use raw canvas, no Chart.js instances
+    }
+
+    // ── quadrant dashboard ──
+    function cogScore(r){
+      // Map COG record to 0–100 risk axis (0=sharp, 100=impaired)
+      // Use light + metric spread for positioning
+      const base = {green:15, amber:50, red:85}[r.light||"amber"];
+      // Add small spread from actual metrics so points don't all stack
+      let spread = 0;
+      if(isFinite(r.srt_median))  spread += (r.srt_median > 400 ? 5 : r.srt_median < 250 ? -5 : 0);
+      if(isFinite(r.stro_acc))    spread += (r.stro_acc  < 80  ? 5 : r.stro_acc  > 95  ? -5 : 0);
+      if(isFinite(r.nb_d))        spread += (r.nb_d < 0.5 ? 5 : r.nb_d > 2 ? -5 : 0);
+      return Math.max(2, Math.min(98, base + spread));
+    }
+
+    function fratScore(r){
+      // Map FRAT band to 0–100 risk axis (0=low risk, 100=high risk)
+      const map = {"Below ref range":8, "Low":28, "Moderate":65, "High":90};
+      return map[r.band] ?? 50;
+    }
+
+    function renderQuadrant(results){
+      const quadWrap = document.getElementById("arQuadrantWrap");
+      const canvas   = document.getElementById("arQuadrantCanvas");
+      const summary  = document.getElementById("arQuadrantSummary");
+      const legend   = document.getElementById("arQuadrantLegend");
+
+      const cogRecs  = results.filter(r => r.type !== "frat");
+      const fratRecs = results.filter(r => r.type === "frat");
+
+      if(!cogRecs.length || !fratRecs.length){
+        quadWrap.style.display = "none";
+        return;
+      }
+      quadWrap.style.display = "";
+
+      // Build paired points: for each FRAT record, find the nearest COG record in time
+      const pairs = [];
+      fratRecs.forEach(fr=>{
+        const ft = fr.timestamp ? new Date(fr.timestamp).getTime() : 0;
+        let bestCog = null, bestDiff = Infinity;
+        cogRecs.forEach(cr=>{
+          const ct = cr.timestamp ? new Date(cr.timestamp).getTime() : 0;
+          const diff = Math.abs(ft - ct);
+          if(diff < bestDiff){ bestDiff = diff; bestCog = cr; }
+        });
+        if(bestCog) pairs.push({frat:fr, cog:bestCog, diff:bestDiff});
+      });
+
+      if(!pairs.length){ quadWrap.style.display = "none"; return; }
+
+      // Sort by time, take last 20
+      pairs.sort((a,b)=> new Date(a.frat.timestamp)-new Date(b.frat.timestamp));
+      const recent = pairs.slice(-20);
+      const latest = recent[recent.length-1];
+
+      // Draw
+      const SIZE = 300;
+      const PAD  = 36;
+      const GW   = SIZE - PAD*2;
+      canvas.width  = SIZE;
+      canvas.height = SIZE;
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0,0,SIZE,SIZE);
+
+      // Background quadrants
+      const mid = PAD + GW/2;
+      const quads = [
+        {x:PAD,      y:PAD,   w:GW/2, h:GW/2, color:"rgba(255,91,91,0.08)",  label:"HIGH BOTH"},
+        {x:mid,      y:PAD,   w:GW/2, h:GW/2, color:"rgba(255,179,26,0.08)", label:"HIGH FRAT"},
+        {x:PAD,      y:mid,   w:GW/2, h:GW/2, color:"rgba(255,179,26,0.08)", label:"HIGH COG"},
+        {x:mid,      y:mid,   w:GW/2, h:GW/2, color:"rgba(19,194,122,0.08)", label:"LOW BOTH"},
+      ];
+      quads.forEach(q=>{
+        ctx.fillStyle = q.color;
+        ctx.fillRect(q.x, q.y, q.w, q.h);
+      });
+
+      // Grid lines
+      ctx.strokeStyle = "#dce4ed"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(mid,PAD); ctx.lineTo(mid,PAD+GW); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(PAD,mid); ctx.lineTo(PAD+GW,mid); ctx.stroke();
+
+      // Axis labels
+      ctx.fillStyle = "#9ab0c4"; ctx.font = "bold 8px system-ui"; ctx.textAlign = "center";
+      ctx.fillText("← COG SHARP", PAD + GW*0.25, SIZE-4);
+      ctx.fillText("COG IMPAIRED →", PAD + GW*0.75, SIZE-4);
+      ctx.save();
+      ctx.translate(10, PAD + GW*0.75);
+      ctx.rotate(-Math.PI/2);
+      ctx.fillText("← FRAT LOW", 0, 0);
+      ctx.restore();
+      ctx.save();
+      ctx.translate(10, PAD + GW*0.25);
+      ctx.rotate(-Math.PI/2);
+      ctx.fillText("FRAT HIGH →", 0, 0);
+      ctx.restore();
+
+      // Quadrant corner labels
+      ctx.font = "bold 7px system-ui";
+      const qLabels = [
+        {x:PAD+4,      y:PAD+10,    color:"rgba(255,91,91,0.6)",   text:"⚠ HIGH BOTH"},
+        {x:mid+4,      y:PAD+10,    color:"rgba(255,179,26,0.6)",  text:"FRAT RISK"},
+        {x:PAD+4,      y:mid+10,    color:"rgba(255,179,26,0.6)",  text:"COG SOFT"},
+        {x:mid+4,      y:mid+10,    color:"rgba(19,194,122,0.6)",  text:"✓ GOOD ZONE"},
+      ];
+      qLabels.forEach(l=>{ ctx.fillStyle=l.color; ctx.textAlign="left"; ctx.fillText(l.text,l.x,l.y); });
+
+      // Convert score to canvas coords
+      // X: cog score 0→left(PAD) to 100→right(PAD+GW)
+      // Y: frat score 0→bottom(PAD+GW) to 100→top(PAD)
+      const toX = s => PAD + (s/100)*GW;
+      const toY = s => PAD + GW - (s/100)*GW;
+
+      // Historical ghost dots
+      recent.slice(0,-1).forEach((p,i)=>{
+        const x = toX(cogScore(p.cog));
+        const y = toY(fratScore(p.frat));
+        const alpha = 0.15 + (i/recent.length)*0.35;
+        ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2);
+        ctx.fillStyle = `rgba(90,113,132,${alpha})`;
+        ctx.fill();
+      });
+
+      // Latest dot — large, colored by combined signal
+      const lx = toX(cogScore(latest.cog));
+      const ly = toY(fratScore(latest.frat));
+      const cs = cogScore(latest.cog);
+      const fs = fratScore(latest.frat);
+      const combinedBad = cs > 50 && fs > 50;
+      const oneBad      = cs > 50 || fs > 50;
+      const dotColor = combinedBad ? "#ff5b5b" : oneBad ? "#ffb31a" : "#13c27a";
+
+      // Glow ring
+      ctx.beginPath(); ctx.arc(lx,ly,13,0,Math.PI*2);
+      ctx.fillStyle = dotColor.replace(")"," / 0.2)").replace("rgb","rgba");
+      ctx.fill();
+      // Outer ring
+      ctx.beginPath(); ctx.arc(lx,ly,9,0,Math.PI*2);
+      ctx.strokeStyle = dotColor; ctx.lineWidth = 2; ctx.stroke();
+      // Inner fill
+      ctx.beginPath(); ctx.arc(lx,ly,6,0,Math.PI*2);
+      ctx.fillStyle = dotColor; ctx.fill();
+
+      // Summary card
+      const cogLabel  = latest.cog.statusLabel  || "—";
+      const fratLabel = (latest.frat.band||"—") + " risk band";
+      const advice = combinedBad
+        ? "Both assessments show elevated risk. Strong no-go signal."
+        : cs > 50
+        ? "External conditions look manageable, but cognitive sharpness is soft. Consider a delay."
+        : fs > 50
+        ? "You’re mentally sharp, but external risk factors are elevated. Proceed carefully."
+        : "Both assessments look good. Low combined risk.";
+      const adviceColor = combinedBad ? "var(--bad)" : oneBad ? "var(--warn)" : "var(--good)";
+
+      summary.innerHTML = `
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:130px;background:#f0f6ff;border:1px solid #dce4ed;border-radius:10px;padding:10px 12px;">
+            <div style="font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#9ab0c4;">Cognition</div>
+            <div style="font-weight:700;color:#1a2f45;font-size:.88rem;margin-top:3px;">${cogLabel}</div>
+            <div style="font-size:.75rem;color:#5a7184;">${latest.cog.timestamp?formatPilotTimestamp(new Date(latest.cog.timestamp)).slice(0,12):""}</div>
+          </div>
+          <div style="flex:1;min-width:130px;background:#f0f6ff;border:1px solid #dce4ed;border-radius:10px;padding:10px 12px;">
+            <div style="font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#9ab0c4;">FRAT</div>
+            <div style="font-weight:700;color:#1a2f45;font-size:.88rem;margin-top:3px;">${fratLabel}</div>
+            <div style="font-size:.75rem;color:#5a7184;">Score: ${isFinite(latest.frat.total)?latest.frat.total:"—"}</div>
+          </div>
+        </div>
+        <div style="margin-top:8px;padding:10px 12px;background:#f8fafc;border-radius:10px;border-left:3px solid ${adviceColor};font-size:.85rem;color:#1a2f45;">
+          <b style="color:${adviceColor};">On Second Thought…</b> ${advice}
+        </div>`;
+
+      // Time-proximity note
+      const diffHrs = Math.round(latest.diff / 3600000);
+      legend.textContent = diffHrs < 2
+        ? `Latest COG + FRAT taken within ${Math.round(latest.diff/60000)} min of each other.`
+        : diffHrs < 24
+        ? `Latest COG and FRAT taken ~${diffHrs}h apart — closer pairing gives a cleaner picture.`
+        : `Latest COG and FRAT are >24h apart. Run both assessments on the same day for best results.`;
+    }
+
+    // ── main render ──
+    function renderAllResults(){
+      const results = loadAllResults();
+      renderList(results);
+      renderCharts(results);
+      renderQuadrant(results);
+    }
+
+  })();
+  // ── END ALL RESULTS ──────────────────────────────────────────
 
   if(disclaimerLink) onPressPointer(disclaimerLink,()=>{ hide(resultCard);show(disclaimerCard);setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50); });
   onPressPointer(disclaimerBackBtn,()=>{ hide(disclaimerCard);show(resultCard);scrollTopNow(); });
@@ -1968,17 +2977,21 @@ body.test-active .globalMenuBtn{
   fratNextBtn.textContent="Next";
 }
 
-  function startFratWizard(){
+  function startFratWizard(freshStart=false){
     const{rules,exp}=getFratProfile();
     if(!rules||!exp){showToast("Please select flight rules and experience in type first.");return;}
     fratState.rules=rules;fratState.exp=exp;
     fratState.items=FRAT_ITEMS.filter(i=>applicableToRules(i.rule,rules));
-    fratState.idx=0;fratState.answers={};fratReviewList.innerHTML="";
+    // Only wipe answers on an explicit fresh start (Run FRAT Again),
+    // not when the user taps Begin after seeing a previous result.
+    if(freshStart){ fratState.idx=0;fratState.answers={}; }
+    else { fratState.idx=0; }
+    fratReviewList.innerHTML="";
     hide(fratResultCard);hide(fratIntroCard);show(fratWizardCard);
     scrollTopNow();fratWizardCard.scrollIntoView({behavior:"auto"});
     renderFratQuestion();
   }
-  onPressPointer(fratBeginBtn,startFratWizard);
+  onPressPointer(fratBeginBtn,()=>startFratWizard(false));
 
   function runningTotal(){ let t=0;for(const it of fratState.items){if(fratState.answers[it.id]===true)t+=it.score;}return t; }
 
@@ -2023,7 +3036,7 @@ body.test-active .globalMenuBtn{
   fratState.idx--;
   renderFratQuestion();
 });
-  if(fratRestartBtn) onPressPointer(fratRestartBtn,()=>startFratWizard());
+  if(fratRestartBtn) onPressPointer(fratRestartBtn,()=>startFratWizard(true));
   onPressPointer(document.getElementById('fratMainMenuBtn'),()=>{ goMain(); });
   onPressPointer(fratResetBtn,()=>{
   fratState.answers={};
@@ -2074,6 +3087,16 @@ body.test-active .globalMenuBtn{
     hide(fratWizardCard);show(fratResultCard);
     setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50);
     fratResultCard.dataset.payload=JSON.stringify({total,band,byCat,rules,exp,answers:fratState.answers,items:fratState.items});
+    // Save to All Results
+    const _allR=loadAllResults();
+    _allR.push({
+      type:'frat',
+      timestamp:new Date().toISOString(),
+      total,band,byCat,rules,exp,
+      light:dotClass,
+      statusLabel:band+' risk band'
+    });
+    saveAllResults(_allR);
   }
 
   function buildFratReviewList(){
@@ -2088,14 +3111,79 @@ body.test-active .globalMenuBtn{
 
   onPressPointer(fratExportBtn,()=>{
     const payload=fratResultCard.dataset.payload?JSON.parse(fratResultCard.dataset.payload):null;
-    const when=new Date().toLocaleString();
-    if(!payload){openPrintOverlay("Second Opinion — FRAT Summary",`<div class="printDoc"><h1>Second Opinion — Flight Risk Assessment (FRAT)</h1><div class="pmuted">Generated: ${when}</div><div class="pbox"><b>No FRAT result to export.</b></div></div>`);return;}
+    const when=formatPilotTimestamp(new Date());
+    if(!payload){
+      openPrintOverlay("Second Opinion — FRAT Summary",
+        `<div class="printDoc"><h1>Second Opinion — Flight Risk Assessment (FRAT)</h1><div class="pmuted">Generated: ${when}</div><div class="pbox"><b>No FRAT result to export.</b></div></div>`,
+        "SECOND OPINION — FRAT\nNo result to export."
+      );
+      return;
+    }
     const{total,band,byCat,rules,exp,answers,items}=payload;
     const cats=Object.keys(byCat).sort();
-    const breakdown=cats.length?cats.map(cat=>`<div><b>${cat}:</b> ${byCat[cat]} points</div>`).join(""):"No items scored True.";
-    const qa=(items||[]).map((it,idx)=>{ const a=answers?.[it.id],ansText=(a===true)?"TRUE":"FALSE",points=(a===true)?it.score:0;return `<div style="margin-top:8px;"><b>${idx+1}. ${it.cat}</b> — ${it.text}<br><span class="pmuted">Answer: ${ansText} (+${points})</span></div>`; }).join("");
-    const html=`<div class="printDoc"><h1>Second Opinion — Flight Risk Assessment (FRAT)</h1><div class="pmuted">Generated: ${when}</div><div class="pbox"><div><b>Flight rules:</b> ${rules||"—"} • <b>Experience in type:</b> ${exp||"—"}</div><div style="margin-top:6px;"><b>Total FRAT score:</b> ${total}</div><div style="margin-top:6px;"><b>Reference band:</b> ${band}</div><div style="margin-top:6px;"><b>On Second Thought…</b> ${fratGuidance.textContent}</div></div><div class="pbox" style="margin-top:10px;"><h2>Category breakdown</h2><div>${breakdown}</div></div><div class="pbox" style="margin-top:10px;"><h2>Questions & answers</h2><div>${qa||"—"}</div></div></div>`;
-    openPrintOverlay("Second Opinion — FRAT Summary",html);
+
+    // ── HTML version (for overlay display) ──────────────────────────
+    const breakdown=cats.length
+      ?cats.map(cat=>`<div><b>${cat}:</b> ${byCat[cat]} pts</div>`).join("")
+      :"No items scored True.";
+    const qa=(items||[]).map((it,idx)=>{
+      const a=answers?.[it.id],ansText=(a===true)?"TRUE":"FALSE",points=(a===true)?it.score:0;
+      return `<div style="margin-top:10px;padding-top:10px;border-top:1px solid #dce4ed;">
+        <div style="font-size:.8rem;color:#5a7184;font-weight:700;">${idx+1}. ${it.cat.toUpperCase()}</div>
+        <div style="font-weight:700;margin:3px 0 5px;">${it.text}</div>
+        <div style="font-size:.9rem;">Answer: <b style="color:${a===true?'var(--warn)':'var(--muted)'};">${ansText}</b> <span style="color:#9ab0c4;">(+${points})</span></div>
+      </div>`;
+    }).join("");
+    const html=`<div class="printDoc">
+      <h1>Second Opinion — Flight Risk Assessment (FRAT)</h1>
+      <div class="pmuted">Generated: ${when}</div>
+      <div class="pbox" style="margin-top:10px;">
+        <div><b>Flight rules:</b> ${rules||"—"} &nbsp;•&nbsp; <b>Experience in type:</b> ${exp||"—"}</div>
+        <div style="margin-top:6px;font-size:1.1rem;"><b>Total score: ${total}</b> &nbsp;•&nbsp; Band: <b>${band}</b></div>
+        <div style="margin-top:8px;"><b>On Second Thought…</b> ${fratGuidance.textContent}</div>
+      </div>
+      <div class="pbox" style="margin-top:10px;">
+        <h2>Category breakdown</h2>${breakdown}
+      </div>
+      <div class="pbox" style="margin-top:10px;">
+        <h2>Questions &amp; answers</h2>${qa||"—"}
+      </div>
+    </div>`;
+
+    // ── Plain text version (for share sheet) ────────────────────────
+    const SEP="─────────────────────────────";
+    const catLines=cats.length
+      ?cats.map(cat=>`  ${cat}: ${byCat[cat]} pts`).join("\n")
+      :"  No items scored True.";
+    const qaLines=(items||[]).map((it,idx)=>{
+      const a=answers?.[it.id],ansText=(a===true)?"TRUE":"FALSE",points=(a===true)?it.score:0;
+      return `${idx+1}. [${it.cat.toUpperCase()}]\n   ${it.text}\n   Answer: ${ansText} (+${points})`;
+    }).join("\n\n");
+    const plain=[
+      "SECOND OPINION",
+      "Flight Risk Assessment (FRAT)",
+      SEP,
+      when,
+      `Rules:      ${rules||"—"}`,
+      `Experience: ${exp||"—"}`,
+      SEP,
+      `TOTAL SCORE:  ${total}`,
+      `RISK BAND:    ${band}`,
+      "",
+      "ON SECOND THOUGHT…",
+      fratGuidance.textContent,
+      SEP,
+      "CATEGORY BREAKDOWN",
+      catLines,
+      SEP,
+      "QUESTIONS & ANSWERS",
+      "",
+      qaLines,
+      SEP,
+      "Second Opinion — OnSecondThought.me"
+    ].join("\n");
+
+    openPrintOverlay("Second Opinion — FRAT Summary", html, plain);
   });
 
 })();
