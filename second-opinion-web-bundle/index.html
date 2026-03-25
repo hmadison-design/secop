@@ -903,7 +903,7 @@ body.test-active .globalMenuBtn{
       </div>
       <div class="grid grid-2" style="margin-top:6px;">
         <div><h3>Score breakdown</h3><div class="muted" id="fratBreakdown"></div></div>
-        <div><h3>Band reference</h3><div class="muted" id="fratBandRef"></div></div>
+        <div><h3>Band reference</h3><div class="muted" id="fratBandRef" style="font-size:.88rem;line-height:1.6;"></div></div>
       </div>
       <div class="hr"></div>
       <div class="row" style="gap:10px;">
@@ -1194,11 +1194,17 @@ body.test-active .globalMenuBtn{
 
   let baselineSessions=loadBaseline();
   let sessionResult=null;
+  // Abort token: set to true to cancel a running test cleanly
+  let _testAborted = false;
+  let _srtFinishFn = null;   // called by cancel to stop SRT immediately
 
   function setProgress(p){progressBar.style.width=(p*100).toFixed(1)+"%";}
 
   onPressPointer(backToMainBtn,()=>{ hide(resultCard);hide(testCard);hide(baselineCard);hide(tmdInfoCard); goMain(); setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50); });
-  onPressPointer(document.getElementById('goFratFromResultBtn'),()=>{ openFrat(); });
+  onPressPointer(document.getElementById('goFratFromResultBtn'),()=>{
+    window._fratLinkedCogIdx = (typeof window._pendingCogIdx === 'number') ? window._pendingCogIdx : null;
+    openFrat();
+  });
   onPressPointer(document.getElementById('exportResultBtn'),()=>{ exportPDF(); });
 
   onPressPointer(document.getElementById('debugSkipBtn'), ()=>{
@@ -1248,6 +1254,7 @@ body.test-active .globalMenuBtn{
     const t0=now(),total=sec*1000;
     return new Promise(res=>{
       function frame(){
+        if(_testAborted){ res(); return; }
         const t=now()-t0;
         const rem=Math.max(0,total-t);const p=clamp(t/total,0,1);
         tick(rem/1000,p);
@@ -1278,14 +1285,22 @@ body.test-active .globalMenuBtn{
   }
 
   function cancelTestConfirm(){
-  document.body.classList.remove('test-active');
-  globalMenuBtn.style.display='';
-  hide(testCard);
-  show(tmdHome);
-  scrollTopNow();
-}
+    _testAborted = true;
+    // Fire the current SRT/test finish so all listeners are cleaned up
+    if(typeof _srtFinishFn === 'function'){
+      try{ _srtFinishFn(); }catch(_e){}
+      _srtFinishFn = null;
+    }
+    document.body.classList.remove('test-active');
+    globalMenuBtn.style.display='';
+    hide(testCard);
+    show(tmdHome);
+    scrollTopNow();
+  }
 
   async function runTest(){
+    _testAborted = false;
+    _srtFinishFn = null;
     sessionResult=null;addBaselineBtn2.disabled=true;
     hide(resultCard);hide(baselineCard);hide(tmdHome);hide(tmdInfoCard);
     show(testCard);scrollTopNow();testCard.scrollIntoView({behavior:"auto"});
@@ -1347,8 +1362,10 @@ body.test-active .globalMenuBtn{
       tick();
     });
     const srt=await runSRT(DUR.srt);
+    if(_testAborted){ document.body.classList.remove('test-active'); globalMenuBtn.style.display=''; return; }
     await endMessageThenMaybeCountdown({messageText:"TEST OVER\nGET READY FOR THE NEXT ONE",messageMs:3000,countdownSeconds:5});
     const stro=await runStroop(DUR.stroop);
+    if(_testAborted){ document.body.classList.remove('test-active'); globalMenuBtn.style.display=''; return; }
     hide(betweenPane);
     const started=await waitForNbackStart(10000);
     hide(preNbackPane);
@@ -1395,10 +1412,13 @@ body.test-active .globalMenuBtn{
 
       function finish(){
         if(finished)return; finished=true;
+        _srtFinishFn = null;
         if(offHandler)offHandler();
         const medianRT=rts.length?rts.slice().sort((a,b)=>a-b)[Math.floor(rts.length/2)]:999;
         resolve({medianRT,lapses,falseStarts,n:rts.length});
       }
+      // Register so cancel button can trigger clean teardown
+      _srtFinishFn = finish;
       function scheduleNext(){
         if(finished)return; waiting=true;
         const delay=randomGap();
@@ -1436,6 +1456,8 @@ body.test-active .globalMenuBtn{
         timeOver=true;if(finished)return;
         if(waiting){ srtTarget.textContent="TAP";srtTarget.className="tapTarget go";waiting=false;goTime=now(); }
         finalTapArmed=true;
+        // Safety net: if user never taps the final tap, finish anyway after 3s
+        setTimeout(()=>{ if(!finished)finish(); }, 3000);
       });
     });
   }
@@ -1454,6 +1476,7 @@ body.test-active .globalMenuBtn{
 
       function finish(){
         if(finished)return; finished=true;
+        _srtFinishFn = null;
         if(offM)offM();if(offMM)offMM();
         window.removeEventListener('keydown',keyHandler);
         stroopWord.style.visibility="hidden";
@@ -1519,6 +1542,7 @@ body.test-active .globalMenuBtn{
       offMM=onPressPointer(btnMismatch,()=>respond("MISMATCH"));
       function keyHandler(e){ const k=e.key?.toLowerCase(); if(k==='f'){e.preventDefault();respond("MATCH");}if(k==='j'){e.preventDefault();respond("MISMATCH");} }
       window.addEventListener('keydown',keyHandler);
+      _srtFinishFn = finish;  // allow cancel to clean up Stroop
       setProgress(0);
       showTrial();
       sectionTimer("Color–Word",sec,(tleft,p)=>{
@@ -1526,7 +1550,13 @@ body.test-active .globalMenuBtn{
         setProgress(p);
       }).then(()=>{
         timeOver=true;if(finished)return;finalResponseArmed=true;
-        if(awaiting)return;allowFinalTrial=true;showTrial();allowFinalTrial=false;
+        if(awaiting){
+          // Waiting for user response — give them 3 more seconds then force finish
+          setTimeout(()=>{ if(!finished)finish(); }, 3000);
+          return;
+        }
+        // Not awaiting — no more trials needed, finish cleanly
+        finish();
       });
     });
   }
@@ -1573,7 +1603,7 @@ body.test-active .globalMenuBtn{
     }
 
     async function doGroup(){
-      if(group>groups) return;
+      if(group>groups||_testAborted) return;
 
       if(group>1){
         setDigit("",false);
@@ -1651,6 +1681,10 @@ body.test-active .globalMenuBtn{
 
         const probeAnswer=await new Promise(res=>{
           let done=false;
+          // Safety: abort check poll so cancel doesn't leave this hanging
+          const _probeAbortCheck = setInterval(()=>{
+            if(_testAborted&&!done){ done=true; clearInterval(_probeAbortCheck); res(null); }
+          }, 100);
           uniqueDigits.forEach(d=>{
             const btn=document.createElement('button');
             btn.type='button';
@@ -1659,6 +1693,7 @@ body.test-active .globalMenuBtn{
             btn.style.cssText='min-width:64px;font-size:1.8rem;font-weight:800;';
             onPressPointer(btn,()=>{
               if(done)return; done=true;
+              clearInterval(_probeAbortCheck);
               res(d);
             });
             probeContainer.appendChild(btn);
@@ -1901,6 +1936,27 @@ body.test-active .globalMenuBtn{
     hide(testCard);hide(baselineCard);show(resultCard);
     setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50);
     document.getElementById('resultTimestamp').textContent="";
+    // ── Synchronous provisional save so _pendingCogIdx is available immediately
+    // (before async location/METAR resolves). Updated in-place below.
+    const _syncAllResults = loadAllResults();
+    const _syncRecord = {
+      type:'cog',
+      timestamp:new Date().toISOString(),
+      lat:null, lon:null,
+      locationLabel:'Unavailable', metar:null,
+      ...res.today,
+      statusLabel:res.statusLabel,
+      light:res.light,
+      hasBaseline:res.hasBaseline,
+      probe_hits:nb.probeHits,
+      probe_miss:nb.probeMiss,
+      probe_acc:nb.probeAcc,
+      probe_total:nb.probeTotal,
+      weighted_score:nb.weightedScore
+    };
+    _syncAllResults.push(_syncRecord);
+    saveAllResults(_syncAllResults);
+    window._pendingCogIdx = _syncAllResults.length - 1;
     const colorClass=res.hasBaseline?(res.light==="green"?"green":res.light==="red"?"red":"amber"):"amber";
     const statusColors={
       green:{bg:"#e8f8f1",border:"#28c77c",text:"#0d5c35",dot:"#28c77c"},
@@ -1956,23 +2012,17 @@ body.test-active .globalMenuBtn{
       existing.locationLabel = loc.locationLabel || 'Unavailable';
       existing.metar = loc.metar || null;
       resultCard.dataset.payload = JSON.stringify(existing);
-      allResults.push({
-        timestamp:ts.toISOString(),
-        lat:loc.lat,
-        lon:loc.lon,
-        locationLabel:loc.locationLabel||'Unavailable',
-        metar:loc.metar||null,
-        ...res.today,
-        statusLabel:res.statusLabel,
-        light:res.light,
-        hasBaseline:res.hasBaseline,
-        probe_hits:nb.probeHits,
-        probe_miss:nb.probeMiss,
-        probe_acc:nb.probeAcc,
-        probe_total:nb.probeTotal,
-        weighted_score:nb.weightedScore
-      });
-      saveAllResults(allResults);
+      // Update the provisional record saved synchronously above with real location+METAR
+      const _liveAll = loadAllResults();
+      const _liveIdx = window._pendingCogIdx;
+      if(typeof _liveIdx === 'number' && _liveIdx >= 0 && _liveIdx < _liveAll.length){
+        _liveAll[_liveIdx].timestamp = ts.toISOString();
+        _liveAll[_liveIdx].lat = loc.lat;
+        _liveAll[_liveIdx].lon = loc.lon;
+        _liveAll[_liveIdx].locationLabel = loc.locationLabel||'Unavailable';
+        _liveAll[_liveIdx].metar = loc.metar||null;
+        saveAllResults(_liveAll);
+      }
     });
     addBaselineBtn2.disabled=false;
     addBaselineBtn2.textContent="Add to Baseline";
@@ -2285,8 +2335,50 @@ body.test-active .globalMenuBtn{
       const SEP = "─────────────────────────────";
       const ts = r.timestamp ? formatPilotTimestamp(new Date(r.timestamp)) : "Unknown date";
       const fmt2 = v => isFinite(v) ? Math.round(v*10)/10 : "—";
+      if(r.type === 'linked'){
+        const loc = (r.locationLabel && r.locationLabel !== "Unavailable") ? r.locationLabel : null;
+        const fr = r.frat || {};
+        const fcats = Object.keys(fr.byCat||{}).sort();
+        const qaLines = (fr.items||[]).map((it,i)=>{
+          const a=(fr.answers||{})[it.id];
+          return `${i+1}. [${it.cat.toUpperCase()}]\n   ${it.text}\n   Answer: ${a===true?"TRUE":"FALSE"} (+${a===true?it.score:0})`;
+        }).join("\n\n");
+        return [
+          "SECOND OPINION",
+          "Combined Assessment (COG + FRAT)",
+          SEP, ts,
+          loc ? `Location:          ${loc}` : null,
+          r.metar ? r.metar : "METAR Unavailable",
+          SEP,
+          "COGNITION & ACUITY",
+          `STATUS: ${r.statusLabel||"—"}`,
+          `  Median RT:        ${isFinite(r.srt_median)?Math.round(r.srt_median)+" ms":"—"}`,
+          `  Stroop accuracy:  ${fmt2(r.stro_acc)}%`,
+          `  2&4 d′ (scaled): ${fmt2(r.nb_d)}`,
+          SEP,
+          "FLIGHT RISK ASSESSMENT (FRAT)",
+          `Rules: ${fr.rules||"—"}  •  Experience: ${fr.exp||"—"} hrs in type`,
+          `RISK BAND:   ${fr.band||"—"}`,
+          `TOTAL SCORE: ${isFinite(fr.total)?fr.total:"—"}`,
+          "",
+          "CATEGORY BREAKDOWN",
+          ...fcats.map(cat=>`  ${cat}: ${fr.byCat[cat]} pts`),
+          SEP,
+          "QUESTIONS & ANSWERS",
+          "",
+          qaLines,
+          SEP,
+          "Second Opinion — OnSecondThought.me"
+        ].filter(l=>l!==null).join("\n");
+      }
       if(r.type === 'frat'){
         const cats = Object.keys(r.byCat||{}).sort();
+        const qaLines = (r.items||[]).map((it,i)=>{
+          const a = (r.answers||{})[it.id];
+          const ansText = (a===true)?"TRUE":"FALSE";
+          const pts = (a===true)?it.score:0;
+          return `${i+1}. [${it.cat.toUpperCase()}]\n   ${it.text}\n   Answer: ${ansText} (+${pts})`;
+        });
         return [
           "SECOND OPINION",
           "Flight Risk Assessment (FRAT)",
@@ -2299,6 +2391,10 @@ body.test-active .globalMenuBtn{
           "",
           "CATEGORY BREAKDOWN",
           ...cats.map(cat=>`  ${cat}: ${r.byCat[cat]} pts`),
+          SEP,
+          "QUESTIONS & ANSWERS",
+          "",
+          ...qaLines,
           SEP,
           "Second Opinion — OnSecondThought.me"
         ].join("\n");
@@ -2344,9 +2440,72 @@ body.test-active .globalMenuBtn{
          </div>`;
       const secHead = title =>
         `<div style="font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#9ab0c4;padding:12px 0 4px;">${title}</div>`;
+      if(r.type === 'linked'){
+        const fr = r.frat || {};
+        const fsc = statusColors(fr.light||"amber");
+        const loc = (r.locationLabel && r.locationLabel !== "Unavailable") ? r.locationLabel : null;
+        const metarLine = r.metar
+          ? `<div style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Courier New,monospace;font-size:.8rem;color:#5a7184;margin-top:4px;">${r.metar}</div>`
+          : `<div style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Courier New,monospace;font-size:.8rem;color:#9ab0c4;margin-top:4px;">METAR Unavailable</div>`;
+        const fcats = Object.keys(fr.byCat||{}).sort();
+        const fcatRows = fcats.map(cat=>row(cat,(fr.byCat[cat]||0)+" pts")).join("") || row("No items scored True","");
+        const fqaHTML = (fr.items||[]).map((it,i)=>{
+          const a=(fr.answers||{})[it.id];
+          const ansText=a===true?"TRUE":"FALSE", pts=a===true?it.score:0;
+          const ansColor=a===true?"#b87000":"#9ab0c4";
+          return `<div style="padding:8px 0;border-bottom:1px solid #eef2f7;">
+            <div style="font-size:.72rem;font-weight:700;color:#9ab0c4;text-transform:uppercase;letter-spacing:.06em;">${i+1}. ${it.cat}</div>
+            <div style="font-size:.88rem;font-weight:700;color:#1a2f45;margin:2px 0 3px;">${it.text}</div>
+            <div style="font-size:.85rem;">Answer: <b style="color:${ansColor};">${ansText}</b> <span style="color:#9ab0c4;">(+${pts})</span></div>
+          </div>`;
+        }).join("");
+        return `<div class="printDoc">
+          <h1>Second Opinion &mdash; Combined Assessment</h1>
+          <div class="pmuted">${ts}</div>
+          ${loc ? `<div class="pmuted">${loc}</div>` : ""}
+          ${metarLine}
+          <div class="pbox" style="margin-top:10px;background:${sc.bg};border-color:${sc.border};">
+            <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${sc.text};opacity:.7;">Cognition &amp; Acuity</div>
+            <div style="font-size:1.15rem;font-weight:800;color:${sc.text};margin-top:2px;">${r.statusLabel||"—"}</div>
+          </div>
+          <div class="pbox" style="margin-top:10px;">
+            ${secHead("Reaction")}
+            ${row("Median RT",        isFinite(r.srt_median)?fmt2(r.srt_median)+" ms":"—")}
+            ${row("Slow responses",   isFinite(r.srt_lapses)?r.srt_lapses:"—")}
+            ${row("False starts",     isFinite(r.srt_false)?r.srt_false:"—")}
+            ${secHead("Word Color (Stroop)")}
+            ${row("Accuracy",         isFinite(r.stro_acc)?fmt2(r.stro_acc)+"%":"—")}
+            ${row("Mean RT",          isFinite(r.stro_mean_rt)?fmt2(r.stro_mean_rt)+" ms":"—")}
+            ${row("Interference cost",isFinite(r.stro_cost)?fmt2(r.stro_cost)+" ms":"—")}
+            ${secHead("Working Memory (2&amp;4)")}
+            ${row("d′ (scaled)", isFinite(r.nb_d)?fmt2(r.nb_d):"—")}
+            ${row("Recall probe acc", isFinite(r.probe_acc)?fmt2(r.probe_acc)+"%":"—")}
+          </div>
+          <div class="pbox" style="margin-top:10px;background:${fsc.bg};border-color:${fsc.border};">
+            <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${fsc.text};opacity:.7;">FRAT</div>
+            <div style="font-size:1.15rem;font-weight:800;color:${fsc.text};margin-top:2px;">${fr.band||"—"} risk band</div>
+            <div style="font-size:.85rem;color:${fsc.text};margin-top:3px;">Score: ${isFinite(fr.total)?fr.total:"—"} &nbsp;•&nbsp; ${fr.rules||"—"} &nbsp;•&nbsp; ${fr.exp||"—"} hrs in type</div>
+          </div>
+          <div class="pbox" style="margin-top:10px;">
+            ${secHead("Category Breakdown")}${fcatRows}
+          </div>
+          ${fqaHTML ? `<div class="pbox" style="margin-top:10px;">${secHead("Questions &amp; Answers")}${fqaHTML}</div>` : ""}
+        </div>`;
+      }
       if(r.type === 'frat'){
         const cats = Object.keys(r.byCat||{}).sort();
         const catRows = cats.map(cat=>row(cat, (r.byCat[cat]||0)+" pts")).join("") || row("No items scored True","");
+        const qaHTML = (r.items||[]).map((it,i)=>{
+          const a = (r.answers||{})[it.id];
+          const ansText = a===true?"TRUE":"FALSE";
+          const pts = a===true?it.score:0;
+          const ansColor = a===true?"#b87000":"#9ab0c4";
+          return `<div style="padding:8px 0;border-bottom:1px solid #eef2f7;">
+            <div style="font-size:.72rem;font-weight:700;color:#9ab0c4;text-transform:uppercase;letter-spacing:.06em;">${i+1}. ${it.cat}</div>
+            <div style="font-size:.88rem;font-weight:700;color:#1a2f45;margin:2px 0 3px;">${it.text}</div>
+            <div style="font-size:.85rem;">Answer: <b style="color:${ansColor};">${ansText}</b> <span style="color:#9ab0c4;">(+${pts})</span></div>
+          </div>`;
+        }).join("");
         return `<div class="printDoc">
           <h1>Second Opinion &mdash; FRAT</h1>
           <div class="pmuted">${ts}</div>
@@ -2358,6 +2517,7 @@ body.test-active .globalMenuBtn{
           <div class="pbox" style="margin-top:10px;">
             ${secHead("Category Breakdown")}${catRows}
           </div>
+          ${qaHTML ? `<div class="pbox" style="margin-top:10px;">${secHead("Questions &amp; Answers")}${qaHTML}</div>` : ""}
         </div>`;
       }
       const loc = (r.locationLabel && r.locationLabel !== "Unavailable") ? r.locationLabel : null;
@@ -2395,6 +2555,7 @@ body.test-active .globalMenuBtn{
       const rows = [...results].reverse().map((r, revIdx)=>{
         const idx = results.length - revIdx;
         const isFrat = r.type === 'frat';
+        const isLinked = r.type === 'linked';
         const ts = r.timestamp ? formatPilotTimestamp(new Date(r.timestamp)) : "Unknown";
         const loc = (r.locationLabel && r.locationLabel !== "Unavailable") ? r.locationLabel : null;
         const sc = statusColors(r.light || "amber");
@@ -2403,18 +2564,27 @@ body.test-active .globalMenuBtn{
         const badge = isFrat
           ? `<span style="font-size:.6rem;font-weight:800;background:#e8f0ff;color:#2979ff;border-radius:3px;padding:1px 4px;margin-left:5px;">FRAT</span>`
           : `<span style="font-size:.6rem;font-weight:800;background:#e8f8f4;color:#0a9a7a;border-radius:3px;padding:1px 4px;margin-left:5px;">COG</span>`;
-        const statLine = isFrat
+        const statLine = isLinked
+          ? "" // linked: no right stat — both labels shown inline
+          : isFrat
           ? `<span><b style="color:#1a2f45;">${isFinite(r.total)?r.total:"—"}</b> <span style="color:#9ab0c4;">score</span></span>
              <span><b style="color:#5a7184;">${r.rules||"—"}</b></span>`
           : `<span><b style="color:#1a2f45;">${isFinite(r.srt_median)?Math.round(r.srt_median)+" ms":"—"}</b> <span style="color:#9ab0c4;">RT</span></span>
              <span><b style="color:#1a2f45;">${fmt2(r.stro_acc)}%</b> <span style="color:#9ab0c4;">Stroop</span></span>
              <span><b style="color:#1a2f45;">${fmt2(r.nb_d)}</b> <span style="color:#9ab0c4;">d′</span></span>`;
+        const fr2 = (isLinked && r.frat) ? r.frat : null;
+        const fsc2 = fr2 ? statusColors(fr2.light||"amber") : null;
+        const statusBlock = isLinked && fr2
+          ? `<div style="font-size:.78rem;font-weight:800;color:${sc.text};">${dot}#${idx} ${cogBadge} &nbsp; ${r.statusLabel||"—"}</div>
+             <div style="font-size:.76rem;font-weight:700;color:${fsc2.text};margin-top:3px;">
+               <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${{green:"#13c27a",red:"#ff5b5b",amber:"#ffb31a"}[fr2.light||"amber"]};margin-right:5px;vertical-align:middle;"></span>${fratBadge} &nbsp; ${(fr2.band||"—")+" risk band"}</div>`
+          : `<div style="font-size:.78rem;font-weight:800;color:${sc.text};">${dot}#${idx}${badge} &nbsp; ${r.statusLabel||"—"}</div>`;
         return `<div style="border:1px solid #dce4ed;border-radius:10px;padding:10px 12px;margin-bottom:8px;">
-          <div style="font-size:.78rem;font-weight:800;color:${sc.text};">${dot}#${idx}${badge} &nbsp; ${r.statusLabel||"—"}</div>
+          ${statusBlock}
           <div style="font-size:.75rem;color:#5a7184;margin-top:3px;">${ts}</div>
           ${loc ? `<div style="font-size:.72rem;color:#9ab0c4;">${loc}</div>` : ""}
-          ${!isFrat && r.metar ? `<div style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Courier New,monospace;font-size:.72rem;color:#9ab0c4;margin-top:2px;">${r.metar}</div>` : ""}
-          <div style="display:flex;gap:14px;margin-top:6px;font-size:.82rem;">${statLine}</div>
+          ${!isFrat && !isLinked && r.metar ? `<div style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Courier New,monospace;font-size:.72rem;color:#9ab0c4;margin-top:2px;">${r.metar}</div>` : ""}
+          ${statLine ? `<div style="display:flex;gap:14px;margin-top:6px;font-size:.82rem;">${statLine}</div>` : ""}
         </div>`;
       }).join("");
       return `<div class="printDoc">
@@ -2453,6 +2623,16 @@ body.test-active .globalMenuBtn{
         const catRows = cats.length
           ? cats.map(cat=>tbl(cat, (r.byCat[cat]||0)+" pts")).join("")
           : `<tr><td colspan="2" style="color:#9ab0c4;font-size:.85rem;padding:6px 4px;">No items scored True.</td></tr>`;
+        const qaRows = (r.items||[]).map((it,i)=>{
+          const a = (r.answers||{})[it.id];
+          const ansText = (a===true)?"TRUE":"FALSE";
+          const pts = (a===true)?it.score:0;
+          const ansColor = (a===true)?"var(--warn)":"#9ab0c4";
+          return `<tr>
+            <td style="padding:5px 4px;font-size:.82rem;color:#5a7184;vertical-align:top;">${i+1}. [${it.cat}] ${it.text}</td>
+            <td style="padding:5px 6px;font-weight:800;font-size:.82rem;color:${ansColor};text-align:right;white-space:nowrap;vertical-align:top;">${ansText} <span style="color:#9ab0c4;font-weight:400;">(+${pts})</span></td>
+          </tr>`;
+        }).join("");
         arDetailBody.innerHTML = `
           <div style="background:${sc.bg};border:1.5px solid ${sc.border};border-radius:14px;padding:12px 14px;margin:10px 0 10px;">
             <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${sc.text};opacity:.7;">FRAT Result</div>
@@ -2463,6 +2643,8 @@ body.test-active .globalMenuBtn{
             <tbody>
               ${secHdr("Category Breakdown")}
               ${catRows}
+              ${qaRows ? secHdr("Questions & Answers") : ""}
+              ${qaRows}
             </tbody>
           </table>`;
       } else {
@@ -2501,6 +2683,82 @@ body.test-active .globalMenuBtn{
       currentDetailRecord = null;
     }
 
+    function openPairedDetail(fratIdx, cogIdx){
+      const results = loadAllResults();
+      const fr = results[fratIdx];
+      const cr = results[cogIdx];
+      if(!fr || !cr) return;
+      currentDetailIdx  = fratIdx;   // primary for delete
+      currentDetailRecord = fr;      // primary for share
+
+      const ts  = cr.timestamp ? formatPilotTimestamp(new Date(cr.timestamp)) : "Unknown date";
+      const loc = (cr.locationLabel && cr.locationLabel !== "Unavailable") ? cr.locationLabel : null;
+      const cogSc  = statusColors(cr.light || "amber");
+      const fratSc = statusColors(fr.light || "amber");
+      const fmt2   = v => isFinite(v) ? Math.round(v*10)/10 : "—";
+
+      const metarLine = cr.metar
+        ? `<div style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Courier New,monospace;font-size:.78rem;color:#5a7184;margin-top:4px;">${cr.metar}</div>`
+        : `<div style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Courier New,monospace;font-size:.78rem;color:#9ab0c4;margin-top:4px;">METAR Unavailable</div>`;
+
+      const tbl = (label, val) => `<tr>
+        <td style="padding:5px 4px;color:var(--accent);font-size:.92rem;">${label}</td>
+        <td style="padding:5px 6px;font-weight:700;color:#1a2f45;text-align:right;font-size:.92rem;">${val}</td></tr>`;
+      const secHdr = title => `<tr><td colspan="2" style="font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#9ab0c4;padding:10px 4px 3px;">${title}</td></tr>`;
+
+      const cats = Object.keys(fr.byCat||{}).sort();
+      const catRows = cats.length
+        ? cats.map(cat=>tbl(cat, (fr.byCat[cat]||0)+" pts")).join("")
+        : `<tr><td colspan="2" style="color:#9ab0c4;padding:6px 4px;font-size:.85rem;">No items scored True.</td></tr>`;
+
+      // Q&A rows for FRAT
+      const qaRows = (fr.items||[]).map((it,i)=>{
+        const a = (fr.answers||{})[it.id];
+        const ansText = a===true?"TRUE":"FALSE";
+        const pts = a===true?it.score:0;
+        const ansColor = a===true?"var(--warn)":"#9ab0c4";
+        return `<tr style="${i%2===1?'background:#f0f6ff':''}">
+          <td style="padding:5px 4px;font-size:.82rem;color:#1a2f45;">${i+1}. <span style="color:#5a7184;font-size:.75rem;">[${it.cat}]</span><br>${it.text}</td>
+          <td style="padding:5px 6px;text-align:right;white-space:nowrap;font-weight:700;color:${ansColor};font-size:.85rem;">${ansText}<br><span style="font-weight:400;color:#9ab0c4;font-size:.75rem;">+${pts}</span></td></tr>`;
+      }).join("");
+
+      arDetailTitle.textContent = ts;
+      arDetailBody.innerHTML = `
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;">
+          <div style="flex:1;min-width:130px;background:${cogSc.bg};border:1.5px solid ${cogSc.border};border-radius:12px;padding:10px 12px;">
+            <div style="font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${cogSc.text};opacity:.7;">Cognition &amp; Acuity</div>
+            <div style="font-size:1rem;font-weight:800;color:${cogSc.text};margin-top:2px;">${cr.statusLabel||"—"}</div>
+            ${loc ? `<div style="font-size:.75rem;color:${cogSc.text};opacity:.7;margin-top:2px;">${loc}</div>` : ""}
+            ${metarLine}
+          </div>
+          <div style="flex:1;min-width:130px;background:${fratSc.bg};border:1.5px solid ${fratSc.border};border-radius:12px;padding:10px 12px;">
+            <div style="font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${fratSc.text};opacity:.7;">FRAT</div>
+            <div style="font-size:1rem;font-weight:800;color:${fratSc.text};margin-top:2px;">${fr.band||"—"} risk band</div>
+            <div style="font-size:.82rem;color:${fratSc.text};opacity:.8;margin-top:2px;">Score: ${isFinite(fr.total)?fr.total:"—"} &nbsp;•&nbsp; ${fr.rules||"—"} &nbsp;•&nbsp; ${fr.exp||"—"} in type</div>
+          </div>
+        </div>
+        <table style="width:100%;border-collapse:collapse;">
+          <tbody>
+            ${secHdr("Cognition &amp; Acuity")}
+            ${tbl("Median RT",        isFinite(cr.srt_median)?fmt2(cr.srt_median)+" ms":"—")}
+            ${tbl("Slow responses",   isFinite(cr.srt_lapses)?cr.srt_lapses:"—")}
+            ${tbl("False starts",     isFinite(cr.srt_false)?cr.srt_false:"—")}
+            ${tbl("Stroop accuracy",  isFinite(cr.stro_acc)?fmt2(cr.stro_acc)+"%":"—")}
+            ${tbl("Stroop mean RT",   isFinite(cr.stro_mean_rt)?fmt2(cr.stro_mean_rt)+" ms":"—")}
+            ${tbl("Interf. cost",     isFinite(cr.stro_cost)?fmt2(cr.stro_cost)+" ms":"—")}
+            ${tbl("2&amp;4 d′",  isFinite(cr.nb_d)?fmt2(cr.nb_d):"—")}
+            ${tbl("Recall probe",     isFinite(cr.probe_acc)?fmt2(cr.probe_acc)+"%":"—")}
+            ${secHdr("FRAT Category Breakdown")}
+            ${catRows}
+            ${fr.items && fr.items.length ? secHdr("FRAT Questions &amp; Answers") : ""}
+            ${qaRows}
+          </tbody>
+        </table>`;
+
+      arDetailOverlay.setAttribute("aria-hidden","false");
+      show(arDetailOverlay);
+    }
+
     onPressPointer(arDetailCloseBtn, closeDetail);
     arDetailOverlay.addEventListener("click", e=>{ if(e.target===arDetailOverlay) closeDetail(); });
 
@@ -2514,6 +2772,83 @@ body.test-active .globalMenuBtn{
       renderAllResults();
       showToast("Result deleted.");
     });
+
+    // ── paired detail (COG + FRAT launched together) ──
+    function openPairedDetail(fratIdx, cogIdx){
+      const results = loadAllResults();
+      const fr = results[fratIdx];
+      const cr = results[cogIdx];
+      if(!fr || !cr) return;
+      currentDetailIdx   = fratIdx;
+      currentDetailRecord = fr;
+
+      const ts  = fr.timestamp ? formatPilotTimestamp(new Date(fr.timestamp)) : "Unknown date";
+      const loc = (cr.locationLabel && cr.locationLabel !== "Unavailable") ? cr.locationLabel : null;
+      const cogSC  = statusColors(cr.light || "amber");
+      const fratSC = statusColors(fr.light || "amber");
+      const fmt2   = v => isFinite(v) ? Math.round(v*10)/10 : "—";
+      const metarLine = cr.metar
+        ? `<div style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Courier New,monospace;font-size:.78rem;color:#5a7184;margin-top:4px;">${cr.metar}</div>`
+        : `<div style="font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Courier New,monospace;font-size:.78rem;color:#9ab0c4;margin-top:4px;">METAR Unavailable</div>`;
+      const tbl = (label, val) => `
+        <tr>
+          <td style="padding:5px 4px;color:var(--accent);font-size:.92rem;">${label}</td>
+          <td style="padding:5px 6px;font-weight:700;color:#1a2f45;text-align:right;font-size:.92rem;">${val}</td>
+        </tr>`;
+      const secHdr = title => `<tr><td colspan="2" style="font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#9ab0c4;padding:10px 4px 3px;">${title}</td></tr>`;
+
+      // FRAT Q&A rows
+      const qaRows = (fr.items||[]).map((it,i)=>{
+        const a = fr.answers?.[it.id];
+        const ansText = (a===true)?"TRUE":"FALSE";
+        const pts = (a===true)?it.score:0;
+        const ansColor = (a===true)?"var(--warn)":"#9ab0c4";
+        return `<tr>
+          <td style="padding:5px 4px;font-size:.82rem;color:#5a7184;vertical-align:top;">${i+1}. [${it.cat}] ${it.text}</td>
+          <td style="padding:5px 6px;font-weight:800;font-size:.82rem;color:${ansColor};text-align:right;white-space:nowrap;vertical-align:top;">${ansText} <span style="color:#9ab0c4;font-weight:400;">(+${pts})</span></td>
+        </tr>`;
+      }).join("");
+
+      arDetailTitle.textContent = ts;
+      arDetailBody.innerHTML = `
+        ${loc ? `<div style="font-size:.8rem;color:#5a7184;margin-bottom:6px;">${loc}</div>` : ""}
+        ${metarLine}
+        <div style="background:${cogSC.bg};border:1.5px solid ${cogSC.border};border-radius:14px;padding:10px 14px;margin:10px 0 6px;">
+          <div style="font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${cogSC.text};opacity:.7;">Cognition &amp; Acuity</div>
+          <div style="font-size:1.1rem;font-weight:800;color:${cogSC.text};margin-top:1px;">${cr.statusLabel||"—"}</div>
+        </div>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:8px;">
+          <tbody>
+            ${secHdr("Reaction")}
+            ${tbl("Median RT",        isFinite(cr.srt_median)?fmt2(cr.srt_median)+" ms":"—")}
+            ${tbl("Slow responses",   isFinite(cr.srt_lapses)?cr.srt_lapses:"—")}
+            ${tbl("False starts",     isFinite(cr.srt_false)?cr.srt_false:"—")}
+            ${secHdr("Word Color (Stroop)")}
+            ${tbl("Accuracy",         isFinite(cr.stro_acc)?fmt2(cr.stro_acc)+"%":"—")}
+            ${tbl("Mean RT",          isFinite(cr.stro_mean_rt)?fmt2(cr.stro_mean_rt)+" ms":"—")}
+            ${tbl("Interference cost",isFinite(cr.stro_cost)?fmt2(cr.stro_cost)+" ms":"—")}
+            ${secHdr("Working Memory (2&amp;4)")}
+            ${tbl("d′ (scaled)", isFinite(cr.nb_d)?fmt2(cr.nb_d):"—")}
+            ${tbl("Recall probe acc", isFinite(cr.probe_acc)?fmt2(cr.probe_acc)+"%":"—")}
+          </tbody>
+        </table>
+        <div style="background:${fratSC.bg};border:1.5px solid ${fratSC.border};border-radius:14px;padding:10px 14px;margin:6px 0 6px;">
+          <div style="font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${fratSC.text};opacity:.7;">FRAT</div>
+          <div style="font-size:1.1rem;font-weight:800;color:${fratSC.text};margin-top:1px;">${fr.band||"—"} risk band</div>
+          <div style="font-size:.82rem;color:${fratSC.text};opacity:.8;margin-top:2px;">Score: ${isFinite(fr.total)?fr.total:"—"} • ${fr.rules||"—"} • ${fr.exp||"—"} hrs</div>
+        </div>
+        <table style="width:100%;border-collapse:collapse;">
+          <tbody>
+            ${secHdr("Category Breakdown")}
+            ${Object.keys(fr.byCat||{}).sort().map(cat=>tbl(cat,(fr.byCat[cat]||0)+" pts")).join("") || tbl("No items scored True","")}
+            ${qaRows ? secHdr("Questions &amp; Answers") : ""}
+            ${qaRows}
+          </tbody>
+        </table>`;
+
+      arDetailOverlay.setAttribute("aria-hidden","false");
+      show(arDetailOverlay);
+    }
 
     onPressPointer(arDetailTextBtn, ()=>{
       if(!currentDetailRecord) return;
@@ -2559,15 +2894,55 @@ body.test-active .globalMenuBtn{
         return;
       }
       arEmpty.style.display = "none";
+
+      // Build a set of COG indices that are linked (absorbed into a paired FRAT row)
+      const absorbedCogIdxs = new Set();
+      results.forEach(r=>{
+        if(r.type === 'frat' && typeof r.linkedCogIdx === 'number' && r.linkedCogIdx >= 0){
+          absorbedCogIdxs.add(r.linkedCogIdx);
+        }
+      });
+
+      const COG_BADGE  = `<span style="font-size:.65rem;font-weight:800;letter-spacing:.07em;background:#e8f8f4;color:#0a9a7a;border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:middle;">COG</span>`;
+      const FRAT_BADGE = `<span style="font-size:.65rem;font-weight:800;letter-spacing:.07em;background:#e8f0ff;color:#2979ff;border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:middle;">FRAT</span>`;
+
       const html = [...results].reverse().map((r, revIdx)=>{
         const idx = results.length - 1 - revIdx;
         const isFrat = r.type === 'frat';
+
+        // Skip COG records that are absorbed into a paired entry
+        if(!isFrat && absorbedCogIdxs.has(idx)) return "";
+
         const ts = r.timestamp ? formatPilotTimestamp(new Date(r.timestamp)) : "Unknown date";
-        const loc = (r.locationLabel && r.locationLabel !== "Unavailable") ? r.locationLabel : null;
+
+        // Paired entry: FRAT launched from COG result
+        if(isFrat && typeof r.linkedCogIdx === 'number' && r.linkedCogIdx >= 0){
+          const cog = results[r.linkedCogIdx];
+          if(!cog) {
+            // COG record missing — fall through to normal FRAT row
+          } else {
+            const loc = (cog.locationLabel && cog.locationLabel !== "Unavailable") ? cog.locationLabel : null;
+            const cogDot  = {green:"var(--good)",amber:"var(--warn)",red:"var(--bad)"}[cog.light||"amber"];
+            const fratDot = {green:"var(--good)",amber:"var(--warn)",red:"var(--bad)"}[r.light||"amber"];
+            return `<div data-aridx="${idx}" data-linked-cog="${r.linkedCogIdx}" style="display:flex;align-items:flex-start;gap:12px;padding:10px 12px;border-radius:12px;border:1px solid #dce4ed;background:#f8fafc;margin-bottom:8px;cursor:pointer;">
+              <div style="display:flex;flex-direction:column;gap:5px;padding-top:3px;flex-shrink:0;">
+                <div style="width:10px;height:10px;border-radius:50%;background:${cogDot};"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:${fratDot};"></div>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-weight:700;font-size:.88rem;color:#1a2f45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${cog.statusLabel||"—"}${COG_BADGE}</div>
+                <div style="font-weight:700;font-size:.88rem;color:#1a2f45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px;">${r.statusLabel||"—"}${FRAT_BADGE}</div>
+                <div style="font-size:.78rem;color:#5a7184;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${ts}</div>
+                ${loc ? `<div style="font-size:.75rem;color:#9ab0c4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${loc}</div>` : ""}
+              </div>
+            </div>`;
+          }
+        }
+
+        // Normal single-record row
         const dotColor = {green:"var(--good)",amber:"var(--warn)",red:"var(--bad)"}[r.light||"amber"];
-        const badge = isFrat
-          ? `<span style="font-size:.65rem;font-weight:800;letter-spacing:.07em;background:#e8f0ff;color:#2979ff;border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:middle;">FRAT</span>`
-          : `<span style="font-size:.65rem;font-weight:800;letter-spacing:.07em;background:#e8f8f4;color:#0a9a7a;border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:middle;">COG</span>`;
+        const badge    = isFrat ? FRAT_BADGE : COG_BADGE;
+        const loc      = (r.locationLabel && r.locationLabel !== "Unavailable") ? r.locationLabel : null;
         const rightVal = isFrat
           ? `<div style="font-size:.78rem;color:#5a7184;">${isFinite(r.total)?r.total:"—"}</div><div style="font-size:.72rem;color:#9ab0c4;">score</div>`
           : `<div style="font-size:.78rem;color:#5a7184;">${isFinite(r.srt_median)?Math.round(r.srt_median)+" ms":"—"}</div><div style="font-size:.72rem;color:#9ab0c4;">RT</div>`;
@@ -2581,10 +2956,17 @@ body.test-active .globalMenuBtn{
           <div style="text-align:right;flex-shrink:0;">${rightVal}</div>
         </div>`;
       }).join("");
+
       arList.innerHTML = html;
       arList.querySelectorAll("[data-aridx]").forEach(el=>{
         el.addEventListener("pointerdown", ()=>{
-          openDetail(parseInt(el.dataset.aridx));
+          const fratIdx = parseInt(el.dataset.aridx);
+          const linkedCog = el.dataset.linkedCog;
+          if(linkedCog !== undefined){
+            openPairedDetail(fratIdx, parseInt(linkedCog));
+          } else {
+            openDetail(fratIdx);
+          }
         });
       });
     }
@@ -2599,7 +2981,8 @@ body.test-active .globalMenuBtn{
       arChartsWrap.style.display = "";
 
       // Charts only plot COG records — FRAT uses different axes (quadrant dashboard)
-      const cogResults = results.filter(r => r.type !== 'frat');
+      // Records without a type field are legacy COG records saved before typing was added
+      const cogResults = results.filter(r => !r.type || r.type === 'cog' || r.type === 'linked');
       if(cogResults.length < 2){
         arChartsWrap.style.display = "none";
         destroyCharts();
@@ -2610,7 +2993,9 @@ body.test-active .globalMenuBtn{
       const labels = recent.map((r,i)=>{
         if(!r.timestamp) return "#"+(results.length - N + i + 1);
         const d = new Date(r.timestamp);
-        return (d.getMonth()+1)+"/"+(d.getDate());
+        const hh = String(d.getHours()).padStart(2,'0');
+        const mm = String(d.getMinutes()).padStart(2,'0');
+        return (d.getMonth()+1)+"/"+(d.getDate())+" "+hh+":"+mm;
       });
 
       const W = Math.max(Math.min(window.innerWidth - 48, 800), 300);
@@ -2693,7 +3078,7 @@ body.test-active .globalMenuBtn{
 
         // x-axis labels
         ctx.fillStyle = "#9ab0c4"; ctx.font = "9px system-ui"; ctx.textAlign = "center";
-        const step = Math.ceil(values.length / 8);
+        const step = Math.max(1, Math.ceil(values.length / 5)); // fewer labels for longer strings
         values.forEach((v,i)=>{ if(i%step===0||i===values.length-1) ctx.fillText(labels[i], xOf(i), ch-4); });
 
         // y-axis labels
@@ -2754,8 +3139,12 @@ body.test-active .globalMenuBtn{
       const summary  = document.getElementById("arQuadrantSummary");
       const legend   = document.getElementById("arQuadrantLegend");
 
-      const cogRecs  = results.filter(r => r.type !== "frat");
-      const fratRecs = results.filter(r => r.type === "frat");
+      const cogRecs  = results.filter(r => !r.type || r.type === "cog" || r.type === "linked");
+      // FRAT sources: standalone frat records + the embedded frat in linked records
+      const fratRecs = [
+        ...results.filter(r => r.type === "frat"),
+        ...results.filter(r => r.type === "linked").map(r => ({...r.frat, timestamp:r.timestamp}))
+      ];
 
       if(!cogRecs.length || !fratRecs.length){
         quadWrap.style.display = "none";
@@ -2884,19 +3273,10 @@ body.test-active .globalMenuBtn{
       const adviceColor = combinedBad ? "var(--bad)" : oneBad ? "var(--warn)" : "var(--good)";
 
       summary.innerHTML = `
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <div style="flex:1;min-width:130px;background:#f0f6ff;border:1px solid #dce4ed;border-radius:10px;padding:10px 12px;">
-            <div style="font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#9ab0c4;">Cognition</div>
-            <div style="font-weight:700;color:#1a2f45;font-size:.88rem;margin-top:3px;">${cogLabel}</div>
-            <div style="font-size:.75rem;color:#5a7184;">${latest.cog.timestamp?formatPilotTimestamp(new Date(latest.cog.timestamp)).slice(0,12):""}</div>
+        <div style="padding:10px 12px;background:#f8fafc;border-radius:10px;border-left:3px solid ${adviceColor};font-size:.85rem;color:#1a2f45;">
+          <div style="font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#9ab0c4;margin-bottom:4px;">
+            COG: ${cogLabel} &nbsp;•&nbsp; FRAT: ${fratLabel} (${isFinite(latest.frat.total)?latest.frat.total:"—"})
           </div>
-          <div style="flex:1;min-width:130px;background:#f0f6ff;border:1px solid #dce4ed;border-radius:10px;padding:10px 12px;">
-            <div style="font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#9ab0c4;">FRAT</div>
-            <div style="font-weight:700;color:#1a2f45;font-size:.88rem;margin-top:3px;">${fratLabel}</div>
-            <div style="font-size:.75rem;color:#5a7184;">Score: ${isFinite(latest.frat.total)?latest.frat.total:"—"}</div>
-          </div>
-        </div>
-        <div style="margin-top:8px;padding:10px 12px;background:#f8fafc;border-radius:10px;border-left:3px solid ${adviceColor};font-size:.85rem;color:#1a2f45;">
           <b style="color:${adviceColor};">On Second Thought…</b> ${advice}
         </div>`;
 
@@ -3055,21 +3435,22 @@ body.test-active .globalMenuBtn{
     let total=0;const byCat={};
     fratState.items.forEach(item=>{ if(fratState.answers[item.id]===true){total+=item.score;byCat[item.cat]=(byCat[item.cat]||0)+item.score;} });
     let band="Low",dotClass="green",narrative="",guidance="",bandText="";
+    // TODO: Review FRAT scoring thresholds with Harvey before App Store submission
     if(rules==="IFR"){
       if(exp==="<100"){
         if(total<20){band="Below ref range";dotClass="green";}else if(total<=25){band="Low";dotClass="green";}else if(total<=30){band="Moderate";dotClass="amber";}else{band="High";dotClass="red";}
-        bandText="IFR • <100 in type: Low 20–25, Moderate 25–30, High >30.";
+        bandText="IFR • <100 hrs in type: Low 20–25, Moderate 25–30, High >30";
       }else{
         if(total<25){band="Below ref range";dotClass="green";}else if(total<=30){band="Low";dotClass="green";}else if(total<=35){band="Moderate";dotClass="amber";}else{band="High";dotClass="red";}
-        bandText="IFR • ≥100 in type: Low 25–30, Moderate 30–35, High >35.";
+        bandText="IFR • ≥100 hrs in type: Low 25–30, Moderate 30–35, High >35";
       }
     }else{
       if(exp==="<100"){
         if(total<5){band="Below ref range";dotClass="green";}else if(total<=15){band="Low";dotClass="green";}else if(total<=20){band="Moderate";dotClass="amber";}else{band="High";dotClass="red";}
-        bandText="VFR • <100 in type: Low 5–15, Moderate 15–20, High >20.";
+        bandText="VFR • <100 hrs in type: Low 5–15, Moderate 15–20, High >20";
       }else{
         if(total<15){band="Below ref range";dotClass="green";}else if(total<=20){band="Low";dotClass="green";}else if(total<=25){band="Moderate";dotClass="amber";}else{band="High";dotClass="red";}
-        bandText="VFR • ≥100 in type: Low 15–20, Moderate 20–25, High >25.";
+        bandText="VFR • ≥100 hrs in type: Low 15–20, Moderate 20–25, High >25";
       }
     }
     if(band==="Below ref range"){narrative="Your numeric score is below the reference \u201CLow\u201D band for this profile.";guidance="don't let a low number lull you into complacency. Keep scanning for traps the form doesn't capture.";}
@@ -3082,21 +3463,45 @@ body.test-active .globalMenuBtn{
     fratNarrative.textContent=narrative;fratGuidance.textContent=guidance;
     const catLines=Object.keys(byCat).sort().map(cat=>`<div><b>${cat}:</b> ${byCat[cat]} points</div>`);
     fratBreakdown.innerHTML=catLines.length?catLines.join(""):"<div>No items scored True.</div>";
-    fratBandRef.textContent=bandText;
+    // Format band reference as structured lines
+    {
+      const parts = bandText.split(':');
+      const profile = parts[0] ? parts[0].trim() : '';
+      const bands   = parts[1] ? parts[1].trim() : '';
+      const bandLines = bands.split(',').map(s=>s.trim()).filter(Boolean);
+      fratBandRef.innerHTML = `<b>${profile}:</b><br>${bandLines.map(b=>`&nbsp;&nbsp;${b}`).join('<br>')}`;
+    }
     buildFratReviewList();
     hide(fratWizardCard);show(fratResultCard);
     setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50);
     fratResultCard.dataset.payload=JSON.stringify({total,band,byCat,rules,exp,answers:fratState.answers,items:fratState.items});
     // Save to All Results
     const _allR=loadAllResults();
-    _allR.push({
+    const _fratRecord={
       type:'frat',
       timestamp:new Date().toISOString(),
       total,band,byCat,rules,exp,
       light:dotClass,
-      statusLabel:band+' risk band'
-    });
-    saveAllResults(_allR);
+      statusLabel:band+' risk band',
+      answers:{...fratState.answers},
+      items:fratState.items.map(i=>({id:i.id,cat:i.cat,text:i.text,score:i.score}))
+    };
+    if(typeof window._fratLinkedCogIdx === 'number' && window._fratLinkedCogIdx !== null){
+      const _linkedIdx = window._fratLinkedCogIdx;
+      window._fratLinkedCogIdx = null;
+      if(_linkedIdx >= 0 && _linkedIdx < _allR.length && _allR[_linkedIdx].type === 'cog'){
+        _allR[_linkedIdx].type = 'linked';
+        _allR[_linkedIdx].frat = _fratRecord;
+        saveAllResults(_allR);
+      } else {
+        _allR.push(_fratRecord);
+        saveAllResults(_allR);
+      }
+    } else {
+      window._fratLinkedCogIdx = null;
+      _allR.push(_fratRecord);
+      saveAllResults(_allR);
+    }
   }
 
   function buildFratReviewList(){
