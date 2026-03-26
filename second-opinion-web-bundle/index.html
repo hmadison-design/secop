@@ -684,6 +684,138 @@ body.test-active .globalMenuBtn{
     border:2px solid #1a3050;text-align:center;}
   .qa-big{font-size:2rem;font-weight:800;}
   .qa-green{color:#13c27a;}.qa-red{color:#ff5b5b;}.qa-amber{color:#ffb31a;}
+
+  /* ============================================================
+     RESPONSIVE LAYOUT — iPad & large iPhone
+     Strategy:
+       • Most screens: centered column, max ~600px (focused/task UI)
+       • All Results: wider, uses available space
+       • Safe-area insets for notch/home-bar devices
+     ============================================================ */
+
+  /* --- Safe area insets (iPhone notch, home bar, iPad) --- */
+  .wrap{
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+    padding-left:  max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+  .globalMenuBtn{
+    right: max(16px, env(safe-area-inset-right));
+  }
+
+  /* --- iPad (768px and up) --- */
+  @media (min-width: 768px) {
+
+    /* Wrap gets more breathing room */
+    .wrap{
+      padding: 24px max(32px, env(safe-area-inset-right)) max(32px, env(safe-area-inset-bottom)) max(32px, env(safe-area-inset-left));
+    }
+
+    /* Cards get more padding */
+    .card{
+      padding: 24px 28px 28px;
+      border-radius: 22px;
+    }
+
+    /* ── Focused screens: centered column ── */
+    /* Main menu, test, result, FRAT, onboarding, info cards */
+    #modeCard,
+    #testCard,
+    #resultCard,
+    #baselineCard,
+    #fratRoot,
+    #tmdRoot,
+    #tmdInfoCard,
+    #appInfoCard,
+    #disclaimerCard,
+    #fratResultCard {
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Main menu heading scales up nicely */
+    .main-heading{
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+    }
+
+    /* Main action buttons — side by side, taller on iPad */
+    .mainActions .btn{
+      min-height: 160px;
+      font-size: 1.25rem;
+      padding: 28px 16px;
+    }
+
+    /* FRAT wizard questions */
+    .fratWizardQ{
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Global menu sheet — slightly wider on iPad */
+    .globalMenuSheet{
+      width: 300px;
+    }
+
+    /* Global menu button nudge */
+    .globalMenuBtn{
+      top: 28px;
+      right: max(28px, env(safe-area-inset-right));
+    }
+
+    /* Onboarding already has max-width:520px on .ob-screen — just add more padding */
+    .ob-screen{
+      padding: 64px 40px 40px;
+    }
+    .tut-slide{
+      padding: 64px 40px 40px;
+    }
+
+    /* Modal sheets get a bit more width */
+    .modalSheet{
+      width: min(680px, 92%);
+    }
+
+    /* Tap target (SRT circle) — a touch bigger on iPad */
+    .tapTarget{
+      width: 280px;
+      height: 280px;
+    }
+
+    /* Charts & quadrant in All Results — let these breathe wider */
+    #arQuadrantCanvas{
+      width: 360px !important;
+      height: 360px !important;
+    }
+  }
+
+  /* --- iPad large (1024px+, 11"/12.9" Pro) --- */
+  @media (min-width: 1024px) {
+
+    /* Focused screens stay at 600px, but All Results can go wider */
+    #allResultsCard{
+      max-width: 820px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Bump font scale slightly */
+    .main-heading{
+      font-size: 4rem;
+    }
+
+    .mainActions .btn{
+      font-size: 1.35rem;
+      min-height: 180px;
+    }
+
+    /* Quadrant dashboard bigger on large iPad */
+    #arQuadrantCanvas{
+      width: 420px !important;
+      height: 420px !important;
+    }
+  }
 </style>
 </head>
 
@@ -3828,19 +3960,27 @@ body.test-active .globalMenuBtn{
     document.getElementById('fratPrevBtn').disabled=(fratState.idx===0);
     scrollTopNow();fratWizardCard.scrollIntoView({behavior:"auto"});
   }
+  function fratAdvance(selectedValue){
+    const it=fratState.items[fratState.idx];
+    if(selectedValue!=="true"&&selectedValue!=="false") return;
+    fratState.answers[it.id]=(selectedValue==="true");
+    document.querySelectorAll('input[name="fratWizardAns"]').forEach(x=>x.checked=false);
+    if(fratState.idx>=fratState.items.length-1){
+      computeAndShowFratResults();
+      return;
+    }
+    fratState.idx++;
+    renderFratQuestion();
+  }
   document.querySelectorAll('input[name="fratWizardAns"]').forEach(r=>{
+    // change fires when switching from one answer to the other
     r.addEventListener("change",()=>{
-      const it=fratState.items[fratState.idx];
       const selected=document.querySelector('input[name="fratWizardAns"]:checked')?.value;
-      if(selected!=="true"&&selected!=="false") return;
-      fratState.answers[it.id]=(selected==="true");
-      document.querySelectorAll('input[name="fratWizardAns"]').forEach(x=>x.checked=false);
-      if(fratState.idx>=fratState.items.length-1){
-        computeAndShowFratResults();
-        return;
-      }
-      fratState.idx++;
-      renderFratQuestion();
+      fratAdvance(selected);
+    });
+    // click fires even when re-tapping an already-selected answer (change won't fire in that case)
+    r.addEventListener("click",()=>{
+      if(r.checked) fratAdvance(r.value);
     });
   });
 
