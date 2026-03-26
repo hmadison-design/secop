@@ -548,6 +548,142 @@
 body.test-active .globalMenuBtn{
   display:none !important;
 }
+
+  /* ============================================================
+     ONBOARDING + PILOT PROFILE + TUTORIAL
+     ============================================================ */
+  #onboardingOverlay{
+    position:fixed;inset:0;
+    background:#ffffff;
+    z-index:99998;
+    display:flex;flex-direction:column;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  #onboardingOverlay.hide{display:none !important;}
+  .ob-screen{
+    min-height:100vh;
+    display:flex;flex-direction:column;
+    padding:48px 24px 32px;
+    max-width:520px;
+    margin:0 auto;
+    width:100%;
+  }
+  .ob-screen.hide{display:none !important;}
+  .ob-title{
+    font-size:2rem;font-weight:800;letter-spacing:-.03em;
+    color:#1a2f45;line-height:1.1;margin:0 0 10px;
+  }
+  .ob-subtitle{
+    font-size:1rem;color:#5a7184;margin:0 0 28px;line-height:1.5;
+  }
+  .ob-field{margin-bottom:18px;}
+  .ob-label{
+    font-size:.78rem;font-weight:800;letter-spacing:.08em;
+    text-transform:uppercase;color:#9ab0c4;margin-bottom:6px;display:block;
+  }
+  .ob-input{
+    width:100%;padding:12px 14px;border-radius:12px;
+    border:1.5px solid #dce4ed;font-size:1rem;color:#1a2f45;
+    background:#f8fafc;outline:none;
+    -webkit-appearance:none;
+  }
+  .ob-input:focus{border-color:var(--accent);background:#fff;}
+  .ob-cert-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  }
+  .ob-cert-label{
+    display:flex;align-items:center;gap:8px;
+    padding:9px 12px;border-radius:10px;
+    border:1.5px solid #dce4ed;background:#f8fafc;
+    font-size:.88rem;color:#1a2f45;cursor:pointer;
+    user-select:none;
+  }
+  .ob-cert-label input{accent-color:var(--accent);width:16px;height:16px;flex-shrink:0;}
+  .ob-cert-label:has(input:checked){
+    border-color:var(--accent);background:#e8f8f4;color:#1a2f45;
+  }
+  .ob-actions{
+    margin-top:auto;padding-top:24px;
+    display:flex;flex-direction:column;gap:10px;
+  }
+  .ob-skip{
+    text-align:center;font-size:.88rem;color:#9ab0c4;
+    cursor:pointer;padding:8px;
+    text-decoration:none;
+  }
+  .ob-skip:hover{color:#5a7184;}
+
+  /* Tutorial slides */
+  .tut-slide{
+    min-height:100vh;display:flex;flex-direction:column;
+    padding:48px 24px 32px;max-width:520px;margin:0 auto;width:100%;
+  }
+  .tut-slide.hide{display:none !important;}
+  .tut-icon{font-size:3.2rem;margin-bottom:16px;line-height:1;}
+  .tut-title{font-size:1.8rem;font-weight:800;letter-spacing:-.025em;color:#1a2f45;margin:0 0 10px;}
+  .tut-body{font-size:1rem;color:#5a7184;line-height:1.6;flex:1;}
+  .tut-body b{color:#1a2f45;}
+  .tut-pips{
+    display:flex;justify-content:center;gap:8px;padding:20px 0 10px;
+  }
+  .tut-pip{
+    width:8px;height:8px;border-radius:50%;
+    background:#dce4ed;transition:background .2s;
+  }
+  .tut-pip.active{background:var(--accent);}
+  .tut-actions{display:flex;flex-direction:column;gap:10px;padding-top:8px;}
+
+  /* Hours reminder banner */
+  #hoursReminderBanner{
+    display:none;
+    background:#fff8e8;border:1px solid #f0a629;border-radius:14px;
+    padding:12px 14px;margin:10px 0 0;
+    font-size:.88rem;color:#7a4f00;
+  }
+  #hoursReminderBanner b{color:#7a4f00;}
+
+  /* ── QA TEST RUNNER OVERLAY ─────────────────────────────── */
+  #qaOverlay{
+    position:fixed;inset:0;background:#0a1520;z-index:999999;
+    display:flex;flex-direction:column;overflow:hidden;
+  }
+  #qaOverlay.hide{display:none !important;}
+  #qaHeader{
+    background:#0d1e30;padding:14px 16px 10px;
+    border-bottom:1px solid #1a3050;flex-shrink:0;
+  }
+  #qaHeader h2{margin:0 0 2px;font-size:1rem;color:#0ab8b4;letter-spacing:.04em;}
+  #qaHeader .qa-sub{font-size:.75rem;color:#5a7184;}
+  #qaRunBtn{
+    background:#0ab8b4;color:#fff;border:none;border-radius:8px;
+    padding:8px 18px;font-size:.85rem;font-weight:700;cursor:pointer;
+    margin-top:8px;
+  }
+  #qaCloseBtn{
+    float:right;background:none;border:1px solid #1a3050;color:#5a7184;
+    border-radius:8px;padding:6px 14px;font-size:.8rem;cursor:pointer;
+    margin-top:4px;
+  }
+  #qaScrollBody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px;}
+  .qa-suite{background:#0d1e30;border-radius:10px;padding:12px;margin-bottom:10px;border:1px solid #1a3050;}
+  .qa-suite-title{font-size:.85rem;font-weight:700;color:#9ab0c4;margin-bottom:8px;
+    display:flex;justify-content:space-between;align-items:center;}
+  .qa-test{display:flex;align-items:flex-start;gap:8px;padding:4px 0;
+    border-bottom:1px solid #0a1520;font-size:.78rem;}
+  .qa-test:last-child{border-bottom:none;}
+  .qa-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+  .qa-pass{background:#13c27a;}.qa-fail{background:#ff5b5b;}.qa-pending{background:#5a7184;}
+  .qa-name{flex:1;color:#c8d8e8;line-height:1.4;}
+  .qa-err{color:#ff9090;font-size:.72rem;margin-top:2px;}
+  .qa-badge{font-size:.68rem;font-weight:800;padding:2px 6px;border-radius:4px;}
+  .qa-badge-pass{background:#0a3d2a;color:#13c27a;}
+  .qa-badge-fail{background:#3d0a0a;color:#ff5b5b;}
+  .qa-badge-pend{background:#1a2f45;color:#5a7184;}
+  .qa-summary{background:#0d1e30;border-radius:10px;padding:14px;margin-bottom:10px;
+    border:2px solid #1a3050;text-align:center;}
+  .qa-big{font-size:2rem;font-weight:800;}
+  .qa-green{color:#13c27a;}.qa-red{color:#ff5b5b;}.qa-amber{color:#ffb31a;}
 </style>
 </head>
 
@@ -575,7 +711,9 @@ body.test-active .globalMenuBtn{
     <button id="menuExportGlobal"     type="button" class="btn btn-ghost">Export Assessment</button>
     <button id="menuAllResultsGlobal" type="button" class="btn btn-ghost">All Results</button>
     <div class="hr"></div>
+    <button id="menuProfileGlobal"    type="button" class="btn btn-ghost">Pilot Profile</button>
     <button id="menuAboutGlobal"      type="button" class="btn btn-ghost">About</button>
+    <button id="menuQAGlobal" type="button" class="btn btn-ghost" style="color:#0ab8b4;">⚙ Run Tests</button>
   </section>
 
   <!-- MAIN MENU -->
@@ -592,7 +730,7 @@ body.test-active .globalMenuBtn{
 
     <div class="footer-link muted" style="font-style:italic;text-align:center;margin-top:auto;padding-top:16px;">
       <a href="javascript:void(0)" id="appInfoLink" class="infoLink" style="display:block;margin-bottom:6px;">What is this?</a>
-      © Flying M 2026
+      <span id="devModeToggle" style="cursor:default;user-select:none;">© Flying M 2026</span>
     </div>
   </section>
 
@@ -699,6 +837,215 @@ body.test-active .globalMenuBtn{
       <div id="arDetailBody" class="modalBody"></div>
     </div>
   </div>
+
+
+  <!-- ══ ONBOARDING OVERLAY ══════════════════════════════════════ -->
+  <div id="onboardingOverlay" class="hide" aria-modal="true">
+
+    <!-- Screen 1: Welcome -->
+    <div id="obWelcome" class="ob-screen">
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-size:3rem;margin-bottom:16px;">✈️</div>
+        <h1 class="ob-title">Welcome to<br>Second Opinion</h1>
+        <p class="ob-subtitle">Before your first flight check, let's set up your pilot profile. Everything stays on this device and is entirely optional — skip anything you'd rather not fill in now.</p>
+        <p class="ob-subtitle" style="margin-top:-10px;">You can update your profile any time from the menu.</p>
+      </div>
+      <div class="ob-actions">
+        <button id="obWelcomeNext" type="button" class="btn" style="background:#1a2f45;width:100%;min-height:56px;font-size:1.1rem;">Let's set up my profile →</button>
+        <a id="obWelcomeSkip" class="ob-skip">Skip for now</a>
+      </div>
+    </div>
+
+    <!-- Screen 2: Profile form -->
+    <div id="obProfile" class="ob-screen hide">
+      <h1 class="ob-title">Pilot Profile</h1>
+      <p class="ob-subtitle">All fields are optional.</p>
+
+      <div class="ob-field">
+        <label class="ob-label" for="obName">Name / Callsign</label>
+        <input id="obName" class="ob-input" type="text" placeholder="e.g. Harvey or Maverick" autocomplete="off">
+      </div>
+
+      <div class="ob-field">
+        <label class="ob-label" for="obHomeAirport">Home Airport (ICAO or IATA)</label>
+        <input id="obHomeAirport" class="ob-input" type="text" placeholder="e.g. KAUS" autocomplete="off" style="text-transform:uppercase;">
+      </div>
+
+      <div class="ob-field">
+        <label class="ob-label" for="obHours">Total Flight Hours (approx.)</label>
+        <input id="obHours" class="ob-input" type="number" placeholder="e.g. 450" min="0" inputmode="numeric">
+      </div>
+
+      <div class="ob-field">
+        <label class="ob-label" for="obAircraftType">Primary Aircraft Type</label>
+        <input id="obAircraftType" class="ob-input" type="text" placeholder="e.g. C172, PA-28, RV-7" autocomplete="off">
+      </div>
+
+      <div class="ob-field">
+        <label class="ob-label" for="obTailNumber">N-Number / C-Number (if owned)</label>
+        <input id="obTailNumber" class="ob-input" type="text" placeholder="e.g. N12345 or C-GABC" autocomplete="off" style="text-transform:uppercase;">
+      </div>
+
+      <div class="ob-field">
+        <label class="ob-label" for="obClub">Flying Club / School (optional)</label>
+        <input id="obClub" class="ob-input" type="text" placeholder="e.g. Austin Aero Club" autocomplete="off">
+      </div>
+
+      <div class="ob-field">
+        <label class="ob-label">FAA Certificates Held</label>
+        <div class="ob-cert-grid">
+<label class="ob-cert-label"><input type="checkbox" name="obFaaCert" value="faa_student"> Student Pilot</label>
+<label class="ob-cert-label"><input type="checkbox" name="obFaaCert" value="faa_sport"> Sport Pilot</label>
+<label class="ob-cert-label"><input type="checkbox" name="obFaaCert" value="faa_rec"> Recreational</label>
+<label class="ob-cert-label"><input type="checkbox" name="obFaaCert" value="faa_ppl"> Private (PPL)</label>
+<label class="ob-cert-label"><input type="checkbox" name="obFaaCert" value="faa_ir"> Instrument Rating</label>
+<label class="ob-cert-label"><input type="checkbox" name="obFaaCert" value="faa_cpl"> Commercial (CPL)</label>
+<label class="ob-cert-label"><input type="checkbox" name="obFaaCert" value="faa_atp"> ATP</label>
+<label class="ob-cert-label"><input type="checkbox" name="obFaaCert" value="faa_cfi"> CFI</label>
+<label class="ob-cert-label"><input type="checkbox" name="obFaaCert" value="faa_cfii"> CFII</label>
+<label class="ob-cert-label"><input type="checkbox" name="obFaaCert" value="faa_mei"> MEI</label>
+<label class="ob-cert-label"><input type="checkbox" name="obFaaCert" value="faa_glider"> Glider</label>
+<label class="ob-cert-label"><input type="checkbox" name="obFaaCert" value="faa_balloon"> LTA — Balloon</label>
+<label class="ob-cert-label"><input type="checkbox" name="obFaaCert" value="faa_airship"> LTA — Airship</label>
+<label class="ob-cert-label"><input type="checkbox" name="obFaaCert" value="faa_107"> Remote (Part 107)</label>
+</div>
+      </div>
+
+      <div class="ob-field">
+        <label class="ob-label">Transport Canada Certificates Held</label>
+        <div class="ob-cert-grid">
+<label class="ob-cert-label"><input type="checkbox" name="obTcCert" value="tc_student"> Student Pilot</label>
+<label class="ob-cert-label"><input type="checkbox" name="obTcCert" value="tc_rpp"> Recreational (RPP)</label>
+<label class="ob-cert-label"><input type="checkbox" name="obTcCert" value="tc_ppl"> Private (PPL)</label>
+<label class="ob-cert-label"><input type="checkbox" name="obTcCert" value="tc_ir"> Instrument Rating</label>
+<label class="ob-cert-label"><input type="checkbox" name="obTcCert" value="tc_cpl"> Commercial (CPL)</label>
+<label class="ob-cert-label"><input type="checkbox" name="obTcCert" value="tc_atpl"> ATPL</label>
+<label class="ob-cert-label"><input type="checkbox" name="obTcCert" value="tc_glider"> Glider</label>
+<label class="ob-cert-label"><input type="checkbox" name="obTcCert" value="tc_ultralight"> Ultra-Light</label>
+<label class="ob-cert-label"><input type="checkbox" name="obTcCert" value="tc_balloon"> Balloon</label>
+<label class="ob-cert-label"><input type="checkbox" name="obTcCert" value="tc_fi"> Flight Instructor (FI)</label>
+</div>
+      </div>
+
+      <div class="ob-actions">
+        <button id="obProfileNext" type="button" class="btn" style="background:#1a2f45;width:100%;min-height:56px;font-size:1.1rem;">Save &amp; Continue →</button>
+        <a id="obProfileSkip" class="ob-skip">Skip profile, go to tutorial</a>
+      </div>
+    </div>
+
+    <!-- Screen 3: Tutorial slide 1 — Reaction Time -->
+    <div id="obTut1" class="tut-slide hide">
+      <div class="tut-icon">⚡</div>
+      <h2 class="tut-title">Reaction Time</h2>
+      <div class="tut-body">
+        <p>A large circle appears on screen. It starts grey — <b>don't tap yet</b>.</p>
+        <p>When it turns <b style="color:#13c27a;">green and says TAP</b>, tap it as quickly as you can.</p>
+        <p>The test runs for <b>30 seconds</b>. You'll see the circle reset to grey after each tap and go green again after a random delay — this keeps you honest and prevents you from just tapping rhythmically.</p>
+        <p style="margin-top:16px;padding:12px;background:#f0f6ff;border-radius:10px;border-left:3px solid var(--accent);"><b>What it measures:</b> How quickly your nervous system responds to a simple stimulus. Fatigue, illness, and stress all slow reaction time.</p>
+      </div>
+      <div class="tut-pips">
+        <div class="tut-pip active" id="pip1"></div>
+        <div class="tut-pip" id="pip2"></div>
+        <div class="tut-pip" id="pip3"></div>
+      </div>
+      <div class="tut-actions">
+        <button id="obTut1Next" type="button" class="btn" style="background:#1a2f45;width:100%;min-height:56px;font-size:1.1rem;">Next →</button>
+      </div>
+    </div>
+
+    <!-- Screen 4: Tutorial slide 2 — Word Color (Stroop) -->
+    <div id="obTut2" class="tut-slide hide">
+      <div class="tut-icon">🎨</div>
+      <h2 class="tut-title">Word Color</h2>
+      <div class="tut-body">
+        <p>A color word appears on screen printed in an ink color. Your job is to decide whether <b>the word and the ink color match</b>.</p>
+        <p>Example: <b style="color:#ff1744;">RED</b> — word is RED, ink is red → <b>MATCH</b></p>
+        <p>Example: <b style="color:#2979ff;">RED</b> — word is RED, ink is blue → <b>MISMATCH</b></p>
+        <p>Tap <b>MATCH</b> or <b>MISMATCH</b> as fast and accurately as you can. On a keyboard, use <b>F</b> for MATCH and <b>J</b> for MISMATCH.</p>
+        <p>The test runs for <b>45 seconds</b>.</p>
+        <p style="margin-top:16px;padding:12px;background:#f0f6ff;border-radius:10px;border-left:3px solid var(--accent);"><b>What it measures:</b> Executive control — your ability to suppress an automatic response (reading the word) in favor of a less automatic one (naming the ink color). This degrades under cognitive load and fatigue.</p>
+      </div>
+      <div class="tut-pips">
+        <div class="tut-pip" id="pip1b"></div>
+        <div class="tut-pip active" id="pip2b"></div>
+        <div class="tut-pip" id="pip3b"></div>
+      </div>
+      <div class="tut-actions">
+        <button id="obTut2Next" type="button" class="btn" style="background:#1a2f45;width:100%;min-height:56px;font-size:1.1rem;">Next →</button>
+      </div>
+    </div>
+
+    <!-- Screen 5: Tutorial slide 3 — 2&4 Working Memory -->
+    <div id="obTut3" class="tut-slide hide">
+      <div class="tut-icon">🧠</div>
+      <h2 class="tut-title">2-and-4 Memory</h2>
+      <div class="tut-body">
+        <p>Four single digits flash on screen one at a time. After the fourth, you answer one question:</p>
+        <p style="text-align:center;font-size:1.1rem;font-weight:700;padding:10px;background:#f0f6ff;border-radius:10px;margin:12px 0;"><b>Does the 2nd number match the 4th?</b></p>
+        <p>Tap <b>MATCH</b> or <b>NO MATCH</b>. This repeats for <b>12 groups</b>.</p>
+        <p>Occasionally you'll also be asked to recall the 1st or 3rd number from a group — tap the button showing that digit.</p>
+        <p style="margin-top:16px;padding:12px;background:#f0f6ff;border-radius:10px;border-left:3px solid var(--accent);"><b>What it measures:</b> Working memory — your ability to hold and manipulate information in mind over short periods. One of the first cognitive functions to degrade under fatigue or stress.</p>
+      </div>
+      <div class="tut-pips">
+        <div class="tut-pip" id="pip1c"></div>
+        <div class="tut-pip" id="pip2c"></div>
+        <div class="tut-pip active" id="pip3c"></div>
+      </div>
+      <div class="tut-actions">
+        <button id="obTut3Done" type="button" class="btn" style="background:#1a2f45;width:100%;min-height:56px;font-size:1.1rem;">Got it — let's fly! ✈️</button>
+      </div>
+    </div>
+
+  </div><!-- end #onboardingOverlay -->
+
+  <!-- ══ PILOT PROFILE EDIT SCREEN (via menu) ═════════════════════ -->
+  <section id="profileCard" class="card hide" style="margin-top:60px;background:#ffffff;border:1px solid #dce4ed;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:4px;">
+      <h2 style="color:#1a2f45;margin:0;">Pilot Profile</h2>
+      <button id="profileBackBtn" type="button" class="btn btn-ghost btn-sm">Close</button>
+    </div>
+    <div class="hr"></div>
+    <div id="hoursReminderBanner">
+      <b>⏰ Time to update your hours!</b> It's been more than 3 months since you last updated your flight hours. Tap the hours field below to update.
+    </div>
+
+    <div class="ob-field" style="margin-top:12px;">
+      <label class="ob-label" for="pfName">Name / Callsign</label>
+      <input id="pfName" class="ob-input" type="text" placeholder="e.g. Harvey or Maverick" autocomplete="off">
+    </div>
+    <div class="ob-field">
+      <label class="ob-label" for="pfHomeAirport">Home Airport</label>
+      <input id="pfHomeAirport" class="ob-input" type="text" placeholder="e.g. KAUS" autocomplete="off" style="text-transform:uppercase;">
+    </div>
+    <div class="ob-field">
+      <label class="ob-label" for="pfHours">Total Flight Hours</label>
+      <input id="pfHours" class="ob-input" type="number" placeholder="e.g. 450" min="0" inputmode="numeric">
+    </div>
+    <div class="ob-field">
+      <label class="ob-label" for="pfAircraftType">Primary Aircraft Type</label>
+      <input id="pfAircraftType" class="ob-input" type="text" placeholder="e.g. C172, PA-28" autocomplete="off">
+    </div>
+    <div class="ob-field">
+      <label class="ob-label" for="pfTailNumber">N-Number / C-Number</label>
+      <input id="pfTailNumber" class="ob-input" type="text" placeholder="e.g. N12345" autocomplete="off" style="text-transform:uppercase;">
+    </div>
+    <div class="ob-field">
+      <label class="ob-label" for="pfClub">Flying Club / School</label>
+      <input id="pfClub" class="ob-input" type="text" placeholder="e.g. Austin Aero Club" autocomplete="off">
+    </div>
+    <div class="ob-field">
+      <label class="ob-label">FAA Certificates</label>
+      <div class="ob-cert-grid" id="pfFaaCerts"></div>
+    </div>
+    <div class="ob-field">
+      <label class="ob-label">Transport Canada Certificates</label>
+      <div class="ob-cert-grid" id="pfTcCerts"></div>
+    </div>
+    <div style="margin-top:8px;display:flex;gap:10px;flex-wrap:wrap;">
+      <button id="profileSaveBtn" type="button" class="btn" style="background:#1a2f45;flex:1;min-height:52px;">Save Profile</button>
+      <button id="profileTutBtn" type="button" class="btn btn-ghost" style="flex:1;min-height:52px;">View Tutorial</button>
+    </div>
+  </section>
 
   <!-- COGNITION & ACUITY ROOT -->
   <div id="tmdRoot" class="hide">
@@ -878,6 +1225,7 @@ body.test-active .globalMenuBtn{
       <div class="hr"></div>
       <div class="muted" id="fratQCategory" style="font-size:.9rem;margin-bottom:6px;">—</div>
       <h2 id="fratQText" style="margin-top:0;">—</h2>
+      <div id="fratQScoreHint" class="muted" style="font-size:.82rem;margin-top:4px;"></div>
 
       <div class="fratChoiceRow" role="group" aria-label="Answer true or false">
         <label><input type="radio" name="fratWizardAns" value="true"> TRUE</label>
@@ -964,7 +1312,12 @@ body.test-active .globalMenuBtn{
   const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
   const sd=a=>{if(a.length<2)return 0;const m=mean(a);return Math.sqrt(mean(a.map(x=>(x-m)*(x-m))));};
   const now=()=>performance.now();
-  const sleep = ms => new Promise(r=>setTimeout(r,ms));
+  const sleep = ms => new Promise(r=>{
+    const t = setTimeout(r, ms);
+    // Poll abort flag so cancel doesn't leave sleep() hanging
+    const poll = setInterval(()=>{ if(_testAborted){ clearTimeout(t); clearInterval(poll); r(); } }, 50);
+    setTimeout(()=>clearInterval(poll), ms+100);
+  });
   const scrollTopNow = ()=>{ try{ window.scrollTo(0,0); }catch(_e){} };
 
   const MONTH_NAMES=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
@@ -1122,6 +1475,7 @@ body.test-active .globalMenuBtn{
     hide(tmdHome);hide(tmdInfoCard);hide(testCard);hide(resultCard);hide(baselineCard);
     hide(fratIntroCard);hide(fratWizardCard);hide(fratResultCard);
     hide($("#allResultsCard"));
+    hide($("#profileCard"));
     closeExplainer(); closePrintOverlay();
   }
 
@@ -1145,6 +1499,8 @@ body.test-active .globalMenuBtn{
   onPressPointer(goFratBtn,openFrat);
   onPressPointer($("#backFromFrat"),goMain);
   onPressPointer(appInfoLink,openAbout);
+
+  // TODO before App Store: hide debugSkipBtn and menuQAGlobal (add 'hide' class to both)
   onPressPointer(appInfoBackBtn,goMain);
 
   onPressPointer(tmdInfoBtn,()=>{ hide(tmdHome); show(tmdInfoCard); setTimeout(()=>{ window.scrollTo({top:0,behavior:"auto"}); }, 50); });
@@ -1306,6 +1662,8 @@ body.test-active .globalMenuBtn{
     show(testCard);scrollTopNow();testCard.scrollIntoView({behavior:"auto"});
     document.body.classList.add('test-active');
     globalMenuBtn.style.display='none';
+    // Reset phase label so stale text from a cancelled run never bleeds through
+    stepName.textContent='Get Ready!';
 
     await new Promise(res=>{
       hide(srtPane);hide(stroopPane);hide(nbackPane);hide(preNbackPane);hide(betweenPane);
@@ -1364,9 +1722,11 @@ body.test-active .globalMenuBtn{
     const srt=await runSRT(DUR.srt);
     if(_testAborted){ document.body.classList.remove('test-active'); globalMenuBtn.style.display=''; return; }
     await endMessageThenMaybeCountdown({messageText:"TEST OVER\nGET READY FOR THE NEXT ONE",messageMs:3000,countdownSeconds:5});
+    if(_testAborted){ document.body.classList.remove('test-active'); globalMenuBtn.style.display=''; return; }
     const stro=await runStroop(DUR.stroop);
     if(_testAborted){ document.body.classList.remove('test-active'); globalMenuBtn.style.display=''; return; }
     hide(betweenPane);
+    if(_testAborted){ document.body.classList.remove('test-active'); globalMenuBtn.style.display=''; return; }
     const started=await waitForNbackStart(10000);
     hide(preNbackPane);
     if(!started){
@@ -1388,10 +1748,11 @@ body.test-active .globalMenuBtn{
     countdown.textContent="—";stepName.textContent="Prepare: 2&4";
     return new Promise(res=>{
       let done=false;
-      function finish(ok){ if(done)return; done=true; startNbackBtn.removeEventListener('click',onClick); clearTimeout(to); res(ok); }
+      function finish(ok){ if(done)return; done=true; startNbackBtn.removeEventListener('click',onClick); clearTimeout(to); clearInterval(abortPoll); res(ok); }
       function onClick(){finish(true);}
       startNbackBtn.disabled=false;startNbackBtn.addEventListener('click',onClick);
       const to=setTimeout(()=>finish(false),timeoutMs);
+      const abortPoll=setInterval(()=>{ if(_testAborted)finish(false); },50);
     });
   }
 
@@ -1564,6 +1925,9 @@ body.test-active .globalMenuBtn{
   async function runTwoAndFour(groups){
     show(nbackPane);hide(srtPane);hide(stroopPane);hide(preNbackPane);hide(betweenPane);
 
+    // Remove any leftover probe containers from a previously cancelled run
+    nbackPane.querySelectorAll('.probeContainer').forEach(el=>el.remove());
+
     setDigit("",false);
     twoBackButtons.style.visibility="hidden";
     await sleep(2000);
@@ -1669,13 +2033,19 @@ body.test-active .globalMenuBtn{
       if(probeGroups.includes(group)){
         const probePos=Math.random()<0.5?0:2; // ask about d1 or d3
         const correctDigit=digits[probePos];
-        const uniqueDigits=[...new Set(digits)].sort(()=>Math.random()-0.5);
+        const uniqueDigits=[...new Set(digits)];
+        // Fisher-Yates shuffle — unbiased, unlike sort(random)
+        for(let _i=uniqueDigits.length-1;_i>0;_i--){
+          const _j=Math.floor(Math.random()*(_i+1));
+          [uniqueDigits[_i],uniqueDigits[_j]]=[uniqueDigits[_j],uniqueDigits[_i]];
+        }
 
         // Show probe question
         stepName.textContent=`What was the ${probePos===0?"1st":"3rd"} number?`;
 
         // Build answer buttons
         const probeContainer=document.createElement('div');
+        probeContainer.className='probeContainer';
         probeContainer.style.cssText='display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px;';
         nbackPane.appendChild(probeContainer);
 
@@ -1683,7 +2053,11 @@ body.test-active .globalMenuBtn{
           let done=false;
           // Safety: abort check poll so cancel doesn't leave this hanging
           const _probeAbortCheck = setInterval(()=>{
-            if(_testAborted&&!done){ done=true; clearInterval(_probeAbortCheck); res(null); }
+            if(_testAborted&&!done){
+              done=true; clearInterval(_probeAbortCheck);
+              if(probeContainer.parentNode) probeContainer.parentNode.removeChild(probeContainer);
+              res(null);
+            }
           }, 100);
           uniqueDigits.forEach(d=>{
             const btn=document.createElement('button');
@@ -3312,31 +3686,88 @@ body.test-active .globalMenuBtn{
   const fratBandRef=$("#fratBandRef"),fratExportBtn=$("#fratExportBtn"),fratReviewList=$("#fratReviewList");
 
   const FRAT_ITEMS=[
-    {id:"pilot_recent",cat:"Pilot",text:"Less than 3 hours flight time in last 30 days.",score:2,rule:"BOTH"},
-    {id:"pilot_inst_curr",cat:"Pilot",text:"Instrument rating not current and/or not proficient.",score:4,rule:"IFR"},
-    {id:"pilot_night",cat:"Pilot",text:"Planning night operations with minimal recent night experience.",score:3,rule:"BOTH"},
-    {id:"pilot_fatigue",cat:"Pilot",text:"Moderate fatigue or reduced sleep in last 24 hours.",score:3,rule:"BOTH"},
-    {id:"pilot_illness",cat:"Pilot",text:"IM SAFE: 'Illness' or 'Medication' not completely resolved.",score:5,rule:"BOTH"},
-    {id:"ac_new_type",cat:"Aircraft",text:"Less than 25 hours in this aircraft / avionics type.",score:3,rule:"BOTH"},
-    {id:"ac_mx_def",cat:"Aircraft",text:"Minor deferred maintenance items or recent maintenance just completed.",score:2,rule:"BOTH"},
-    {id:"ac_complex",cat:"Aircraft",text:"Complex or high-performance aircraft (retract, turbo, etc.) with limited recent experience.",score:3,rule:"BOTH"},
-    {id:"env_xwind",cat:"Environment",text:"Forecast crosswind component within 5 kt of personal minimums or POH limits.",score:3,rule:"BOTH"},
-    {id:"env_ceiling_marginal",cat:"Environment",text:"Ceiling / visibility marginal for planned route (MVFR or worse).",score:4,rule:"IFR"},
-    {id:"env_convective",cat:"Environment",text:"Convective activity or embedded cells along route or near destination.",score:4,rule:"BOTH"},
-    {id:"env_ice",cat:"Environment",text:"Known or forecast icing in climb/cruise/approach segment.",score:5,rule:"IFR"},
-    {id:"route_new",cat:"Route / Operation",text:"Unfamiliar route, airspace, or destination.",score:3,rule:"BOTH"},
-    {id:"route_mountain",cat:"Route / Operation",text:"Mountainous terrain or high density altitude without recent experience.",score:3,rule:"BOTH"},
-    {id:"route_night_vfr",cat:"Route / Operation",text:"Night VFR over unlit terrain or water.",score:3,rule:"VFR"},
-    {id:"ifrp_altmin",cat:"IFR Flight Plan",text:"IFR alternate required and close to minimums.",score:4,rule:"IFR"},
-    {id:"ifrp_single_pilot_ifr",cat:"IFR Flight Plan",text:"Single-pilot IFR in busy or unfamiliar airspace.",score:4,rule:"IFR"},
-    {id:"app_nonprec_mins",cat:"Approach (IFR)",text:"Planned nonprecision approach within 200 ft of published minimums.",score:4,rule:"IFR"},
-    {id:"app_circle",cat:"Approach (IFR)",text:"Circle-to-land or circling maneuver required at destination.",score:4,rule:"IFR"},
-    {id:"press_schedule",cat:"External Pressures",text:"Schedule pressure (late departure, tight arrival window, passengers waiting).",score:3,rule:"BOTH"},
-    {id:"press_passengers",cat:"External Pressures",text:"Carrying business associates, family, or people you feel pressure to impress.",score:3,rule:"BOTH"},
-    {id:"press_financial",cat:"External Pressures",text:"Financial or other external consequences if the flight is delayed or cancelled.",score:3,rule:"BOTH"}
-  ];
+    // ── Pilot ──────────────────────────────────────────────────────────────
+    {id:"pilot_hours_type",  cat:"Pilot", score:5, rule:"BOTH",
+     text:"Less than 50 hours in this aircraft or avionics type."},
+    {id:"pilot_recent_90",   cat:"Pilot", score:3, rule:"BOTH",
+     text:"Less than 15 hours of flight time in the last 90 days."},
+    {id:"pilot_after_work",  cat:"Pilot", score:4, rule:"BOTH",
+     text:"Flight will occur after work or other demanding activities."},
+    {id:"pilot_fatigue",     cat:"Pilot", score:5, rule:"BOTH",
+     text:"Less than 8 hours sleep prior to flight."},
+    {id:"pilot_illness",     cat:"Pilot", score:5, rule:"BOTH",
+     text:"IM SAFE: Illness or medication not completely resolved."},
+    {id:"pilot_dual_recent", cat:"Pilot", score:-1, rule:"BOTH", reducer:true,
+     text:"Dual instruction received in the last 90 days."},
+    {id:"pilot_wings",       cat:"Pilot", score:-3, rule:"BOTH", reducer:true,
+     text:"WINGS Phase completion in the last 6 months."},
+    {id:"pilot_inst_curr",   cat:"Pilot", score:-3, rule:"IFR",  reducer:true,
+     text:"Instrument rating current and proficient."},
 
-  let fratState={rules:null,exp:null,items:[],idx:0,answers:{}};
+    // ── Flight Conditions ──────────────────────────────────────────────────
+    {id:"fc_night",          cat:"Flight Conditions", score:5, rule:"BOTH",
+     text:"Flight will occur at twilight or night."},
+    {id:"fc_wind_surface",   cat:"Flight Conditions", score:4, rule:"BOTH",
+     text:"Surface wind greater than 15 knots."},
+    {id:"fc_wind_cross",     cat:"Flight Conditions", score:4, rule:"BOTH",
+     text:"Crosswind component greater than 7 knots."},
+    {id:"fc_mountain",       cat:"Flight Conditions", score:4, rule:"BOTH",
+     text:"Flight involves mountainous terrain."},
+
+    // ── Airport ────────────────────────────────────────────────────────────
+    {id:"apt_nontowered",    cat:"Airport", score:5, rule:"BOTH",
+     text:"Non-towered airport, or tower closed at ETD or ETA."},
+    {id:"apt_runway_short",  cat:"Airport", score:3, rule:"BOTH",
+     text:"Runway length less than 3,000 feet."},
+    {id:"apt_runway_soft",   cat:"Airport", score:3, rule:"BOTH",
+     text:"Wet or soft field runway."},
+    {id:"apt_obstacles",     cat:"Airport", score:3, rule:"BOTH",
+     text:"Obstacles on approach and/or departure path."},
+
+    // ── VFR Flight Plan ────────────────────────────────────────────────────
+    {id:"vfr_ceiling",       cat:"VFR Flight Plan", score:2, rule:"VFR",
+     text:"Ceiling less than 3,000 feet AGL along route or at destination."},
+    {id:"vfr_visibility",    cat:"VFR Flight Plan", score:2, rule:"VFR",
+     text:"Visibility less than 5 SM along route or at destination."},
+    {id:"vfr_no_wx",         cat:"VFR Flight Plan", score:4, rule:"VFR",
+     text:"No weather reporting available at destination."},
+    {id:"vfr_flight_plan",   cat:"VFR Flight Plan", score:-2, rule:"VFR", reducer:true,
+     text:"Flight plan filed and activated."},
+    {id:"vfr_atc_following", cat:"VFR Flight Plan", score:-3, rule:"VFR", reducer:true,
+     text:"ATC flight following arranged and in use."},
+
+    // ── IFR Flight Plan ────────────────────────────────────────────────────
+    {id:"ifr_ceiling",       cat:"IFR Flight Plan", score:2, rule:"IFR",
+     text:"Ceiling less than 1,000 feet AGL at destination or alternate."},
+    {id:"ifr_visibility",    cat:"IFR Flight Plan", score:2, rule:"IFR",
+     text:"Visibility less than 3 SM at destination or alternate."},
+    {id:"ifr_no_wx",         cat:"IFR Flight Plan", score:4, rule:"IFR",
+     text:"No weather reporting available at destination."},
+    {id:"ifr_convective",    cat:"IFR Flight Plan", score:4, rule:"IFR",
+     text:"Convective activity or embedded cells along route or near destination."},
+    {id:"ifr_ice",           cat:"IFR Flight Plan", score:5, rule:"IFR",
+     text:"Known or forecast icing in climb, cruise, or approach segment."},
+    {id:"ifr_alternate",     cat:"IFR Flight Plan", score:4, rule:"IFR",
+     text:"IFR alternate required and forecast close to minimums."},
+
+    // ── Approaches (IFR) ───────────────────────────────────────────────────
+    {id:"app_precision",     cat:"Approaches (IFR)", score:-2, rule:"IFR", reducer:true,
+     text:"Precision approach available and planned at destination."},
+    {id:"app_nonprec",       cat:"Approaches (IFR)", score:3, rule:"IFR",
+     text:"Best available approach is a non-precision approach."},
+    {id:"app_none",          cat:"Approaches (IFR)", score:4, rule:"IFR",
+     text:"No instrument approach available at destination."},
+    {id:"app_circle",        cat:"Approaches (IFR)", score:7, rule:"IFR",
+     text:"Circling approach required at destination."},
+
+    // ── External Pressures (Second Opinion supplement — not in FAA tool) ───
+    {id:"press_schedule",    cat:"External Pressures", score:3, rule:"BOTH",
+     text:"Schedule pressure (late departure, tight arrival window, passengers waiting)."},
+    {id:"press_passengers",  cat:"External Pressures", score:3, rule:"BOTH",
+     text:"Carrying people you feel pressure to impress or not disappoint."},
+    {id:"press_financial",   cat:"External Pressures", score:3, rule:"BOTH",
+     text:"Financial or other consequences if the flight is delayed or cancelled."},
+  ];  let fratState={rules:null,exp:null,items:[],idx:0,answers:{}};
 
   function getFratProfile(){ return{rules:document.querySelector('input[name="fratRules"]:checked')?.value||null,exp:document.querySelector('input[name="fratExp"]:checked')?.value||null}; }
   function applicableToRules(itemRule,rules){ return itemRule==="BOTH"||itemRule===rules; }
@@ -3378,10 +3809,18 @@ body.test-active .globalMenuBtn{
   function renderFratQuestion(){
     const items=fratState.items,i=fratState.idx,it=items[i];
     fratQCounter.textContent=`${i+1} / ${items.length}`;
-    fratRunningTotal.textContent=String(runningTotal());
+    const _rt = runningTotal();
+    fratRunningTotal.textContent = (_rt > 0 ? '+' : '') + String(_rt);
+    fratRunningTotal.style.color = _rt < 0 ? '#0a9a7a' : _rt === 0 ? '' : 'var(--warn)';
     fratQCategory.textContent=it.cat.toUpperCase();
     fratQText.textContent=it.text;
-    fratQScoreHint.textContent=`True = +${it.score} points • False = +0 points`;
+    if(it.reducer){
+      fratQScoreHint.textContent=`True = −${Math.abs(it.score)} points (risk reduced ✓) • False = +0 points`;
+      fratQScoreHint.style.color = '#0a9a7a';
+    } else {
+      fratQScoreHint.textContent=`True = +${it.score} points • False = +0 points`;
+      fratQScoreHint.style.color = '';
+    }
     const saved=fratState.answers[it.id];
     document.querySelectorAll('input[name="fratWizardAns"]').forEach(r=>{ r.checked=(String(saved)===r.value); });
     fratNextBtn.textContent=(i===items.length-1)?"Finish":"Next";
@@ -3435,21 +3874,34 @@ body.test-active .globalMenuBtn{
     let total=0;const byCat={};
     fratState.items.forEach(item=>{ if(fratState.answers[item.id]===true){total+=item.score;byCat[item.cat]=(byCat[item.cat]||0)+item.score;} });
     let band="Low",dotClass="green",narrative="",guidance="",bandText="";
-    // TODO: Review FRAT scoring thresholds with Harvey before App Store submission
+    // Band thresholds match FAA FRAT reference table exactly (confirmed from screenshots).
+    // Scores are identical across all four profiles — only bands differ.
     if(rules==="IFR"){
       if(exp==="<100"){
-        if(total<20){band="Below ref range";dotClass="green";}else if(total<=25){band="Low";dotClass="green";}else if(total<=30){band="Moderate";dotClass="amber";}else{band="High";dotClass="red";}
+        if(total<20){band="Below ref range";dotClass="green";}
+        else if(total<=25){band="Low";dotClass="green";}
+        else if(total<=30){band="Moderate";dotClass="amber";}
+        else{band="High";dotClass="red";}
         bandText="IFR • <100 hrs in type: Low 20–25, Moderate 25–30, High >30";
       }else{
-        if(total<25){band="Below ref range";dotClass="green";}else if(total<=30){band="Low";dotClass="green";}else if(total<=35){band="Moderate";dotClass="amber";}else{band="High";dotClass="red";}
+        if(total<25){band="Below ref range";dotClass="green";}
+        else if(total<=30){band="Low";dotClass="green";}
+        else if(total<=35){band="Moderate";dotClass="amber";}
+        else{band="High";dotClass="red";}
         bandText="IFR • ≥100 hrs in type: Low 25–30, Moderate 30–35, High >35";
       }
     }else{
       if(exp==="<100"){
-        if(total<5){band="Below ref range";dotClass="green";}else if(total<=15){band="Low";dotClass="green";}else if(total<=20){band="Moderate";dotClass="amber";}else{band="High";dotClass="red";}
+        if(total<5){band="Below ref range";dotClass="green";}
+        else if(total<=15){band="Low";dotClass="green";}
+        else if(total<=20){band="Moderate";dotClass="amber";}
+        else{band="High";dotClass="red";}
         bandText="VFR • <100 hrs in type: Low 5–15, Moderate 15–20, High >20";
       }else{
-        if(total<15){band="Below ref range";dotClass="green";}else if(total<=20){band="Low";dotClass="green";}else if(total<=25){band="Moderate";dotClass="amber";}else{band="High";dotClass="red";}
+        if(total<15){band="Below ref range";dotClass="green";}
+        else if(total<=20){band="Low";dotClass="green";}
+        else if(total<=25){band="Moderate";dotClass="amber";}
+        else{band="High";dotClass="red";}
         bandText="VFR • ≥100 hrs in type: Low 15–20, Moderate 20–25, High >25";
       }
     }
@@ -3461,7 +3913,12 @@ body.test-active .globalMenuBtn{
     fratStatusLabel.textContent=`${band} risk band`;
     fratScoreText.textContent=`Score: ${total}`;
     fratNarrative.textContent=narrative;fratGuidance.textContent=guidance;
-    const catLines=Object.keys(byCat).sort().map(cat=>`<div><b>${cat}:</b> ${byCat[cat]} points</div>`);
+    const catLines=Object.keys(byCat).sort().map(cat=>{
+      const v = byCat[cat];
+      const sign = v > 0 ? '+' : '';
+      const color = v < 0 ? 'var(--good)' : 'inherit';
+      return `<div><b>${cat}:</b> <span style="color:${color}">${sign}${v} points</span></div>`;
+    });
     fratBreakdown.innerHTML=catLines.length?catLines.join(""):"<div>No items scored True.</div>";
     // Format band reference as structured lines
     {
@@ -3508,8 +3965,14 @@ body.test-active .globalMenuBtn{
     const items=fratState.items.slice(),answers=fratState.answers;
     const html=items.map((it,idx)=>{
       const a=answers[it.id],ansText=(a===true)?"TRUE":"FALSE",points=(a===true)?it.score:0;
-      const tagColor=(a===true)?"var(--warn)":"var(--muted)";
-      return `<div class="card" style="background:#0f1622;border:1px solid #1e3050;margin-top:10px;"><div class="muted" style="font-size:.85rem;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;"><div><b>${idx+1}.</b> ${it.cat}</div><div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:900;letter-spacing:.06em;color:${tagColor};">${ansText}</span><span class="muted">(+${points})</span></div></div><div style="margin-top:6px;font-weight:700;">${it.text}</div></div>`;
+      const tagColor = (a===true)
+        ? (it.reducer ? "var(--good)" : "var(--warn)")
+        : "var(--muted)";
+      const pointsLabel = (a===true)
+        ? (it.reducer ? `(−${Math.abs(it.score)})` : `(+${points})`)
+        : '(+0)';
+      const reducerTag = it.reducer ? ' <span style="font-size:.72rem;font-weight:800;color:var(--good);letter-spacing:.04em;">✓ REDUCER</span>' : '';
+      return `<div class="card" style="background:#0f1622;border:1px solid #1e3050;margin-top:10px;"><div class="muted" style="font-size:.85rem;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;"><div><b>${idx+1}.</b> ${it.cat}${reducerTag}</div><div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:900;letter-spacing:.06em;color:${tagColor};">${ansText}</span><span class="muted">${pointsLabel}</span></div></div><div style="margin-top:6px;font-weight:700;">${it.text}</div></div>`;
     }).join("");
     fratReviewList.innerHTML=html||"<div class='muted'>No questions.</div>";
   }
@@ -3533,10 +3996,13 @@ body.test-active .globalMenuBtn{
       :"No items scored True.";
     const qa=(items||[]).map((it,idx)=>{
       const a=answers?.[it.id],ansText=(a===true)?"TRUE":"FALSE",points=(a===true)?it.score:0;
+      const ansColor  = (a===true) ? (it.reducer ? 'var(--good)' : 'var(--warn)') : 'var(--muted)';
+      const ptDisplay = (a===true) ? (it.reducer ? `(−${Math.abs(it.score)})` : `(+${points})`) : '(+0)';
+      const redLabel  = it.reducer ? ' <span style="color:var(--good);font-size:.75rem;">✓ reducer</span>' : '';
       return `<div style="margin-top:10px;padding-top:10px;border-top:1px solid #dce4ed;">
-        <div style="font-size:.8rem;color:#5a7184;font-weight:700;">${idx+1}. ${it.cat.toUpperCase()}</div>
+        <div style="font-size:.8rem;color:#5a7184;font-weight:700;">${idx+1}. ${it.cat.toUpperCase()}${redLabel}</div>
         <div style="font-weight:700;margin:3px 0 5px;">${it.text}</div>
-        <div style="font-size:.9rem;">Answer: <b style="color:${a===true?'var(--warn)':'var(--muted)'};">${ansText}</b> <span style="color:#9ab0c4;">(+${points})</span></div>
+        <div style="font-size:.9rem;">Answer: <b style="color:${ansColor};">${ansText}</b> <span style="color:#9ab0c4;">${ptDisplay}</span></div>
       </div>`;
     }).join("");
     const html=`<div class="printDoc">
@@ -3562,7 +4028,8 @@ body.test-active .globalMenuBtn{
       :"  No items scored True.";
     const qaLines=(items||[]).map((it,idx)=>{
       const a=answers?.[it.id],ansText=(a===true)?"TRUE":"FALSE",points=(a===true)?it.score:0;
-      return `${idx+1}. [${it.cat.toUpperCase()}]\n   ${it.text}\n   Answer: ${ansText} (+${points})`;
+      const ptLabel = (a===true) ? (it.reducer ? `(-${Math.abs(it.score)})` : `(+${points})`) : '(+0)';
+      return `${idx+1}. [${it.cat.toUpperCase()}${it.reducer?' REDUCER':''}]\n   ${it.text}\n   Answer: ${ansText} ${ptLabel}`;
     }).join("\n\n");
     const plain=[
       "SECOND OPINION",
@@ -3591,6 +4058,560 @@ body.test-active .globalMenuBtn{
     openPrintOverlay("Second Opinion — FRAT Summary", html, plain);
   });
 
+  // ══════════════════════════════════════════════════════════════
+  // PILOT PROFILE + ONBOARDING + TUTORIAL
+  // ══════════════════════════════════════════════════════════════
+  (function(){
+
+    // ── Storage keys ──
+    const PROFILE_KEY    = 'flyingm_pilot_profile_v1';
+    const OB_DONE_KEY    = 'flyingm_onboarding_done';
+
+    const FAA_CERTS = [
+      {val:'faa_student',label:'Student Pilot'},
+      {val:'faa_sport',  label:'Sport Pilot'},
+      {val:'faa_rec',    label:'Recreational'},
+      {val:'faa_ppl',    label:'Private (PPL)'},
+      {val:'faa_ir',     label:'Instrument Rating'},
+      {val:'faa_cpl',    label:'Commercial (CPL)'},
+      {val:'faa_atp',    label:'ATP'},
+      {val:'faa_cfi',    label:'CFI'},
+      {val:'faa_cfii',   label:'CFII'},
+      {val:'faa_mei',    label:'MEI'},
+      {val:'faa_glider', label:'Glider'},
+      {val:'faa_balloon',label:'LTA — Balloon'},
+      {val:'faa_airship',label:'LTA — Airship'},
+      {val:'faa_107',    label:'Remote (Part 107)'},
+    ];
+    const TC_CERTS = [
+      {val:'tc_student',   label:'Student Pilot'},
+      {val:'tc_rpp',       label:'Recreational (RPP)'},
+      {val:'tc_ppl',       label:'Private (PPL)'},
+      {val:'tc_ir',        label:'Instrument Rating'},
+      {val:'tc_cpl',       label:'Commercial (CPL)'},
+      {val:'tc_atpl',      label:'ATPL'},
+      {val:'tc_glider',    label:'Glider'},
+      {val:'tc_ultralight',label:'Ultra-Light'},
+      {val:'tc_balloon',   label:'Balloon'},
+      {val:'tc_fi',        label:'Flight Instructor (FI)'},
+    ];
+
+    // ── Load / save profile ──
+    function loadProfile(){
+      try{ return JSON.parse(localStorage.getItem(PROFILE_KEY)||'{}'); }catch{ return {}; }
+    }
+    function saveProfile(p){ localStorage.setItem(PROFILE_KEY, JSON.stringify(p||{})); }
+
+    // ── Build cert checkboxes for the profile edit screen ──
+    function buildCertGrid(containerId, certs, nameAttr, checkedVals){
+      const el = document.getElementById(containerId);
+      if(!el) return;
+      el.innerHTML = certs.map(c=>`
+        <label class="ob-cert-label">
+          <input type="checkbox" name="${nameAttr}" value="${c.val}"${checkedVals.includes(c.val)?' checked':''}>
+          ${c.label}
+        </label>`).join('');
+    }
+
+    // ── Collect onboarding form values ──
+    function collectObProfile(){
+      const faa = [...document.querySelectorAll('input[name="obFaaCert"]:checked')].map(x=>x.value);
+      const tc  = [...document.querySelectorAll('input[name="obTcCert"]:checked')].map(x=>x.value);
+      const hours = parseFloat(document.getElementById('obHours').value);
+      return {
+        name:        document.getElementById('obName').value.trim(),
+        homeAirport: document.getElementById('obHomeAirport').value.trim().toUpperCase(),
+        hours:       isFinite(hours) ? hours : null,
+        hoursUpdated:isFinite(hours) ? new Date().toISOString() : null,
+        aircraftType:document.getElementById('obAircraftType').value.trim(),
+        tailNumber:  document.getElementById('obTailNumber').value.trim().toUpperCase(),
+        club:        document.getElementById('obClub').value.trim(),
+        faaCerts:    faa,
+        tcCerts:     tc,
+      };
+    }
+
+    // ── Collect profile edit screen values ──
+    function collectPfProfile(){
+      const faa = [...document.querySelectorAll('input[name="pfFaaCert"]:checked')].map(x=>x.value);
+      const tc  = [...document.querySelectorAll('input[name="pfTcCert"]:checked')].map(x=>x.value);
+      const hours = parseFloat(document.getElementById('pfHours').value);
+      const existing = loadProfile();
+      // Only update hoursUpdated if hours actually changed
+      const hoursChanged = isFinite(hours) && hours !== existing.hours;
+      return {
+        name:        document.getElementById('pfName').value.trim(),
+        homeAirport: document.getElementById('pfHomeAirport').value.trim().toUpperCase(),
+        hours:       isFinite(hours) ? hours : null,
+        hoursUpdated:hoursChanged ? new Date().toISOString() : (existing.hoursUpdated||null),
+        aircraftType:document.getElementById('pfAircraftType').value.trim(),
+        tailNumber:  document.getElementById('pfTailNumber').value.trim().toUpperCase(),
+        club:        document.getElementById('pfClub').value.trim(),
+        faaCerts:    faa,
+        tcCerts:     tc,
+      };
+    }
+
+    // ── Populate profile edit screen from stored profile ──
+    function populateProfileScreen(){
+      const p = loadProfile();
+      document.getElementById('pfName').value        = p.name        || '';
+      document.getElementById('pfHomeAirport').value = p.homeAirport || '';
+      document.getElementById('pfHours').value       = isFinite(p.hours) ? p.hours : '';
+      document.getElementById('pfAircraftType').value= p.aircraftType|| '';
+      document.getElementById('pfTailNumber').value  = p.tailNumber  || '';
+      document.getElementById('pfClub').value        = p.club        || '';
+      buildCertGrid('pfFaaCerts', FAA_CERTS, 'pfFaaCert', p.faaCerts||[]);
+      buildCertGrid('pfTcCerts',  TC_CERTS,  'pfTcCert',  p.tcCerts||[]);
+      // Hours reminder banner
+      const banner = document.getElementById('hoursReminderBanner');
+      if(banner) banner.style.display = shouldRemindHours(p) ? '' : 'none';
+    }
+
+    // ── Hours reminder logic ──
+    function shouldRemindHours(p){
+      if(!p || !p.hoursUpdated) return false; // never set → no reminder yet
+      const days = (Date.now() - new Date(p.hoursUpdated).getTime()) / 86400000;
+      return days > 90;
+    }
+
+    // ── Onboarding flow ──
+    const overlay   = document.getElementById('onboardingOverlay');
+    function showOb(screenId){
+      ['obWelcome','obProfile','obTut1','obTut2','obTut3'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el) el.classList.toggle('hide', el.id!==screenId);
+      });
+      overlay.classList.remove('hide');
+      overlay.scrollTop=0;
+    }
+    function hideOb(){
+      overlay.classList.add('hide');
+    }
+    let _obStandalone = false; // true when tutorial opened from profile screen
+
+    function finishOnboarding(){
+      localStorage.setItem(OB_DONE_KEY,'1');
+      hideOb();
+      if(_obStandalone){
+        _obStandalone = false;
+        hideAllAppScreens();
+        show(modeCard);
+        scrollTopNow();
+      } else {
+        const p = loadProfile();
+        if(shouldRemindHours(p)) showToast('⏰ Time to update your flight hours! Open Pilot Profile from the menu.');
+      }
+    }
+
+    // Welcome screen
+    onPressPointer(document.getElementById('obWelcomeNext'), ()=>showOb('obProfile'));
+    onPressPointer(document.getElementById('obWelcomeSkip'), ()=>showOb('obTut1'));
+
+    // Profile screen
+    onPressPointer(document.getElementById('obProfileNext'), ()=>{
+      saveProfile(collectObProfile());
+      showOb('obTut1');
+    });
+    onPressPointer(document.getElementById('obProfileSkip'), ()=>showOb('obTut1'));
+
+    // Tutorial slides
+    onPressPointer(document.getElementById('obTut1Next'), ()=>showOb('obTut2'));
+    onPressPointer(document.getElementById('obTut2Next'), ()=>showOb('obTut3'));
+    onPressPointer(document.getElementById('obTut3Done'), ()=>finishOnboarding());
+
+    // ── Profile edit screen (via menu) ──
+    function openProfile(){
+      hideAllAppScreens();
+      populateProfileScreen();
+      show(document.getElementById('profileCard'));
+      scrollTopNow();
+    }
+
+    onPressPointer(document.getElementById('profileBackBtn'), ()=>{
+      hideAllAppScreens(); show(modeCard); scrollTopNow();
+    });
+    onPressPointer(document.getElementById('profileSaveBtn'), ()=>{
+      saveProfile(collectPfProfile());
+      showToast('Profile saved.');
+      hideAllAppScreens(); show(modeCard); scrollTopNow();
+    });
+    onPressPointer(document.getElementById('profileTutBtn'), ()=>{
+      // Show tutorial from profile screen — mark as standalone (not first-launch)
+      _obStandalone = true;
+      hideAllAppScreens();
+      showOb('obTut1');
+    });
+
+    // Global menu wiring
+    onPressPointer(document.getElementById('menuProfileGlobal'), ()=>{
+      closeGlobalMenu(); openProfile();
+    });
+    onPressPointer(document.getElementById('menuQAGlobal'), ()=>{
+      closeGlobalMenu();
+      document.getElementById('qaOverlay').classList.remove('hide');
+    });
+
+    // ── Check onboarding on first load (after intro animation) ──
+    setTimeout(()=>{
+      if(!localStorage.getItem(OB_DONE_KEY)){
+        showOb('obWelcome');
+      } else {
+        // Returning user: check hours reminder
+        const p = loadProfile();
+        if(shouldRemindHours(p)){
+          showToast('⏰ Time to update your flight hours! Open Pilot Profile from the menu.');
+        }
+        // Personalised greeting if name is set
+        if(p.name){
+          // Subtle: update the main menu heading area — just a personal touch
+          const heading = document.querySelector('#modeCard .main-heading');
+          if(heading && !heading.dataset.personalised){
+            heading.dataset.personalised = '1';
+            // Don't change the heading text — keep it clean
+          }
+        }
+      }
+    }, 3800); // after intro fade (3100ms fade-out + 600ms opacity + buffer)
+
+    // Expose openProfile for About screen link if needed
+    window._openPilotProfile = openProfile;
+
+  })();
+  // ══ END PILOT PROFILE + ONBOARDING ════════════════════════════
+
+
+
+  // ── QA TEST RUNNER (inline, same window) ─────────────────────────────
+  (function(){
+
+    // ── Framework ────────────────────────────────────────────────────────
+    function assert(cond, msg){ if(!cond) throw new Error(msg||'Assertion failed'); }
+    function assertEqual(a,b,msg){
+      if(a!==b) throw new Error((msg||'')+'  Expected '+JSON.stringify(b)+', got '+JSON.stringify(a));
+    }
+    function assertRange(v,min,max,msg){
+      if(v<min||v>max) throw new Error((msg||'')+' '+v+' not in ['+min+','+max+']');
+    }
+
+    // Band simulation (mirrors computeAndShowFratResults logic)
+    function simBand(rules, exp, answers, items){
+      let total=0;
+      items.forEach(item=>{
+        const ok = item.rule==='BOTH'||item.rule===rules;
+        if(ok && answers[item.id]===true) total+=item.score;
+      });
+      let band='Low', dotClass='green';
+      if(rules==='IFR'){
+        if(exp==='<100'){
+          if(total<20)       {band='Below ref range';dotClass='green';}
+          else if(total<=25) {band='Low';            dotClass='green';}
+          else if(total<=30) {band='Moderate';       dotClass='amber';}
+          else               {band='High';           dotClass='red';  }
+        }else{
+          if(total<25)       {band='Below ref range';dotClass='green';}
+          else if(total<=30) {band='Low';            dotClass='green';}
+          else if(total<=35) {band='Moderate';       dotClass='amber';}
+          else               {band='High';           dotClass='red';  }
+        }
+      }else{
+        if(exp==='<100'){
+          if(total<5)        {band='Below ref range';dotClass='green';}
+          else if(total<=15) {band='Low';            dotClass='green';}
+          else if(total<=20) {band='Moderate';       dotClass='amber';}
+          else               {band='High';           dotClass='red';  }
+        }else{
+          if(total<15)       {band='Below ref range';dotClass='green';}
+          else if(total<=20) {band='Low';            dotClass='green';}
+          else if(total<=25) {band='Moderate';       dotClass='amber';}
+          else               {band='High';           dotClass='red';  }
+        }
+      }
+      return {total, band, dotClass};
+    }
+
+    // ── Test Suites ───────────────────────────────────────────────────────
+    const SUITES = [
+
+      {name:'DOM Integrity', tests:[
+        ['modeCard exists',          ()=>assert(document.getElementById('modeCard'))],
+        ['testCard exists',          ()=>assert(document.getElementById('testCard'))],
+        ['resultCard exists',        ()=>assert(document.getElementById('resultCard'))],
+        ['fratIntroCard exists',     ()=>assert(document.getElementById('fratIntroCard'))],
+        ['fratWizardCard exists',    ()=>assert(document.getElementById('fratWizardCard'))],
+        ['fratResultCard exists',    ()=>assert(document.getElementById('fratResultCard'))],
+        ['allResultsCard exists',    ()=>assert(document.getElementById('allResultsCard'))],
+        ['onboardingOverlay exists', ()=>assert(document.getElementById('onboardingOverlay'))],
+        ['profileCard exists',       ()=>assert(document.getElementById('profileCard'))],
+        ['fratQScoreHint exists',    ()=>assert(document.getElementById('fratQScoreHint'),'fratQScoreHint missing — score hint will not show')],
+        ['arQuadrantCanvas exists',  ()=>assert(document.getElementById('arQuadrantCanvas'))],
+        ['arChartMedianRT exists',   ()=>assert(document.getElementById('arChartMedianRT'))],
+        ['arChartStroopAcc exists',  ()=>assert(document.getElementById('arChartStroopAcc'))],
+        ['arChartNbD exists',        ()=>assert(document.getElementById('arChartNbD'))],
+        ['srtTarget exists',         ()=>assert(document.getElementById('srtTarget'))],
+        ['btnMatch exists',          ()=>assert(document.getElementById('btnMatch'))],
+        ['btnMismatch exists',       ()=>assert(document.getElementById('btnMismatch'))],
+        ['btnTarget exists',         ()=>assert(document.getElementById('btnTarget'))],
+        ['btnNotTarget exists',      ()=>assert(document.getElementById('btnNotTarget'))],
+        ['debugSkipBtn exists',      ()=>{
+          const btn=document.getElementById('debugSkipBtn');
+          assert(btn,'debugSkipBtn missing');
+          // NOTE: hidden before App Store (TODO comment in code marks the spot)
+        }],
+        ['devModeToggle exists',     ()=>assert(document.getElementById('devModeToggle'))],
+        ['menuProfileGlobal exists', ()=>assert(document.getElementById('menuProfileGlobal'))],
+        ['menuAllResultsGlobal exists',()=>assert(document.getElementById('menuAllResultsGlobal'))],
+      ]},
+
+      {name:'FRAT Question Set', tests:[
+        ['34 total items',           ()=>assertEqual(FRAT_ITEMS.length, 34, 'FRAT item count')],
+        ['6 reducer items',          ()=>assertEqual(FRAT_ITEMS.filter(i=>i.reducer).length, 6)],
+        ['Reducers have neg scores', ()=>FRAT_ITEMS.filter(i=>i.reducer).forEach(i=>assert(i.score<0, i.id+' reducer must be negative'))],
+        ['Non-reducers positive',    ()=>FRAT_ITEMS.filter(i=>!i.reducer).forEach(i=>assert(i.score>0, i.id+' must be positive'))],
+        ['All have required fields', ()=>FRAT_ITEMS.forEach(i=>{
+          assert(i.id,'missing id');assert(i.cat,'missing cat');assert(i.text,'missing text');
+          assert(i.score!==undefined,'missing score');
+          assert(['BOTH','VFR','IFR'].includes(i.rule),'invalid rule: '+i.rule);
+        })],
+        ['No duplicate IDs',         ()=>{
+          const ids=FRAT_ITEMS.map(i=>i.id);
+          assertEqual(new Set(ids).size, ids.length,'Duplicate item IDs');
+        }],
+        ['pilot_hours_type = 5pts',  ()=>assertEqual(FRAT_ITEMS.find(i=>i.id==='pilot_hours_type')?.score, 5)],
+        ['pilot_fatigue = 5pts',     ()=>assertEqual(FRAT_ITEMS.find(i=>i.id==='pilot_fatigue')?.score, 5)],
+        ['fc_night = 5pts',          ()=>assertEqual(FRAT_ITEMS.find(i=>i.id==='fc_night')?.score, 5)],
+        ['apt_nontowered = 5pts',    ()=>assertEqual(FRAT_ITEMS.find(i=>i.id==='apt_nontowered')?.score, 5)],
+        ['app_circle = 7pts',        ()=>assertEqual(FRAT_ITEMS.find(i=>i.id==='app_circle')?.score, 7)],
+        ['apt_runway_short = 3pts',  ()=>assertEqual(FRAT_ITEMS.find(i=>i.id==='apt_runway_short')?.score, 3)],
+        ['pilot_wings = -3pts',      ()=>assertEqual(FRAT_ITEMS.find(i=>i.id==='pilot_wings')?.score, -3)],
+        ['vfr_atc_following = -3pts',()=>assertEqual(FRAT_ITEMS.find(i=>i.id==='vfr_atc_following')?.score, -3)],
+        ['app_precision = -2pts',    ()=>assertEqual(FRAT_ITEMS.find(i=>i.id==='app_precision')?.score, -2)],
+        ['vfr_ceiling is VFR rule',  ()=>assertEqual(FRAT_ITEMS.find(i=>i.id==='vfr_ceiling')?.rule, 'VFR')],
+        ['ifr_ceiling is IFR rule',  ()=>assertEqual(FRAT_ITEMS.find(i=>i.id==='ifr_ceiling')?.rule, 'IFR')],
+      ]},
+
+      {name:'FRAT Scoring & Bands', tests:[
+        ['All-false = Below ref range', ()=>{
+          ['VFR','IFR'].forEach(rules=>['<100','>=100'].forEach(exp=>{
+            const {band}=simBand(rules,exp,{},FRAT_ITEMS);
+            assertEqual(band,'Below ref range',rules+'/'+exp+' all-false');
+          }));
+        }],
+        ['IFR <100: 22pts = Low',    ()=>{
+          const a={pilot_fatigue:true,fc_night:true,apt_nontowered:true,fc_wind_surface:true,apt_runway_soft:true};
+          const {total,band}=simBand('IFR','<100',a,FRAT_ITEMS);
+          assertEqual(total,22,'score'); assertEqual(band,'Low','band');
+        }],
+        ['IFR <100: 26pts = Moderate',()=>{
+          const a={pilot_fatigue:true,fc_night:true,apt_nontowered:true,fc_wind_surface:true,apt_runway_soft:true,fc_wind_cross:true};
+          const {total,band}=simBand('IFR','<100',a,FRAT_ITEMS);
+          assertEqual(total,26,'score'); assertEqual(band,'Moderate','band');
+        }],
+        ['IFR <100: 31pts = High',   ()=>{
+          // 5+5+5+4+4+4+4 = 31 (fatigue+night+nontowered+surf_wind+crosswind+mountain+after_work)
+          const a={pilot_fatigue:true,fc_night:true,apt_nontowered:true,fc_wind_surface:true,fc_wind_cross:true,fc_mountain:true,pilot_after_work:true};
+          const {total,band}=simBand('IFR','<100',a,FRAT_ITEMS);
+          assertEqual(total,31,'score'); assertEqual(band,'High','band');
+        }],
+        ['IFR >=100: 25pts = Low',   ()=>{
+          const a={pilot_fatigue:true,fc_night:true,apt_nontowered:true,fc_wind_surface:true,fc_wind_cross:true,apt_runway_soft:true};
+          const {total,band}=simBand('IFR','>=100',a,FRAT_ITEMS);
+          assertEqual(total,26,'score'); assertEqual(band,'Low','band');
+        }],
+        ['VFR <100: 7pts = Low',     ()=>{
+          const a={pilot_after_work:true,apt_runway_short:true};
+          const {total,band}=simBand('VFR','<100',a,FRAT_ITEMS);
+          assertEqual(total,7,'score'); assertEqual(band,'Low','band');
+        }],
+        ['VFR <100: 18pts = Moderate',()=>{
+          const a={pilot_fatigue:true,fc_night:true,apt_nontowered:true,apt_runway_short:true};
+          const {total,band}=simBand('VFR','<100',a,FRAT_ITEMS);
+          assertEqual(total,18,'score'); assertEqual(band,'Moderate','band');
+        }],
+        ['VFR <100: 22pts = High',   ()=>{
+          const a={pilot_fatigue:true,fc_night:true,apt_nontowered:true,apt_runway_short:true,fc_wind_surface:true};
+          const {total,band}=simBand('VFR','<100',a,FRAT_ITEMS);
+          assertEqual(total,22,'score'); assertEqual(band,'High','band');
+        }],
+        ['VFR >=100: 18pts = Low',   ()=>{
+          const a={pilot_fatigue:true,apt_obstacles:true,apt_runway_short:true,apt_runway_soft:true,fc_wind_cross:true};
+          const {total,band}=simBand('VFR','>=100',a,FRAT_ITEMS);
+          assertEqual(total,18,'score'); assertEqual(band,'Low','band');
+        }],
+        ['VFR >=100: 22pts = Moderate',()=>{
+          const a={pilot_fatigue:true,apt_obstacles:true,apt_runway_short:true,apt_runway_soft:true,fc_wind_cross:true,fc_mountain:true};
+          const {total,band}=simBand('VFR','>=100',a,FRAT_ITEMS);
+          assertEqual(total,22,'score'); assertEqual(band,'Moderate','band');
+        }],
+        ['VFR >=100: 26pts = High',  ()=>{
+          const a={pilot_fatigue:true,apt_obstacles:true,apt_runway_short:true,apt_runway_soft:true,fc_wind_cross:true,fc_mountain:true,fc_wind_surface:true};
+          const {total,band}=simBand('VFR','>=100',a,FRAT_ITEMS);
+          assertEqual(total,26,'score'); assertEqual(band,'High','band');
+        }],
+        ['Reducer subtracts score',  ()=>{
+          const base={pilot_fatigue:true,fc_night:true};
+          const withR={pilot_fatigue:true,fc_night:true,pilot_wings:true};
+          const r1=simBand('VFR','>=100',base,FRAT_ITEMS);
+          const r2=simBand('VFR','>=100',withR,FRAT_ITEMS);
+          assertEqual(r1.total-r2.total, 3, 'WINGS should subtract 3');
+        }],
+        ['IFR items dont score VFR', ()=>{
+          const a={};
+          FRAT_ITEMS.filter(i=>i.rule==='IFR').forEach(i=>{a[i.id]=true;});
+          const {total}=simBand('VFR','>=100',a,FRAT_ITEMS);
+          assertEqual(total,0,'IFR-only items must not score for VFR');
+        }],
+        ['VFR items dont score IFR', ()=>{
+          const a={};
+          FRAT_ITEMS.filter(i=>i.rule==='VFR').forEach(i=>{a[i.id]=true;});
+          const {total}=simBand('IFR','>=100',a,FRAT_ITEMS);
+          assertEqual(total,0,'VFR-only items must not score for IFR');
+        }],
+      ]},
+
+      {name:'localStorage & Storage Keys', tests:[
+        ['all_results readable',     ()=>{
+          const v=localStorage.getItem('flyingm_all_results_v1');
+          assert(v===null||Array.isArray(JSON.parse(v||'[]')),'Should be array or null');
+        }],
+        ['baseline readable',        ()=>{
+          const v=localStorage.getItem('flyingm_imsafe_baseline_v2');
+          assert(v===null||Array.isArray(JSON.parse(v||'[]')),'Should be array or null');
+        }],
+        ['profile readable',         ()=>{
+          const v=localStorage.getItem('flyingm_pilot_profile_v1');
+          assert(v===null||typeof JSON.parse(v||'{}')==='object','Should be object or null');
+        }],
+        ['onboarding flag readable',  ()=>{
+          const v=localStorage.getItem('flyingm_onboarding_done');
+          assert(v===null||v==='1','Should be null or "1"');
+        }],
+      ]},
+
+      {name:'Abort & Cancel Safety', tests:[
+        ['_testAborted starts false', ()=>assertEqual(_testAborted, false)],
+        ['_srtFinishFn starts null',  ()=>assertEqual(_srtFinishFn, null)],
+        ['cancelTestConfirm exists',  ()=>assert(typeof cancelTestConfirm==='function')],
+        ['cancel sets _testAborted',  ()=>{
+          _testAborted=false;
+          cancelTestConfirm();
+          assertEqual(_testAborted, true,'cancelTestConfirm must set _testAborted=true');
+          _testAborted=false; // reset
+        }],
+      ]},
+
+      {name:'Charts & All Results Data', tests:[
+        ['COG records have srt_median',()=>{
+          const recs=JSON.parse(localStorage.getItem('flyingm_all_results_v1')||'[]');
+          const cog=recs.filter(r=>!r.type||r.type==='cog'||r.type==='linked');
+          if(!cog.length) return;
+          cog.forEach(r=>assert(isFinite(r.srt_median)||r.srt_median===undefined,
+            'Record missing srt_median: '+r.timestamp));
+        }],
+        ['COG records have stro_acc', ()=>{
+          const recs=JSON.parse(localStorage.getItem('flyingm_all_results_v1')||'[]');
+          const cog=recs.filter(r=>!r.type||r.type==='cog'||r.type==='linked');
+          if(!cog.length) return;
+          cog.forEach(r=>assert(isFinite(r.stro_acc)||r.stro_acc===undefined,
+            'Record missing stro_acc'));
+        }],
+        ['COG records have nb_d',     ()=>{
+          const recs=JSON.parse(localStorage.getItem('flyingm_all_results_v1')||'[]');
+          const cog=recs.filter(r=>!r.type||r.type==='cog'||r.type==='linked');
+          if(!cog.length) return;
+          cog.forEach(r=>assert(isFinite(r.nb_d)||r.nb_d===undefined,
+            'Record missing nb_d'));
+        }],
+        ['Real COG records vary',     ()=>{
+          const recs=JSON.parse(localStorage.getItem('flyingm_all_results_v1')||'[]');
+          const real=recs.filter(r=>
+            (!r.type||r.type==='cog'||r.type==='linked')&&
+            isFinite(r.srt_median)&&r.srt_median!==285
+          );
+          if(real.length<2) return; // need 2+ real records
+          const vals=real.map(r=>r.srt_median);
+          assert(!vals.every(v=>v===vals[0]),
+            'All '+vals.length+' real COG records have identical srt_median='+vals[0]+
+            'ms — charts will be flat. Run real assessments (not DEBUG skip).');
+        }],
+        ['DEBUG skip record count',   ()=>{
+          const recs=JSON.parse(localStorage.getItem('flyingm_all_results_v1')||'[]');
+          const debug=recs.filter(r=>(!r.type||r.type==='cog'||r.type==='linked')&&r.srt_median===285);
+          const total=recs.filter(r=>!r.type||r.type==='cog'||r.type==='linked').length;
+          // Not a failure — just informational
+          assert(true, debug.length+' of '+total+' COG records are DEBUG stubs (srt_median=285). Clear before shipping.');
+        }],
+        ['FRAT records have band',    ()=>{
+          const recs=JSON.parse(localStorage.getItem('flyingm_all_results_v1')||'[]');
+          const frat=recs.filter(r=>r.type==='frat'||(r.type==='linked'&&r.frat));
+          if(!frat.length) return;
+          frat.forEach(r=>{const fr=r.frat||r;assert(fr.band,'FRAT record missing band');});
+        }],
+      ]},
+
+    ]; // end SUITES
+
+    // ── Runner ────────────────────────────────────────────────────────────
+    function runAllTests(){
+      const out = document.getElementById('qaResults');
+      out.innerHTML = '';
+      let totalPass=0, totalFail=0;
+
+      SUITES.forEach(suite=>{
+        let sPass=0, sFail=0, testsHtml='';
+        suite.tests.forEach(([name, fn])=>{
+          let ok=false, err='';
+          try{ fn(); ok=true; totalPass++; sPass++; }
+          catch(e){ err=e.message; totalFail++; sFail++; }
+          testsHtml+=`<div class="qa-test">
+            <div class="qa-dot ${ok?'qa-pass':'qa-fail'}"></div>
+            <div class="qa-name">${name}${err?`<div class="qa-err">✗ ${err}</div>`:''}</div>
+          </div>`;
+        });
+        const badge=sFail===0
+          ?`<span class="qa-badge qa-badge-pass">${sPass} passed</span>`
+          :`<span class="qa-badge qa-badge-fail">${sFail} failed</span>`;
+        const suiteEl=document.createElement('div');
+        suiteEl.className='qa-suite';
+        suiteEl.innerHTML=`<div class="qa-suite-title">${suite.name}${badge}</div>${testsHtml}`;
+        out.appendChild(suiteEl);
+      });
+
+      const total=totalPass+totalFail;
+      const pct=Math.round(totalPass/total*100);
+      const cls=totalFail===0?'qa-green':totalFail<=3?'qa-amber':'qa-red';
+      const sumEl=document.createElement('div');
+      sumEl.className='qa-summary';
+      sumEl.innerHTML=`<div class="qa-big ${cls}">${totalPass} / ${total}</div>
+        <div style="color:#5a7184;font-size:.8rem;">${pct}% passing &nbsp;•&nbsp; ${totalFail} failed</div>`;
+      out.prepend(sumEl);
+      out.scrollTop=0;
+    }
+
+    // ── Wire up buttons (deferred so overlay HTML exists in DOM) ───────────
+    window.addEventListener('DOMContentLoaded', ()=>{
+      const runBtn   = document.getElementById('qaRunBtn');
+      const closeBtn = document.getElementById('qaCloseBtn');
+      if(runBtn)   runBtn.addEventListener('click', runAllTests);
+      if(closeBtn) closeBtn.addEventListener('click', ()=>{
+        document.getElementById('qaOverlay').classList.add('hide');
+      });
+    });
+    // If DOMContentLoaded already fired (page fully loaded), wire immediately
+    if(document.readyState !== 'loading'){
+      const runBtn   = document.getElementById('qaRunBtn');
+      const closeBtn = document.getElementById('qaCloseBtn');
+      if(runBtn)   runBtn.addEventListener('click', runAllTests);
+      if(closeBtn) closeBtn.addEventListener('click', ()=>{
+        document.getElementById('qaOverlay').classList.add('hide');
+      });
+    }
+
+
+
+  })();
+  // ── END QA TEST RUNNER ────────────────────────────────────────────────
+
 })();
 </script>
 <script>
@@ -3598,5 +4619,20 @@ if("serviceWorker" in navigator){
   window.addEventListener("load",()=>{ navigator.serviceWorker.register("./sw.js").catch(()=>{}); });
 }
 </script>
+  <!-- ── QA TEST RUNNER OVERLAY ──────────────────────────── -->
+  <div id="qaOverlay" class="hide">
+    <div id="qaHeader">
+      <button id="qaCloseBtn">✕ Close</button>
+      <h2>⚙ QA Test Runner</h2>
+      <div class="qa-sub">Second Opinion — automated regression tests</div>
+      <button id="qaRunBtn">▶ Run All Tests</button>
+    </div>
+    <div id="qaScrollBody">
+      <div id="qaResults" style="color:#5a7184;font-size:.85rem;padding:20px 0;text-align:center;">
+        Tap Run All Tests to begin.
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
