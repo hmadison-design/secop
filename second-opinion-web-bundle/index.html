@@ -402,7 +402,7 @@
   }
   .intro-phrase{
     position:absolute;
-    font-size:clamp(2.4rem,11vw,4.2rem);
+    font-size:clamp(2rem,9vw,3.6rem);
     font-weight:800;
     color:#ffffff;
     letter-spacing:-.03em;
@@ -410,21 +410,39 @@
     text-align:center;
     padding:0 24px;
     opacity:0;
+    width:100%;
   }
-  .intro-phrase.p1{animation:phraseAnim .9s ease-in-out forwards;animation-delay:.05s;}
-  .intro-phrase.p2{animation:phraseAnim .9s ease-in-out forwards;animation-delay:.85s;}
-  .intro-phrase.p3{animation:phraseAnim .9s ease-in-out forwards;animation-delay:1.65s;}
+  /* Three phrases stacked: p1 top, p2 middle, p3 lower.
+     Each fades in exactly as the previous fades out (75% into prior anim).
+     Phrase duration: 0.9s. Fade-out starts at 75% = 0.675s.
+     p1 delay: 0.05s  → fade-out at ~0.725s
+     p2 delay: 0.725s → fade-out at ~1.40s
+     p3 delay: 1.40s  → logo fires at ~2.10s                */
+  .intro-phrase.p1{
+    top:calc(50% - 9rem);
+    animation:phraseAnim 2s ease-in-out forwards;
+    animation-delay:0s;
+  }
+  .intro-phrase.p2{
+    top:calc(50% - 4.5rem);
+    animation:phraseAnim 2s ease-in-out forwards;
+    animation-delay:1s;
+  }
+  .intro-phrase.p3{
+    top:calc(50%);
+    animation:phraseAnim 2s ease-in-out forwards;
+    animation-delay:2s;
+  }
   @keyframes phraseAnim{
-    0%{opacity:0;transform:translateY(8px);}
-    25%{opacity:1;transform:translateY(0);}
-    75%{opacity:1;transform:translateY(0);}
-    100%{opacity:0;transform:translateY(-8px);}
+    0%  {opacity:0;transform:translateY(6px);}
+    50% {opacity:1;transform:translateY(0);}
+    100%{opacity:0;transform:translateY(-6px);}
   }
   .intro-logo{
     position:absolute;
     opacity:0;
     animation:logoAnim 1.2s ease-in forwards;
-    animation-delay:2.45s;
+    animation-delay:3.5s;
   }
   .intro-logo img{
     width:140vw;
@@ -554,12 +572,31 @@ body.test-active .globalMenuBtn{
      ============================================================ */
   #onboardingOverlay{
     position:fixed;inset:0;
-    background:#ffffff;
+    background:#b8e0f7;
     z-index:99998;
     display:flex;flex-direction:column;
     overflow-y:auto;
     -webkit-overflow-scrolling:touch;
   }
+  /* Cloud background on welcome screen only */
+  #obWelcome{
+    position:relative;
+  }
+  #obWelcome::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 180'%3E%3Cg fill='white' fill-opacity='0.78'%3E%3Cellipse cx='130' cy='155' rx='118' ry='22'/%3E%3Cellipse cx='90' cy='140' rx='72' ry='28'/%3E%3Cellipse cx='160' cy='135' rx='68' ry='30'/%3E%3Cellipse cx='115' cy='118' rx='58' ry='32'/%3E%3Cellipse cx='75' cy='108' rx='44' ry='28'/%3E%3Cellipse cx='155' cy='105' rx='50' ry='30'/%3E%3Cellipse cx='108' cy='90' rx='42' ry='28'/%3E%3Cellipse cx='140' cy='82' rx='36' ry='26'/%3E%3Cellipse cx='95' cy='72' rx='30' ry='24'/%3E%3Cellipse cx='125' cy='60' rx='24' ry='20'/%3E%3Cellipse cx='108' cy='48' rx='18' ry='16'/%3E%3Cellipse cx='118' cy='38' rx='14' ry='12'/%3E%3Cellipse cx='50' cy='125' rx='28' ry='18'/%3E%3Cellipse cx='200' cy='120' rx='32' ry='20'/%3E%3Cellipse cx='35' cy='148' rx='22' ry='14'/%3E%3Cellipse cx='220' cy='145' rx='26' ry='16'/%3E%3Cellipse cx='170' cy='68' rx='22' ry='18'/%3E%3Cellipse cx='178' cy='52' rx='16' ry='14'/%3E%3C/g%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 160'%3E%3Cg fill='white' fill-opacity='0.65'%3E%3Cellipse cx='100' cy='138' rx='90' ry='20'/%3E%3Cellipse cx='68' cy='122' rx='58' ry='26'/%3E%3Cellipse cx='130' cy='118' rx='54' ry='28'/%3E%3Cellipse cx='96' cy='102' rx='46' ry='28'/%3E%3Cellipse cx='62' cy='90' rx='36' ry='24'/%3E%3Cellipse cx='128' cy='86' rx='40' ry='26'/%3E%3Cellipse cx='92' cy='72' rx='32' ry='22'/%3E%3Cellipse cx='115' cy='60' rx='26' ry='20'/%3E%3Cellipse cx='86' cy='48' rx='20' ry='18'/%3E%3Cellipse cx='100' cy='36' rx='15' ry='14'/%3E%3Cellipse cx='108' cy='24' rx='11' ry='10'/%3E%3Cellipse cx='38' cy='110' rx='24' ry='15'/%3E%3Cellipse cx='162' cy='106' rx='26' ry='16'/%3E%3Cellipse cx='148' cy='72' rx='18' ry='14'/%3E%3Cellipse cx='154' cy='56' rx='13' ry='11'/%3E%3C/g%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 140'%3E%3Cg fill='white' fill-opacity='0.58'%3E%3Cellipse cx='90' cy='122' rx='80' ry='17'/%3E%3Cellipse cx='62' cy='108' rx='52' ry='24'/%3E%3Cellipse cx='116' cy='104' rx='48' ry='25'/%3E%3Cellipse cx='86' cy='88' rx='40' ry='25'/%3E%3Cellipse cx='56' cy='76' rx='30' ry='20'/%3E%3Cellipse cx='114' cy='72' rx='34' ry='22'/%3E%3Cellipse cx='82' cy='58' rx='26' ry='19'/%3E%3Cellipse cx='102' cy='46' rx='20' ry='17'/%3E%3Cellipse cx='78' cy='34' rx='15' ry='14'/%3E%3Cellipse cx='90' cy='22' rx='11' ry='10'/%3E%3Cellipse cx='34' cy='96' rx='20' ry='13'/%3E%3Cellipse cx='146' cy='92' rx='22' ry='14'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 62% auto, 44% auto, 36% auto;
+    background-position: -8% 30%, 58% 55%, 18% 75%;
+    background-repeat: no-repeat;
+  }
+  #obWelcome > *{position:relative;z-index:1;}
   #onboardingOverlay.hide{display:none !important;}
   .ob-screen{
     min-height:100vh;
@@ -602,6 +639,9 @@ body.test-active .globalMenuBtn{
   .ob-cert-label input{accent-color:var(--accent);width:16px;height:16px;flex-shrink:0;}
   .ob-cert-label:has(input:checked){
     border-color:var(--accent);background:#e8f8f4;color:#1a2f45;
+  }
+  .ob-cert-label.cert-disabled{
+    opacity:.35;pointer-events:none;
   }
   .ob-actions{
     margin-top:auto;padding-top:24px;
@@ -684,138 +724,6 @@ body.test-active .globalMenuBtn{
     border:2px solid #1a3050;text-align:center;}
   .qa-big{font-size:2rem;font-weight:800;}
   .qa-green{color:#13c27a;}.qa-red{color:#ff5b5b;}.qa-amber{color:#ffb31a;}
-
-  /* ============================================================
-     RESPONSIVE LAYOUT — iPad & large iPhone
-     Strategy:
-       • Most screens: centered column, max ~600px (focused/task UI)
-       • All Results: wider, uses available space
-       • Safe-area insets for notch/home-bar devices
-     ============================================================ */
-
-  /* --- Safe area insets (iPhone notch, home bar, iPad) --- */
-  .wrap{
-    padding-bottom: max(24px, env(safe-area-inset-bottom));
-    padding-left:  max(16px, env(safe-area-inset-left));
-    padding-right: max(16px, env(safe-area-inset-right));
-  }
-  .globalMenuBtn{
-    right: max(16px, env(safe-area-inset-right));
-  }
-
-  /* --- iPad (768px and up) --- */
-  @media (min-width: 768px) {
-
-    /* Wrap gets more breathing room */
-    .wrap{
-      padding: 24px max(32px, env(safe-area-inset-right)) max(32px, env(safe-area-inset-bottom)) max(32px, env(safe-area-inset-left));
-    }
-
-    /* Cards get more padding */
-    .card{
-      padding: 24px 28px 28px;
-      border-radius: 22px;
-    }
-
-    /* ── Focused screens: centered column ── */
-    /* Main menu, test, result, FRAT, onboarding, info cards */
-    #modeCard,
-    #testCard,
-    #resultCard,
-    #baselineCard,
-    #fratRoot,
-    #tmdRoot,
-    #tmdInfoCard,
-    #appInfoCard,
-    #disclaimerCard,
-    #fratResultCard {
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    /* Main menu heading scales up nicely */
-    .main-heading{
-      font-size: clamp(2.4rem, 5vw, 3.8rem);
-    }
-
-    /* Main action buttons — side by side, taller on iPad */
-    .mainActions .btn{
-      min-height: 160px;
-      font-size: 1.25rem;
-      padding: 28px 16px;
-    }
-
-    /* FRAT wizard questions */
-    .fratWizardQ{
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    /* Global menu sheet — slightly wider on iPad */
-    .globalMenuSheet{
-      width: 300px;
-    }
-
-    /* Global menu button nudge */
-    .globalMenuBtn{
-      top: 28px;
-      right: max(28px, env(safe-area-inset-right));
-    }
-
-    /* Onboarding already has max-width:520px on .ob-screen — just add more padding */
-    .ob-screen{
-      padding: 64px 40px 40px;
-    }
-    .tut-slide{
-      padding: 64px 40px 40px;
-    }
-
-    /* Modal sheets get a bit more width */
-    .modalSheet{
-      width: min(680px, 92%);
-    }
-
-    /* Tap target (SRT circle) — a touch bigger on iPad */
-    .tapTarget{
-      width: 280px;
-      height: 280px;
-    }
-
-    /* Charts & quadrant in All Results — let these breathe wider */
-    #arQuadrantCanvas{
-      width: 360px !important;
-      height: 360px !important;
-    }
-  }
-
-  /* --- iPad large (1024px+, 11"/12.9" Pro) --- */
-  @media (min-width: 1024px) {
-
-    /* Focused screens stay at 600px, but All Results can go wider */
-    #allResultsCard{
-      max-width: 820px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    /* Bump font scale slightly */
-    .main-heading{
-      font-size: 4rem;
-    }
-
-    .mainActions .btn{
-      font-size: 1.35rem;
-      min-height: 180px;
-    }
-
-    /* Quadrant dashboard bigger on large iPad */
-    #arQuadrantCanvas{
-      width: 420px !important;
-      height: 420px !important;
-    }
-  }
 </style>
 </head>
 
@@ -823,9 +731,9 @@ body.test-active .globalMenuBtn{
 <div class="wrap">
 
   <div id="introScreen" aria-hidden="true">
-    <span class="intro-phrase p1">Real Flights</span>
-    <span class="intro-phrase p2">Human Factors</span>
-    <span class="intro-phrase p3">Safer Skies</span>
+    <span class="intro-phrase p1">Self-evaluation</span>
+    <span class="intro-phrase p2">is imperfect.</span>
+    <span class="intro-phrase p3">Data isn't.</span>
     <div class="intro-logo">
       <img src="SecOpIconFinal.png" alt="Second Opinion">
     </div>
@@ -977,14 +885,16 @@ body.test-active .globalMenuBtn{
     <!-- Screen 1: Welcome -->
     <div id="obWelcome" class="ob-screen">
       <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
-        <div style="font-size:3rem;margin-bottom:16px;">✈️</div>
-        <h1 class="ob-title">Welcome to<br>Second Opinion</h1>
-        <p class="ob-subtitle">Before your first flight check, let's set up your pilot profile. Everything stays on this device and is entirely optional — skip anything you'd rather not fill in now.</p>
-        <p class="ob-subtitle" style="margin-top:-10px;">You can update your profile any time from the menu.</p>
+        <div style="margin-bottom:20px;">
+          <img src="SecOpIconFinal.png" alt="Second Opinion" style="width:100px;height:100px;border-radius:20px;object-fit:cover;box-shadow:0 4px 20px rgba(0,0,0,.18);">
+        </div>
+        <h1 class="ob-title" style="color:#0d1b2a;">Welcome to<br>Second Opinion</h1>
+        <p class="ob-subtitle" style="color:#1a3a50;">Before your first flight check, let's set up your pilot profile. Everything stays on this device and is entirely optional — skip anything you'd rather not fill in now.</p>
+        <p class="ob-subtitle" style="margin-top:-10px;color:#1a3a50;">You can update your profile any time from the menu.</p>
       </div>
       <div class="ob-actions">
         <button id="obWelcomeNext" type="button" class="btn" style="background:#1a2f45;width:100%;min-height:56px;font-size:1.1rem;">Let's set up my profile →</button>
-        <a id="obWelcomeSkip" class="ob-skip">Skip for now</a>
+        <a id="obWelcomeSkip" class="ob-skip" style="color:#1a3a50;">Skip for now</a>
       </div>
     </div>
 
@@ -1357,7 +1267,7 @@ body.test-active .globalMenuBtn{
       <div class="hr"></div>
       <div class="muted" id="fratQCategory" style="font-size:.9rem;margin-bottom:6px;">—</div>
       <h2 id="fratQText" style="margin-top:0;">—</h2>
-      <div id="fratQScoreHint" class="muted" style="font-size:.82rem;margin-top:4px;"></div>
+      <div id="fratQScoreHint" class="muted" style="font-size:.82rem;margin-top:4px;display:none;"></div>
 
       <div class="fratChoiceRow" role="group" aria-label="Answer true or false">
         <label><input type="radio" name="fratWizardAns" value="true"> TRUE</label>
@@ -1435,7 +1345,7 @@ body.test-active .globalMenuBtn{
     setTimeout(()=>{
       introScreen.classList.add('fade-out');
       setTimeout(()=>{ introScreen.style.display='none'; introScreen.style.zIndex='-1'; }, 600);
-    }, 3100);
+    }, 4200);
   }
 
   const $ = s=>document.querySelector(s);
@@ -3960,27 +3870,19 @@ body.test-active .globalMenuBtn{
     document.getElementById('fratPrevBtn').disabled=(fratState.idx===0);
     scrollTopNow();fratWizardCard.scrollIntoView({behavior:"auto"});
   }
-  function fratAdvance(selectedValue){
-    const it=fratState.items[fratState.idx];
-    if(selectedValue!=="true"&&selectedValue!=="false") return;
-    fratState.answers[it.id]=(selectedValue==="true");
-    document.querySelectorAll('input[name="fratWizardAns"]').forEach(x=>x.checked=false);
-    if(fratState.idx>=fratState.items.length-1){
-      computeAndShowFratResults();
-      return;
-    }
-    fratState.idx++;
-    renderFratQuestion();
-  }
   document.querySelectorAll('input[name="fratWizardAns"]').forEach(r=>{
-    // change fires when switching from one answer to the other
     r.addEventListener("change",()=>{
+      const it=fratState.items[fratState.idx];
       const selected=document.querySelector('input[name="fratWizardAns"]:checked')?.value;
-      fratAdvance(selected);
-    });
-    // click fires even when re-tapping an already-selected answer (change won't fire in that case)
-    r.addEventListener("click",()=>{
-      if(r.checked) fratAdvance(r.value);
+      if(selected!=="true"&&selected!=="false") return;
+      fratState.answers[it.id]=(selected==="true");
+      document.querySelectorAll('input[name="fratWizardAns"]').forEach(x=>x.checked=false);
+      if(fratState.idx>=fratState.items.length-1){
+        computeAndShowFratResults();
+        return;
+      }
+      fratState.idx++;
+      renderFratQuestion();
     });
   });
 
@@ -4253,6 +4155,34 @@ body.test-active .globalMenuBtn{
         </label>`).join('');
     }
 
+    // ── Student pilot mutex ──
+    // Attaches change listeners to a cert grid container.
+    // studentVal: the value of the student pilot checkbox (e.g. 'faa_student')
+    // nameAttr:   the checkbox name attribute (e.g. 'obFaaCert')
+    // containerId: the grid container element id (for dynamic grids) OR null to use nameAttr query
+    function applyStudentMutex(nameAttr, studentVal){
+      function update(){
+        const all   = [...document.querySelectorAll(`input[name="${nameAttr}"]`)];
+        const stuCb = all.find(x=>x.value===studentVal);
+        if(!stuCb) return;
+        const others = all.filter(x=>x.value!==studentVal);
+        const stuChecked    = stuCb.checked;
+        const anyOtherChecked = others.some(x=>x.checked);
+        // Gray out others if student is checked
+        others.forEach(x=>{
+          x.closest('.ob-cert-label').classList.toggle('cert-disabled', stuChecked);
+        });
+        // Gray out student if any other is checked
+        stuCb.closest('.ob-cert-label').classList.toggle('cert-disabled', anyOtherChecked);
+      }
+      // Wire — use event delegation on document so it works for dynamically built grids too
+      document.addEventListener('change', e=>{
+        if(e.target.name===nameAttr) update();
+      });
+      // Run once immediately in case checkboxes are pre-populated
+      update();
+    }
+
     // ── Collect onboarding form values ──
     function collectObProfile(){
       const faa = [...document.querySelectorAll('input[name="obFaaCert"]:checked')].map(x=>x.value);
@@ -4303,6 +4233,8 @@ body.test-active .globalMenuBtn{
       document.getElementById('pfClub').value        = p.club        || '';
       buildCertGrid('pfFaaCerts', FAA_CERTS, 'pfFaaCert', p.faaCerts||[]);
       buildCertGrid('pfTcCerts',  TC_CERTS,  'pfTcCert',  p.tcCerts||[]);
+      // Re-run mutex state after dynamic grid is built
+      document.querySelectorAll('input[name="pfFaaCert"],input[name="pfTcCert"]').forEach(x=>x.dispatchEvent(new Event('change')));
       // Hours reminder banner
       const banner = document.getElementById('hoursReminderBanner');
       if(banner) banner.style.display = shouldRemindHours(p) ? '' : 'none';
@@ -4392,6 +4324,12 @@ body.test-active .globalMenuBtn{
       document.getElementById('qaOverlay').classList.remove('hide');
     });
 
+    // ── Wire student pilot mutex for both cert grids ──
+    applyStudentMutex('obFaaCert', 'faa_student');
+    applyStudentMutex('obTcCert',  'tc_student');
+    applyStudentMutex('pfFaaCert', 'faa_student');
+    applyStudentMutex('pfTcCert',  'tc_student');
+
     // ── Check onboarding on first load (after intro animation) ──
     setTimeout(()=>{
       if(!localStorage.getItem(OB_DONE_KEY)){
@@ -4412,7 +4350,7 @@ body.test-active .globalMenuBtn{
           }
         }
       }
-    }, 3800); // after intro fade (3100ms fade-out + 600ms opacity + buffer)
+    }, 5000); // after intro fade (4200ms + 600ms opacity + buffer)
 
     // Expose openProfile for About screen link if needed
     window._openPilotProfile = openProfile;
