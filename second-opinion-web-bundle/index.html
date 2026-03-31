@@ -653,6 +653,33 @@ body.test-active .globalMenuBtn{
     text-decoration:none;
   }
   .ob-skip:hover{color:#5a7184;}
+  /* EULA checkbox row */
+  .ob-eula-row{
+    display:flex;align-items:flex-start;gap:12px;
+    background:#f0f6ff;border:1.5px solid #c6ddf5;
+    border-radius:14px;padding:14px 16px;margin-bottom:20px;
+    cursor:pointer;
+  }
+  .ob-eula-row input[type=checkbox]{
+    width:20px;height:20px;flex-shrink:0;margin-top:2px;
+    accent-color:var(--accent);cursor:pointer;
+  }
+  .ob-eula-row p{
+    font-size:.85rem;color:#1a3a50;line-height:1.45;margin:0;
+  }
+  .ob-eula-row a{color:var(--accent);text-decoration:underline;}
+  /* EULA full text panel */
+  #obEulaText{
+    display:none;
+    background:#fff;border:1.5px solid #dce4ed;border-radius:14px;
+    padding:16px;margin-bottom:16px;
+    max-height:260px;overflow-y:auto;
+    font-size:.78rem;color:#1a3a50;line-height:1.55;
+  }
+  #obEulaText h3{font-size:.82rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#1a2f45;margin:14px 0 4px;}
+  #obEulaText h3:first-child{margin-top:0;}
+  /* Dimmed state for continue/skip before EULA accepted */
+  .ob-eula-gated{opacity:.4;}
 
   /* Tutorial slides */
   .tut-slide{
@@ -777,6 +804,10 @@ body.test-active .globalMenuBtn{
   <!-- ABOUT -->
   <section id="appInfoCard" class="card hide">
     <h2>About <i>Second Opinion</i></h2>
+    <div style="background:#fff8e6;border:1.5px solid #f5c842;border-radius:12px;padding:14px 16px;margin-bottom:18px;display:flex;gap:10px;align-items:flex-start;">
+      <span style="font-size:1.3rem;flex-shrink:0;">⚠️</span>
+      <p style="margin:0;font-size:.85rem;color:#5a3e00;line-height:1.5;"><b>Not a medical device.</b> Second Opinion is a wellness and decision-support tool only. It is not FDA-cleared, does not diagnose any medical condition, and does not replace the judgment of a physician, AME, or certificated flight instructor. All go/no-go decisions remain the sole responsibility of the pilot-in-command.</p>
+    </div>
     <div class="muted">
       <p><b>What this app is.</b> <i>Second Opinion</i> was developed by instructional designer and pilot Harvey
       Madison, co-host of <i>On Second Thought</i>, to assist pilots in making more objective, data-informed
@@ -809,6 +840,10 @@ body.test-active .globalMenuBtn{
     <button id="appInfoBackBtn" type="button" class="btn btn-ghost">Back to main menu</button>
     <div class="footer-link muted">
       Learn more at <a href="https://OnSecondThought.me" target="_blank" rel="noopener noreferrer">OnSecondThought.me</a>.
+    </div>
+    <div class="footer-link muted" style="margin-top:6px;font-size:.8rem;">
+      <a href="https://flyingm.aero/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a> &nbsp;·&nbsp;
+      <a href="mailto:second.opinion@flyingm.aero">second.opinion@flyingm.aero</a>
     </div>
   </section>
 
@@ -892,9 +927,36 @@ body.test-active .globalMenuBtn{
         <p class="ob-subtitle" style="color:#1a3a50;">Before your first flight check, let's set up your pilot profile. Everything stays on this device and is entirely optional — skip anything you'd rather not fill in now.</p>
         <p class="ob-subtitle" style="margin-top:-10px;color:#1a3a50;">You can update your profile any time from the menu.</p>
       </div>
+      <!-- EULA acceptance -->
+      <div>
+        <label class="ob-eula-row" for="obEulaCheck">
+          <input type="checkbox" id="obEulaCheck">
+          <p>I have read and agree to the <a href="javascript:void(0)" id="obEulaToggleLink">Terms of Use &amp; Privacy Policy</a>. I understand that <b>Second Opinion is not a medical device</b> and does not replace professional medical or aeronautical judgment. All go/no-go decisions remain the sole responsibility of the pilot-in-command.</p>
+        </label>
+        <div id="obEulaText">
+          <h3>Terms of Use</h3>
+          <p><b>Second Opinion</b> ("the App") is developed and operated by Flying M (Harvey Madison, sole proprietor, Austin, TX). By using the App you agree to these terms.</p>
+          <h3>Not a Medical Device</h3>
+          <p>The App is a <b>wellness and decision-support tool only</b>. It is not a medical device, is not FDA-cleared or approved, and is not intended to diagnose, treat, cure, or prevent any medical condition. Test results reflect performance on brief cognitive tasks and do not constitute a medical or clinical assessment. Do not use App results as a substitute for medical evaluation, advice from a healthcare professional, or any regulatory fitness-for-duty standard.</p>
+          <h3>Aviation Responsibility</h3>
+          <p>All go/no-go flight decisions are the sole responsibility of the pilot-in-command. The App supplements—but does not replace—your preflight judgment, the IM SAFE checklist, applicable FARs/CARs, and advice from a certificated flight instructor or aviation medical examiner. A positive result does not guarantee fitness to fly; a below-baseline result does not prohibit flight.</p>
+          <h3>No Warranties</h3>
+          <p>The App is provided "as is" without warranty of any kind. Flying M makes no representations regarding accuracy, completeness, or fitness for any particular purpose. Your use is at your own risk.</p>
+          <h3>Limitation of Liability</h3>
+          <p>To the maximum extent permitted by applicable law, Flying M shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising from your use of or inability to use the App, including any flight decisions made in reliance on App results.</p>
+          <h3>Privacy</h3>
+          <p>All data you enter is stored exclusively on your device. Flying M does not collect, transmit, sell, or share your personal information or assessment results. See the full Privacy Policy at <a href="https://flyingm.aero/privacy" target="_blank" rel="noopener noreferrer">flyingm.aero/privacy</a>.</p>
+          <h3>Changes to These Terms</h3>
+          <p>Flying M may update these terms at any time. Continued use of the App after an update constitutes acceptance of the revised terms.</p>
+          <h3>Governing Law</h3>
+          <p>These terms are governed by the laws of the State of Texas, without regard to conflict-of-law principles.</p>
+          <h3>Contact</h3>
+          <p>Questions? Email <a href="mailto:second.opinion@flyingm.aero">second.opinion@flyingm.aero</a>.</p>
+        </div>
+      </div>
       <div class="ob-actions">
-        <button id="obWelcomeNext" type="button" class="btn" style="background:#1a2f45;width:100%;min-height:56px;font-size:1.1rem;">Let's set up my profile →</button>
-        <a id="obWelcomeSkip" class="ob-skip" style="color:#1a3a50;">Skip for now</a>
+        <button id="obWelcomeNext" type="button" class="btn ob-eula-gated" style="background:#1a2f45;width:100%;min-height:56px;font-size:1.1rem;">Let's set up my profile →</button>
+        <a id="obWelcomeSkip" class="ob-skip ob-eula-gated" style="color:#1a3a50;">Skip for now</a>
       </div>
     </div>
 
@@ -4287,9 +4349,39 @@ body.test-active .globalMenuBtn{
       }
     }
 
-    // Welcome screen
-    onPressPointer(document.getElementById('obWelcomeNext'), ()=>showOb('obProfile'));
-    onPressPointer(document.getElementById('obWelcomeSkip'), ()=>showOb('obTut1'));
+    // EULA checkbox — toggle terms text and gate buttons
+    (function(){
+      const eulaCheck = document.getElementById('obEulaCheck');
+      const eulaText  = document.getElementById('obEulaText');
+      const eulaLink  = document.getElementById('obEulaToggleLink');
+      const nextBtn   = document.getElementById('obWelcomeNext');
+      const skipLink  = document.getElementById('obWelcomeSkip');
+      function eulaAccepted(){ return eulaCheck && eulaCheck.checked; }
+      function updateGate(){
+        const ok = eulaAccepted();
+        [nextBtn, skipLink].forEach(el=>{
+          if(!el) return;
+          el.classList.toggle('ob-eula-gated', !ok);
+        });
+      }
+      if(eulaCheck) eulaCheck.addEventListener('change', updateGate);
+      if(eulaLink) eulaLink.addEventListener('click', e=>{
+        e.preventDefault();
+        if(eulaText) eulaText.style.display = eulaText.style.display==='block' ? 'none' : 'block';
+      });
+      updateGate();
+      // Welcome screen — gate enforced inside handler
+      onPressPointer(nextBtn, ()=>{
+        if(!eulaAccepted()){ showToast('Please read and accept the Terms of Use to continue.'); return; }
+        showOb('obProfile');
+      });
+      onPressPointer(skipLink, ()=>{
+        if(!eulaAccepted()){ showToast('Please read and accept the Terms of Use to continue.'); return; }
+        showOb('obTut1');
+      });
+    })();
+
+    // Welcome screen — handlers now wired inside EULA IIFE above
 
     // Profile screen
     onPressPointer(document.getElementById('obProfileNext'), ()=>{
@@ -4685,6 +4777,12 @@ body.test-active .globalMenuBtn{
       if(closeBtn) closeBtn.addEventListener('click', ()=>{
         document.getElementById('qaOverlay').classList.add('hide');
       });
+      const resetOb1 = document.getElementById('qaResetOnboardingBtn');
+      if(resetOb1) resetOb1.addEventListener('click', ()=>{
+        localStorage.removeItem('flyingm_onboarding_done');
+        document.getElementById('qaOverlay').classList.add('hide');
+        showToast('Onboarding reset. Reload the app to see the Welcome screen.');
+      });
     });
     // If DOMContentLoaded already fired (page fully loaded), wire immediately
     if(document.readyState !== 'loading'){
@@ -4693,6 +4791,12 @@ body.test-active .globalMenuBtn{
       if(runBtn)   runBtn.addEventListener('click', runAllTests);
       if(closeBtn) closeBtn.addEventListener('click', ()=>{
         document.getElementById('qaOverlay').classList.add('hide');
+      });
+      const resetOb2 = document.getElementById('qaResetOnboardingBtn');
+      if(resetOb2) resetOb2.addEventListener('click', ()=>{
+        localStorage.removeItem('flyingm_onboarding_done');
+        document.getElementById('qaOverlay').classList.add('hide');
+        showToast('Onboarding reset. Reload the app to see the Welcome screen.');
       });
     }
 
@@ -4715,6 +4819,7 @@ if("serviceWorker" in navigator){
       <h2>⚙ QA Test Runner</h2>
       <div class="qa-sub">Second Opinion — automated regression tests</div>
       <button id="qaRunBtn">▶ Run All Tests</button>
+      <button id="qaResetOnboardingBtn" style="background:none;border:1px solid #ff5b5b;color:#ff5b5b;border-radius:8px;padding:6px 14px;font-size:.8rem;font-weight:700;cursor:pointer;margin-top:6px;">↺ Reset Onboarding</button>
     </div>
     <div id="qaScrollBody">
       <div id="qaResults" style="color:#5a7184;font-size:.85rem;padding:20px 0;text-align:center;">
