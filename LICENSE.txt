@@ -1,0 +1,243 @@
+END USER LICENSE AGREEMENT
+Second Opinion — iOS Application
+Developer: Harvey Madison (d/b/a Flying M)
+Contact: hmadison@gmail.com · https://flyingm.aero
+Last updated: April 18, 2026
+
+PLEASE READ THIS END USER LICENSE AGREEMENT ("AGREEMENT") CAREFULLY
+BEFORE DOWNLOADING, INSTALLING, OR USING THE SECOND OPINION APPLICATION
+(THE "APP"). BY DOWNLOADING, INSTALLING, OR USING THE APP, YOU AGREE TO
+BE BOUND BY THIS AGREEMENT. IF YOU DO NOT AGREE, DO NOT DOWNLOAD,
+INSTALL, OR USE THE APP.
+
+--------------------------------------------------------------------
+1. RELATIONSHIP OF THE PARTIES
+--------------------------------------------------------------------
+This Agreement is a binding legal contract between you ("you," "your,"
+or "End User") and Harvey Madison ("Developer," "we," "us," or "our").
+This Agreement is concluded between the Developer and the End User
+only, and not with Apple Inc. ("Apple"). The Developer, not Apple, is
+solely responsible for the App and its content.
+
+--------------------------------------------------------------------
+2. GRANT OF LICENSE
+--------------------------------------------------------------------
+Subject to your compliance with this Agreement, the Developer grants
+you a limited, non-exclusive, non-transferable, revocable license to
+download, install, and use the App on any Apple-branded device that
+you own or control, and as permitted by the Usage Rules set forth in
+the Apple Media Services Terms and Conditions. This license does not
+allow you to use the App on any device that you do not own or control,
+and you may not distribute or make the App available over a network
+where it could be used by multiple devices at the same time.
+
+--------------------------------------------------------------------
+3. RESTRICTIONS
+--------------------------------------------------------------------
+You may not, and you agree not to permit others to: (a) copy, modify,
+or create derivative works of the App; (b) reverse engineer,
+decompile, disassemble, or otherwise attempt to derive the source
+code of the App, except to the extent this restriction is prohibited
+by applicable law; (c) rent, lease, lend, sell, sublicense, assign,
+distribute, publish, transfer, or otherwise make the App available to
+any third party; (d) remove, alter, or obscure any proprietary notice
+(including any notice of copyright or trademark) on or within the App;
+or (e) use the App in any manner that violates applicable law or this
+Agreement.
+
+--------------------------------------------------------------------
+4. NOT A MEDICAL DEVICE; NOT FLIGHT GUIDANCE
+--------------------------------------------------------------------
+The App is a wellness and decision-support tool intended for
+informational purposes only. The App is NOT a medical device, is NOT
+cleared or approved by the U.S. Food and Drug Administration (FDA) or
+any other regulatory authority, and is NOT intended to diagnose,
+treat, cure, mitigate, or prevent any disease or medical condition.
+The App is NOT a substitute for consultation with a qualified Aviation
+Medical Examiner (AME), physician, or other licensed healthcare
+professional.
+
+The App is NOT an official weather product, flight planning service,
+or air traffic control resource. The App does NOT replace, and is not
+intended to replace, the pilot-in-command's responsibilities under
+14 CFR Part 91 (or applicable regulations in your jurisdiction),
+official preflight weather briefings, NOTAMs, aeronautical charts, or
+any other authoritative source of flight information.
+
+Results, scores, recommendations, risk bands, and any other output
+produced by the App are statistical estimates based on user-supplied
+inputs and are not a guarantee of fitness to fly, mission safety, or
+any specific outcome. You are, and remain at all times, solely
+responsible for your go/no-go decision and for the safe conduct of
+any flight.
+
+--------------------------------------------------------------------
+5. ASSUMPTION OF RISK; NO RELIANCE
+--------------------------------------------------------------------
+Aviation is inherently hazardous. You acknowledge that your use of
+the App is voluntary and at your sole risk. You agree not to rely on
+the App as the sole or primary basis for any aeromedical self-
+certification, flight planning decision, or in-flight decision. You
+agree to exercise independent pilot judgment consistent with your
+training, experience, certification, and applicable regulations, and
+to seek advice from a qualified AME or other appropriate professional
+whenever your circumstances warrant.
+
+--------------------------------------------------------------------
+6. MAINTENANCE AND SUPPORT
+--------------------------------------------------------------------
+The Developer is solely responsible for providing any maintenance and
+support services with respect to the App, as required under
+applicable law or as the Developer chooses to provide. You acknowledge
+that Apple has no obligation whatsoever to furnish any maintenance
+and support services with respect to the App.
+
+Support inquiries may be directed to hmadison@gmail.com.
+
+--------------------------------------------------------------------
+7. WARRANTY DISCLAIMER
+--------------------------------------------------------------------
+The App is provided "AS IS" and "AS AVAILABLE," with all faults and
+without warranty of any kind. To the maximum extent permitted by
+applicable law, the Developer expressly disclaims all warranties,
+whether express, implied, statutory, or otherwise, with respect to
+the App, including all implied warranties of merchantability, fitness
+for a particular purpose, accuracy, quiet enjoyment, and non-
+infringement of third-party rights. The Developer does not warrant
+that the App will meet your requirements, that its operation will be
+uninterrupted or error-free, or that defects will be corrected.
+
+The Developer is solely responsible for any product warranties,
+whether express or implied by law, to the extent not effectively
+disclaimed. In the event of any failure of the App to conform to any
+applicable warranty, you may notify Apple, and Apple will refund the
+purchase price for the App (if any) to you. To the maximum extent
+permitted by applicable law, Apple will have no other warranty
+obligation whatsoever with respect to the App, and any other claims,
+losses, liabilities, damages, costs, or expenses attributable to any
+failure to conform to any warranty will be the sole responsibility of
+the Developer.
+
+--------------------------------------------------------------------
+8. LIMITATION OF LIABILITY
+--------------------------------------------------------------------
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT WILL
+THE DEVELOPER BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL,
+CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, OR FOR ANY LOSS OF
+PROFITS, REVENUE, DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES,
+ARISING OUT OF OR RELATING TO THIS AGREEMENT OR YOUR USE OF (OR
+INABILITY TO USE) THE APP, WHETHER BASED ON WARRANTY, CONTRACT, TORT
+(INCLUDING NEGLIGENCE), PRODUCT LIABILITY, OR ANY OTHER LEGAL THEORY,
+AND WHETHER OR NOT THE DEVELOPER HAS BEEN ADVISED OF THE POSSIBILITY
+OF SUCH DAMAGES. THE DEVELOPER'S TOTAL CUMULATIVE LIABILITY ARISING
+OUT OF OR RELATING TO THIS AGREEMENT OR THE APP WILL NOT EXCEED THE
+GREATER OF (A) THE AMOUNT YOU PAID FOR THE APP IN THE TWELVE (12)
+MONTHS PRECEDING THE EVENT GIVING RISE TO THE CLAIM, OR (B) FIVE U.S.
+DOLLARS (US $5.00).
+
+Some jurisdictions do not allow the exclusion or limitation of
+incidental or consequential damages, so the above limitation may not
+apply to you.
+
+--------------------------------------------------------------------
+9. PRODUCT CLAIMS
+--------------------------------------------------------------------
+The Developer, not Apple, is responsible for addressing any claims by
+you or any third party relating to the App or your possession and/or
+use of the App, including but not limited to: (i) product liability
+claims; (ii) any claim that the App fails to conform to any
+applicable legal or regulatory requirement; and (iii) claims arising
+under consumer protection, privacy, or similar legislation, including
+in connection with the App's use of any applicable framework or
+services.
+
+--------------------------------------------------------------------
+10. INTELLECTUAL PROPERTY
+--------------------------------------------------------------------
+The App, including all content, features, and functionality, is owned
+by the Developer and is protected by United States and international
+copyright, trademark, and other intellectual property laws. Except
+for the limited license expressly granted in this Agreement, no right,
+title, or interest in the App is transferred to you.
+
+In the event of any third-party claim that the App or your
+possession and/or use of the App infringes that third party's
+intellectual property rights, the Developer, not Apple, will be
+solely responsible for the investigation, defense, settlement, and
+discharge of any such intellectual property infringement claim.
+
+--------------------------------------------------------------------
+11. PRIVACY
+--------------------------------------------------------------------
+Your use of the App is also governed by the Flying M Privacy Policy,
+available at https://flyingm.aero/privacy.html, which is incorporated
+into this Agreement by reference.
+
+--------------------------------------------------------------------
+12. LEGAL COMPLIANCE; EXPORT
+--------------------------------------------------------------------
+You represent and warrant that: (a) you are not located in a country
+that is subject to a U.S. Government embargo or that has been
+designated by the U.S. Government as a "terrorist supporting"
+country; and (b) you are not listed on any U.S. Government list of
+prohibited or restricted parties. You agree to comply with all
+applicable U.S. and foreign export control laws and regulations.
+
+--------------------------------------------------------------------
+13. THIRD-PARTY TERMS
+--------------------------------------------------------------------
+You agree to comply with all applicable third-party terms of
+agreement when using the App (for example, your wireless data service
+agreement and Apple's Media Services Terms and Conditions).
+
+--------------------------------------------------------------------
+14. THIRD-PARTY BENEFICIARY
+--------------------------------------------------------------------
+You acknowledge and agree that Apple and Apple's subsidiaries are
+third-party beneficiaries of this Agreement, and that, upon your
+acceptance of the terms and conditions of this Agreement, Apple will
+have the right (and will be deemed to have accepted the right) to
+enforce this Agreement against you as a third-party beneficiary
+thereof.
+
+--------------------------------------------------------------------
+15. TERMINATION
+--------------------------------------------------------------------
+This Agreement is effective until terminated by you or the Developer.
+Your rights under this Agreement will terminate automatically,
+without notice, if you fail to comply with any of its terms. Upon
+termination, you must cease all use of the App and delete all copies
+from your devices. Sections 4 through 10 and 12 through 17 will
+survive any termination.
+
+--------------------------------------------------------------------
+16. GOVERNING LAW
+--------------------------------------------------------------------
+This Agreement is governed by the laws of the State of Texas, United
+States, without regard to its conflict of laws principles. The United
+Nations Convention on Contracts for the International Sale of Goods
+does not apply. You and the Developer agree to submit to the
+exclusive jurisdiction of the state and federal courts located in
+the State of Texas, United States for the resolution of any dispute
+arising out of or relating to this Agreement, except that either
+party may seek injunctive relief in any court of competent
+jurisdiction.
+
+--------------------------------------------------------------------
+17. GENERAL
+--------------------------------------------------------------------
+If any provision of this Agreement is held invalid or unenforceable,
+the remaining provisions will remain in full force and effect. The
+Developer's failure to enforce any right or provision of this
+Agreement will not be deemed a waiver of such right or provision.
+This Agreement constitutes the entire agreement between you and the
+Developer regarding the App and supersedes all prior or
+contemporaneous understandings. The Developer may update this
+Agreement from time to time; continued use of the App after any
+update constitutes your acceptance of the revised Agreement.
+
+Contact: Harvey Madison · hmadison@gmail.com · https://flyingm.aero
+
+--------------------------------------------------------------------
+END OF AGREEMENT
+--------------------------------------------------------------------
